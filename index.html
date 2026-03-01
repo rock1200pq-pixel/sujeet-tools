@@ -1,94 +1,274 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-    <title>Rock Tools - Free Online Tools</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body{
-            font-family: Arial;
-            background:#f4f6f9;
-            text-align:center;
-        }
-        h1{
-            background:#007bff;
-            color:white;
-            padding:15px;
-        }
-        .box{
-            background:white;
-            padding:20px;
-            margin:20px;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
-        }
-        button{
-            padding:10px 20px;
-            background:#28a745;
-            color:white;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
-        }
-        input{
-            margin:10px;
-        }
-        footer{
-            margin-top:30px;
-            padding:15px;
-            background:#222;
-            color:white;
-        }
-    </style>
+    <title>PDF Tools - Merger, Image to PDF, PDF to Word</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- PDF Lib Library -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- PDF.js for PDF viewing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 </head>
 <body>
+    <div class="container">
+        <h1>📄 PDF Tools</h1>
+        
+        <!-- PDF Merger Section -->
+        <div class="tool-section">
+            <h2>🔗 PDF Merger</h2>
+            <p>Do ya zyada PDFs ko ek karne ke liye:</p>
+            <input type="file" id="mergeFiles" multiple accept=".pdf">
+            <button onclick="mergePDFs()">Merge PDFs</button>
+        </div>
 
-<h1>🚀 Rock Free Online Tools</h1>
+        <!-- Image to PDF Section -->
+        <div class="tool-section">
+            <h2>🖼️ Image to PDF</h2>
+            <p>Images ko PDF mein convert karein:</p>
+            <input type="file" id="imageFiles" multiple accept="image/*">
+            <button onclick="convertImageToPDF()">Convert to PDF</button>
+        </div>
 
-<div class="box">
-    <h2>📄 PDF Merge Tool (Demo)</h2>
-    <input type="file" multiple>
-    <br>
-    <button onclick="alert('PDF Merge Feature Coming Soon!')">Merge PDF</button>
-</div>
+        <!-- PDF to Word Section -->
+        <div class="tool-section">
+            <h2>📝 PDF to Word</h2>
+            <p>PDF ko Word document mein convert karein:</p>
+            <input type="file" id="pdfToWordFile" accept=".pdf">
+            <button onclick="convertPDFToWord()">Convert to Word</button>
+        </div>
 
-<div class="box">
-   <script>
-async function convertToPDF() {
-    const { jsPDF } = window.jspdf;
-    const fileInput = document.getElementById('imageInput');
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+.tool-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #667eea;
+}
+
+.tool-section h2 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.tool-section p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="file"]:hover {
+    border-color: #667eea;
+}
+
+button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#result {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#result a {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.loading {
+    color: #667eea;
+    font-size: 18px;
+}
+const { PDFDocument } = PDFLib;
+
+// 🔗 PDF Merger Function
+async function mergePDFs() {
+    const fileInput = document.getElementById('mergeFiles');
+    const resultDiv = document.getElementById('result');
     
-    if (fileInput.files.length === 0) {
-        alert("Please select an image first!");
+    if (fileInput.files.length < 2) {
+        alert('Please select at least 2 PDF files!');
         return;
     }
 
-    const file = fileInput.files[0];
-    const reader = new FileReader();
+    resultDiv.innerHTML = '<p class="loading">Merging PDFs... ⏳</p>';
 
-    reader.onload = function(event) {
-        const img = new Image();
-        img.src = event.target.result;
+    try {
+        const mergedPdf = await PDFDocument.create();
 
-        img.onload = function() {
-            const pdf = new jsPDF({
-                orientation: img.width > img.height ? "landscape" : "portrait",
-                unit: "px",
-                format: [img.width, img.height]
-            });
-
-            pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
-            pdf.save("converted.pdf");
+        for (let file of fileInput.files) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await PDFDocument.load(arrayBuffer);
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
         }
-    };
 
-    reader.readAsDataURL(file);
+        const mergedPdfFile = await mergedPdf.save();
+        downloadFile(mergedPdfFile, 'merged.pdf', 'application/pdf');
+        resultDiv.innerHTML = '<p style="color: green;">✅ PDF merged successfully!</p>';
+    } catch (error) {
+        resultDiv.innerHTML = `<p style="color: red;">❌ Error: ${error.message}</p>`;
+    }
 }
-</script> 
-</div>
 
-<footer>
-    © 2026 Rock Tools | Made in India 🇮🇳
-</footer>
+// 🖼️ Image to PDF Function
+async function convertImageToPDF() {
+    const fileInput = document.getElementById('imageFiles');
+    const resultDiv = document.getElementById('result');
+    
+    if (fileInput.files.length === 0) {
+        alert('Please select at least one image!');
+        return;
+    }
 
-</body>
-</html>
+    resultDiv.innerHTML = '<p class="loading">Converting to PDF... ⏳</p>';
+
+    try {
+        const pdfDoc = await PDFDocument.create();
+
+        for (let file of fileInput.files) {
+            const imageBytes = await file.arrayBuffer();
+            let image;
+
+            if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+                image = await pdfDoc.embedJpg(imageBytes);
+            } else if (file.type === 'image/png') {
+                image = await pdfDoc.embedPng(imageBytes);
+            } else {
+                continue;
+            }
+
+            const page = pdfDoc.addPage([image.width, image.height]);
+            page.drawImage(image, {
+                x: 0,
+                y: 0,
+                width: image.width,
+                height: image.height,
+            });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        downloadFile(pdfBytes, 'converted.pdf', 'application/pdf');
+        resultDiv.innerHTML = '<p style="color: green;">✅ Image converted to PDF!</p>';
+    } catch (error) {
+        resultDiv.innerHTML = `<p style="color: red;">❌ Error: ${error.message}</p>`;
+    }
+}
+
+// 📝 PDF to Word Function (Basic - extracts text)
+async function convertPDFToWord() {
+    const fileInput = document.getElementById('pdfToWordFile');
+    const resultDiv = document.getElementById('result');
+    
+    if (fileInput.files.length === 0) {
+        alert('Please select a PDF file!');
+        return;
+    }
+
+    resultDiv.innerHTML = '<p class="loading">Extracting text from PDF... ⏳</p>';
+
+    try {
+        const file = fileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // Load PDF using PDF.js
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        let extractedText = '';
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            extractedText += `--- Page ${i} ---\n${pageText}\n\n`;
+        }
+
+        // Create a simple text file (not true DOCX, but readable)
+        const blob = new Blob([extractedText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'extracted_text.txt';
+        link.click();
+
+        resultDiv.innerHTML = '<p style="color: green;">✅ Text extracted! (Note: Full DOCX requires server-side processing)</p>';
+    } catch (error) {
+        resultDiv.innerHTML = `<p style="color: red;">❌ Error: ${error.message}</p>`;
+    }
+}
+
+// Download Helper Function
+function downloadFile(data, filename, type) {
+    const blob = new Blob([data], { type: type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+}
