@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rock Tools - All Tools</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="script.js"></script>
+</head>
+<body>
+
+<nav>
+<h1>💎 Rock Tools</h1>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="tools.html">Tools</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+
+<div class="container">
+
+<div class="card">
+<h2>📄 PDF Merge</h2>
+<input type="file" id="mergeFiles" multiple>
+<button onclick="mergePDFs()">Merge PDF</button>
+</div>
+
+<div class="card">
+<h2>🖼 Image to PDF</h2>
+<input type="file" id="imageFiles" multiple>
+<button onclick="convertImageToPDF()">Convert</button>
+</div>
+
+<div class="card">
+<h2>📝 PDF Text Extract</h2>
+<input type="file" id="pdfToWordFile">
+<button onclick="convertPDFToWord()">Extract</button>
+</div>
+
+</div>
+
+<div id="result" style="text-align:center;margin-top:20px;"></div>
+
+<footer>
+© 2026 Rock Tools
+</footer>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+</body>
+</html>
