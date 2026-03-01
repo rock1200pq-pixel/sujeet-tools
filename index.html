@@ -52,14 +52,7 @@
 </div>
 
 <div class="box">
-    <h2>🖼 Image to PDF (Working)</h2>
-<input type="file" id="imageInput" accept="image/*">
-<br><br>
-<button onclick="convertToPDF()">Convert to PDF</button>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
+   <script>
 async function convertToPDF() {
     const { jsPDF } = window.jspdf;
     const fileInput = document.getElementById('imageInput');
@@ -73,15 +66,24 @@ async function convertToPDF() {
     const reader = new FileReader();
 
     reader.onload = function(event) {
-        const imgData = event.target.result;
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'JPEG', 10, 10, 180, 160);
-        pdf.save("converted.pdf");
+        const img = new Image();
+        img.src = event.target.result;
+
+        img.onload = function() {
+            const pdf = new jsPDF({
+                orientation: img.width > img.height ? "landscape" : "portrait",
+                unit: "px",
+                format: [img.width, img.height]
+            });
+
+            pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
+            pdf.save("converted.pdf");
+        }
     };
 
     reader.readAsDataURL(file);
 }
-</script>
+</script> 
 </div>
 
 <footer>
