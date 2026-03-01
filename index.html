@@ -1,47 +1,212 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Tools - Merger, Image to PDF, PDF to Word</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- PDF Lib Library -->
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <!-- PDF.js for PDF viewing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rock Tools - Smart Online Utilities</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+header{
+width:100%;
+padding:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+background: rgba(255,255,255,0.1);
+backdrop-filter: blur(10px);
+box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+
+.container{
+width:90%;
+max-width:1100px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+margin-top:40px;
+}
+
+.card{
+background: rgba(255,255,255,0.1);
+padding:25px;
+border-radius:20px;
+backdrop-filter: blur(15px);
+box-shadow:0 8px 25px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.card:hover{
+transform: translateY(-10px);
+box-shadow:0 12px 30px rgba(0,0,0,0.6);
+}
+
+.card h2{
+margin-bottom:15px;
+font-size:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+footer{
+margin-top:40px;
+padding:15px;
+font-size:14px;
+opacity:0.8;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>📄 PDF Tools</h1>
-        
-        <!-- PDF Merger Section -->
-        <div class="tool-section">
-            <h2>🔗 PDF Merger</h2>
-            <p>Do ya zyada PDFs ko ek karne ke liye:</p>
-            <input type="file" id="mergeFiles" multiple accept=".pdf">
-            <button onclick="mergePDFs()">Merge PDFs</button>
-        </div>
 
-        <!-- Image to PDF Section -->
-        <div class="tool-section">
-            <h2>🖼️ Image to PDF</h2>
-            <p>Images ko PDF mein convert karein:</p>
-            <input type="file" id="imageFiles" multiple accept="image/*">
-            <button onclick="convertImageToPDF()">Convert to PDF</button>
-        </div>
+<header>
+🚀 Rock Smart Online Tools
+</header>
 
-        <!-- PDF to Word Section -->
-        <div class="tool-section">
-            <h2>📝 PDF to Word</h2>
-            <p>PDF ko Word document mein convert karein:</p>
-            <input type="file" id="pdfToWordFile" accept=".pdf">
-            <button onclick="convertPDFToWord()">Convert to Word</button>
-        </div>
+<div class="container">
 
-        <div id="result"></div>
-    </div>
+<div class="card">
+<h2>📄 PDF Merge</h2>
+<input type="file" id="mergeFiles" multiple>
+<button onclick="mergePDFs()">Merge PDF</button>
+</div>
 
-    <script src="script.js"></script>
+<div class="card">
+<h2>🖼 Image to PDF</h2>
+<input type="file" id="imageFiles" multiple>
+<button onclick="convertImageToPDF()">Convert</button>
+</div>
+
+<div class="card">
+<h2>📝 PDF Text Extract</h2>
+<input type="file" id="pdfToWordFile">
+<button onclick="convertPDFToWord()">Extract Text</button>
+</div>
+
+</div>
+
+<div id="result" style="margin-top:20px;"></div>
+
+<footer>
+© 2026 Rock Tools | Designed by Rock 💎
+</footer>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+<script>
+
+const { PDFDocument } = PDFLib;
+
+// PDF Merge
+async function mergePDFs() {
+const files = document.getElementById('mergeFiles').files;
+if(files.length < 2){ alert("Select at least 2 PDFs"); return; }
+
+const mergedPdf = await PDFDocument.create();
+
+for (let file of files) {
+const bytes = await file.arrayBuffer();
+const pdf = await PDFDocument.load(bytes);
+const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+copiedPages.forEach((page) => mergedPdf.addPage(page));
+}
+
+const pdfBytes = await mergedPdf.save();
+downloadFile(pdfBytes,'merged.pdf','application/pdf');
+}
+
+// Image to PDF
+async function convertImageToPDF() {
+const files = document.getElementById('imageFiles').files;
+if(files.length === 0){ alert("Select image"); return; }
+
+const pdfDoc = await PDFDocument.create();
+
+for (let file of files) {
+const imgBytes = await file.arrayBuffer();
+let image;
+if(file.type.includes("png")){
+image = await pdfDoc.embedPng(imgBytes);
+}else{
+image = await pdfDoc.embedJpg(imgBytes);
+}
+const page = pdfDoc.addPage([image.width,image.height]);
+page.drawImage(image,{x:0,y:0,width:image.width,height:image.height});
+}
+
+const pdfBytes = await pdfDoc.save();
+downloadFile(pdfBytes,'converted.pdf','application/pdf');
+}
+
+// PDF Text Extract
+async function convertPDFToWord(){
+const file = document.getElementById('pdfToWordFile').files[0];
+if(!file){ alert("Select PDF"); return; }
+
+const arrayBuffer = await file.arrayBuffer();
+const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+let text = '';
+for(let i=1;i<=pdf.numPages;i++){
+const page = await pdf.getPage(i);
+const content = await page.getTextContent();
+text += content.items.map(item=>item.str).join(" ") + "\n\n";
+}
+
+downloadFile(text,'extracted.txt','text/plain');
+}
+
+// Download Helper
+function downloadFile(data, filename, type){
+const blob = new Blob([data],{type:type});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = filename;
+a.click();
+URL.revokeObjectURL(url);
+}
+
+</script>
+
 </body>
 </html>
