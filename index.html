@@ -4,32 +4,48 @@
 <title>Rock Tools - Smart Online Utilities</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+
 <style>
 
-/* Hero Section */
+/* Animated Background */
+body{
+background: linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1c92d2);
+background-size:400% 400%;
+animation: gradientBG 10s ease infinite;
+color:white;
+}
+
+@keyframes gradientBG{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* Hero */
 .hero{
 text-align:center;
-padding:80px 20px;
+padding:100px 20px;
 }
 
 .hero h2{
-font-size:38px;
+font-size:45px;
 margin-bottom:20px;
 }
 
 .hero p{
 font-size:18px;
 opacity:0.9;
-margin-bottom:30px;
+margin-bottom:35px;
 }
 
 .cta-btn{
-padding:14px 28px;
+padding:15px 35px;
 font-size:16px;
 border:none;
-border-radius:30px;
-background:linear-gradient(45deg,#00c6ff,#0072ff);
-color:white;
+border-radius:40px;
+background:white;
+color:#203a43;
+font-weight:bold;
 cursor:pointer;
 transition:0.3s;
 }
@@ -38,38 +54,53 @@ transition:0.3s;
 transform:scale(1.1);
 }
 
-/* Feature Section */
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:25px;
-margin-top:50px;
-}
-
-.feature-card{
-background:rgba(255,255,255,0.1);
-padding:25px;
-border-radius:20px;
-backdrop-filter:blur(10px);
-box-shadow:0 8px 25px rgba(0,0,0,0.3);
-transition:0.3s;
-}
-
-.feature-card:hover{
-transform:translateY(-8px);
-}
-
-.tools-preview{
+/* Stats Section */
+.stats{
+display:flex;
+justify-content:center;
+gap:50px;
 margin-top:70px;
+flex-wrap:wrap;
+}
+
+.stat{
 text-align:center;
 }
 
-.tool-box{
-display:inline-block;
-margin:15px;
-padding:15px 25px;
-border-radius:20px;
+.stat h3{
+font-size:35px;
+}
+
+.stat p{
+opacity:0.8;
+}
+
+/* Glass Cards */
+.section{
+margin-top:80px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.glass{
 background:rgba(255,255,255,0.1);
+padding:25px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+box-shadow:0 8px 30px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.glass:hover{
+transform:translateY(-8px);
+}
+
+footer{
+text-align:center;
+padding:30px;
+margin-top:80px;
+opacity:0.7;
 }
 
 </style>
@@ -87,50 +118,66 @@ background:rgba(255,255,255,0.1);
 </ul>
 </nav>
 
-<div class="container">
-
 <div class="hero">
-<h2>Smart. Fast. Secure File Tools.</h2>
-<p>Rock Tools provides powerful online utilities for managing PDFs and images — directly in your browser with complete privacy.</p>
+<h2>Next-Gen Online File Tools</h2>
+<p>Experience lightning fast, privacy-first PDF & Image tools — built for the modern web.</p>
 <a href="tools.html">
-<button class="cta-btn">Start Using Tools</button>
+<button class="cta-btn">Launch Tools 🚀</button>
 </a>
 </div>
 
-<div class="features">
-<div class="feature-card">
-<h3>🔒 100% Secure</h3>
-<p>All tools work inside your browser. Your files are never uploaded to any server.</p>
+<div class="stats">
+<div class="stat">
+<h3 id="files">0</h3>
+<p>Files Processed</p>
 </div>
 
-<div class="feature-card">
-<h3>⚡ Lightning Fast</h3>
-<p>Instant processing without waiting or slow uploads.</p>
+<div class="stat">
+<h3>100%</h3>
+<p>Secure Processing</p>
 </div>
 
-<div class="feature-card">
-<h3>📱 Fully Responsive</h3>
-<p>Works perfectly on mobile, tablet, and desktop devices.</p>
-</div>
-
-<div class="feature-card">
-<h3>🆓 Free Forever</h3>
-<p>No hidden charges. No login required. Simple and free tools.</p>
+<div class="stat">
+<h3>24/7</h3>
+<p>Availability</p>
 </div>
 </div>
 
-<div class="tools-preview">
-<h2>Popular Tools</h2>
-<div class="tool-box">📄 PDF Merge</div>
-<div class="tool-box">🖼 Image to PDF</div>
-<div class="tool-box">📝 Text Extract</div>
+<div class="section">
+<div class="glass">
+<h3>⚡ Ultra Fast</h3>
+<p>All tools run directly inside your browser without server delay.</p>
 </div>
 
+<div class="glass">
+<h3>🔒 Privacy First</h3>
+<p>Your files never leave your device. Complete security guaranteed.</p>
+</div>
+
+<div class="glass">
+<h3>🌍 Universal Access</h3>
+<p>Works on mobile, tablet, and desktop seamlessly.</p>
+</div>
 </div>
 
 <footer>
-© 2026 Rock Tools | Designed with 💎 by Rock
+© 2026 Rock Tools | Built with 💎 by Rock
 </footer>
+
+<script>
+
+/* Animated Counter */
+let count = 0;
+const counter = document.getElementById("files");
+
+setInterval(()=>{
+if(count < 50000){
+count += 250;
+counter.innerText = count + "+";
+}
+},50);
+
+</script>
 
 </body>
 </html>
