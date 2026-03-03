@@ -72,3 +72,34 @@ height:70px;
 width:auto;
 display:block;
 }
+/* NAVBAR STYLE */
+nav{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:15px 40px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+}
+
+/* LOGO SIZE */
+.logo img{
+height:80px;
+width:auto;
+display:block;
+}
+
+/* MENU STYLE */
+nav ul{
+display:flex;
+gap:30px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+nav ul li a{
+text-decoration:none;
+color:white;
+font-weight:500;
+}
