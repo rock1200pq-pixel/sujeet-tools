@@ -1,70 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>Rock Tools</title>
 
 <link rel="stylesheet" href="style.css">
-<script defer src="script.js"></script>
 
-<!-- icons -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="script.js" defer></script>
 
 </head>
 
 <body>
 
-<div class="layout">
+<nav>
 
-<!-- SIDEBAR -->
+<div class="logo">
+<img src="logo.png">
+</div>
 
-<div class="sidebar">
+<ul>
 
-<h2>🪨 Rock Tools</h2>
-
-<input type="text" id="searchTool"
-placeholder="Search tool..."
-onkeyup="searchTools()">
-
-<ul id="toolList">
-
-<li>Merge PDF</li>
-<li>Split PDF</li>
-<li>Compress PDF</li>
-<li>PDF to Word</li>
-<li>PDF to JPG</li>
-
-<li>Image to PDF</li>
-<li>JPG to PNG</li>
-<li>PNG to JPG</li>
-<li>Resize Image</li>
-<li>Crop Image</li>
-
-<li>QR Generator</li>
-<li>Password Generator</li>
-<li>Text Counter</li>
-<li>UUID Generator</li>
-<li>Base64 Encode</li>
-<li>Base64 Decode</li>
-
-<li>Random Number</li>
-<li>Timestamp</li>
-<li>Case Converter</li>
-<li>Reverse Text</li>
-<li>Color Generator</li>
+<li><a href="index.html">Home</a></li>
+<li><a href="tools.html">Tools</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact</a></li>
 
 </ul>
 
-<button onclick="toggleTheme()" class="themeBtn">
-🌙 Toggle Theme
-</button>
+</nav>
 
-</div>
-
-<!-- MAIN -->
-
-<div class="main">
+<section class="toolsSection">
 
 <h1>All Tools</h1>
 
@@ -73,38 +42,36 @@ onkeyup="searchTools()">
 <div class="toolCard">
 <i class="fa-solid fa-file-pdf"></i>
 <h3>Merge PDF</h3>
-<button>Launch</button>
+<button onclick="mergePDF()">Launch</button>
 </div>
 
 <div class="toolCard">
 <i class="fa-solid fa-file-image"></i>
 <h3>Image to PDF</h3>
-<button>Launch</button>
+<button onclick="imageToPDF()">Launch</button>
 </div>
 
 <div class="toolCard">
 <i class="fa-solid fa-qrcode"></i>
 <h3>QR Generator</h3>
-<button>Launch</button>
+<button onclick="qrGenerator()">Launch</button>
 </div>
 
 <div class="toolCard">
 <i class="fa-solid fa-lock"></i>
 <h3>Password Generator</h3>
-<button>Launch</button>
+<button onclick="passwordGen()">Launch</button>
 </div>
 
 <div class="toolCard">
 <i class="fa-solid fa-font"></i>
 <h3>Text Counter</h3>
-<button>Launch</button>
+<button onclick="textCounter()">Launch</button>
 </div>
 
 </div>
 
-</div>
-
-</div>
+</section>
 
 </body>
 </html>
