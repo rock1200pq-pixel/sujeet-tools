@@ -1,123 +1,106 @@
-const { PDFDocument } = PDFLib;
-
-async function mergePDFs(){
-
-const files = document.getElementById("mergeFiles").files;
-
-if(files.length < 2){
-alert("Select at least 2 PDFs");
-return;
+function generatePassword(){
+let pass=Math.random().toString(36).slice(-10);
+document.getElementById("password").innerText=pass;
 }
 
-const mergedPdf = await PDFDocument.create();
-
-for (let file of files){
-
-const bytes = await file.arrayBuffer();
-
-const pdf = await PDFDocument.load(bytes);
-
-const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-
-copiedPages.forEach((page) => mergedPdf.addPage(page));
-
+function countText(){
+let text=document.getElementById("textInput").value;
+document.getElementById("textResult").innerText=
+"Words: "+text.split(" ").length+" | Characters: "+text.length;
 }
 
-const pdfBytes = await mergedPdf.save();
-
-downloadFile(pdfBytes,"merged.pdf","application/pdf");
-
+function generateUUID(){
+document.getElementById("uuid").innerText=crypto.randomUUID();
 }
 
-
-
-async function convertImageToPDF(){
-
-const files = document.getElementById("imageFiles").files;
-
-if(files.length === 0){
-alert("Select image");
-return;
+function encodeBase(){
+let val=document.getElementById("baseInput").value;
+document.getElementById("baseOutput").innerText=btoa(val);
 }
 
-const pdfDoc = await PDFDocument.create();
-
-for(let file of files){
-
-const imgBytes = await file.arrayBuffer();
-
-let image;
-
-if(file.type.includes("png")){
-image = await pdfDoc.embedPng(imgBytes);
-}else{
-image = await pdfDoc.embedJpg(imgBytes);
+function decodeBase(){
+let val=document.getElementById("decodeInput").value;
+document.getElementById("decodeOutput").innerText=atob(val);
 }
 
-const page = pdfDoc.addPage([image.width,image.height]);
-
-page.drawImage(image,{
-x:0,
-y:0,
-width:image.width,
-height:image.height
-});
-
+function randomNumber(){
+document.getElementById("random").innerText=Math.floor(Math.random()*1000);
 }
 
-const pdfBytes = await pdfDoc.save();
-
-downloadFile(pdfBytes,"converted.pdf","application/pdf");
-
+function getTimestamp(){
+document.getElementById("timestamp").innerText=Date.now();
 }
 
-
-
-async function convertPDFToWord(){
-
-const file = document.getElementById("pdfToWordFile").files[0];
-
-if(!file){
-alert("Select PDF");
-return;
+function upperCase(){
+let v=document.getElementById("caseInput").value;
+document.getElementById("caseOutput").innerText=v.toUpperCase();
 }
 
-const arrayBuffer = await file.arrayBuffer();
-
-const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-
-let text = "";
-
-for(let i=1;i<=pdf.numPages;i++){
-
-const page = await pdf.getPage(i);
-
-const content = await page.getTextContent();
-
-text += content.items.map(item=>item.str).join(" ") + "\n\n";
-
+function lowerCase(){
+let v=document.getElementById("caseInput").value;
+document.getElementById("caseOutput").innerText=v.toLowerCase();
 }
 
-downloadFile(text,"extracted.txt","text/plain");
-
+function reverseText(){
+let v=document.getElementById("reverseInput").value;
+document.getElementById("reverseOutput").innerText=v.split("").reverse().join("");
 }
 
+function colorGenerator(){
+let color="#"+Math.floor(Math.random()*16777215).toString(16);
+document.getElementById("color").innerText=color;
+document.body.style.background=color;
+}
 
+function generateQR(){
+let text=document.getElementById("qrText").value;
+document.getElementById("qr").innerHTML=
+`<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${text}">`;
+}
 
-function downloadFile(data,filename,type){
+function formatJSON(){
+let j=document.getElementById("jsonInput").value;
+document.getElementById("jsonOutput").innerText=
+JSON.stringify(JSON.parse(j),null,2);
+}
 
-const blob = new Blob([data],{type:type});
+function randomQuote(){
+let q=["Stay hungry stay foolish","Rock your code","Dream big","Never quit"];
+document.getElementById("quote").innerText=q[Math.floor(Math.random()*q.length)];
+}
 
-const url = URL.createObjectURL(blob);
+function currentDate(){
+document.getElementById("date").innerText=new Date().toLocaleString();
+}
 
-const a = document.createElement("a");
+function randomEmoji(){
+let e=["😀","🚀","🔥","💎","🎯"];
+document.getElementById("emoji").innerText=e[Math.floor(Math.random()*e.length)];
+}
 
-a.href = url;
+async function showIP(){
+let r=await fetch("https://api.ipify.org?format=json");
+let d=await r.json();
+document.getElementById("ip").innerText=d.ip;
+}
 
-a.download = filename;
+function rollDice(){
+document.getElementById("dice").innerText=Math.floor(Math.random()*6)+1;
+}
 
-a.click();
+function toBinary(){
+let n=document.getElementById("binaryInput").value;
+document.getElementById("binaryOutput").innerText=parseInt(n).toString(2);
+}
 
-URL.revokeObjectURL(url);
+function charCount(){
+let t=document.getElementById("charInput").value;
+document.getElementById("charOutput").innerText=t.length;
+}
 
+function checkPalindrome(){
+let t=document.getElementById("palInput").value;
+let r=t.split("").reverse().join("");
+document.getElementById("palOutput").innerText=
+(t==r)?"Palindrome":"Not Palindrome";
 }
