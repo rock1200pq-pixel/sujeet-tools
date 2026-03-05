@@ -1,19 +1,25 @@
-let search=document.getElementById("search");
+function passwordGen(){
 
-if(search){
+let pass=Math.random().toString(36).slice(-10);
 
-search.addEventListener("keyup",function(){
+alert("Generated Password: " + pass);
 
-let value=this.value.toLowerCase();
+}
 
-let cards=document.querySelectorAll(".tool-card");
+function textCounter(){
 
-cards.forEach(card=>{
+let text=prompt("Enter text");
 
-card.style.display=card.innerText.toLowerCase().includes(value) ? "block":"none";
+alert("Characters: " + text.length);
 
-});
+}
 
-});
+function qrGenerator(){
+
+let text=prompt("Enter text for QR");
+
+window.open(
+"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+text
+);
 
 }
