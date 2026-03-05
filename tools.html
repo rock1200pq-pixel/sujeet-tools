@@ -3,6 +3,10 @@
 <head>
 <title>Tools - Rock Tools</title>
 <link rel="stylesheet" href="style.css">
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
 </head>
 
 <body>
@@ -20,33 +24,59 @@
 </ul>
 </nav>
 
+
 <div class="hero">
 <h1>Online Tools</h1>
-<p>Use powerful file conversion tools.</p>
+<p>Convert and manage your files instantly.</p>
 </div>
+
 
 <div class="features">
 
 <div class="card">
 <h3>📄 PDF Merge</h3>
-<p>Combine multiple PDFs into one.</p>
+
+<input type="file" id="mergeFiles" multiple>
+<br><br>
+
+<button onclick="mergePDFs()">Merge PDF</button>
+
 </div>
 
+
 <div class="card">
+
 <h3>🖼 Image to PDF</h3>
-<p>Convert images to PDF instantly.</p>
+
+<input type="file" id="imageFiles" multiple>
+<br><br>
+
+<button onclick="convertImageToPDF()">Convert</button>
+
 </div>
+
 
 <div class="card">
+
 <h3>📝 PDF Text Extract</h3>
-<p>Extract text from PDF files.</p>
+
+<input type="file" id="pdfToWordFile">
+<br><br>
+
+<button onclick="convertPDFToWord()">Extract</button>
+
 </div>
 
 </div>
+
+
+<div id="result"></div>
 
 <footer>
 © 2026 Rock Tools
 </footer>
+
+<script src="script.js"></script>
 
 </body>
 </html>
