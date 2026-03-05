@@ -37,38 +37,81 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 <section class="toolsSection">
 
 <h1>All Tools</h1>
+<div class="toolCard">
 
-<div class="toolsGrid">
+<h3>Merge PDF</h3>
+
+<input type="file" id="mergeFiles" multiple>
+
+<button onclick="mergePDF()">Merge</button>
+
+</div>
+
 
 <div class="toolCard">
 
-<i class="fa-solid fa-qrcode"></i>
+<h3>Split PDF</h3>
+
+<input type="file" id="splitFile">
+
+<button onclick="splitPDF()">Split</button>
+
+</div>
+
+
+<div class="toolCard">
+
+<h3>Image Compress</h3>
+
+<input type="file" id="compressImg">
+
+<button onclick="compressImage()">Compress</button>
+
+</div>
+
+
+<div class="toolCard">
+
+<h3>Image to PDF</h3>
+
+<input type="file" id="imgPDF" multiple>
+
+<button onclick="imageToPDF()">Convert</button>
+
+</div>
+
+
+<div class="toolCard">
+
+<h3>JPG to PNG</h3>
+
+<input type="file" id="jpgFile">
+
+<button onclick="jpgToPng()">Convert</button>
+
+</div>
+
+
+<div class="toolCard">
 
 <h3>QR Generator</h3>
 
-<button onclick="qrGenerator()">Launch</button>
+<input type="text" id="qrText">
+
+<button onclick="qrGenerator()">Generate</button>
+
+<div id="qrResult"></div>
 
 </div>
 
 
 <div class="toolCard">
 
-<i class="fa-solid fa-lock"></i>
+<h3>Image Text → Excel</h3>
 
-<h3>Password Generator</h3>
+<input type="file" id="ocrImage">
 
-<button onclick="passwordGen()">Launch</button>
-
-</div>
-
-
-<div class="toolCard">
-
-<i class="fa-solid fa-font"></i>
-
-<h3>Text Counter</h3>
-
-<button onclick="textCounter()">Launch</button>
+<button onclick="extractText()">Extract</button>
 
 </div>
 
