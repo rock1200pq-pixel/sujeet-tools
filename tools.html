@@ -1,54 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Rock Tools</title>
-<link rel="stylesheet" href="style.css">
-<script defer src="script.js"></script>
-</head>
-
-<body>
-
-<nav>
-<a href="index.html" class="logo">
-<img src="logo.png">
-</a>
-
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="tools.html">Tools</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-</nav>
-
 <div class="container">
 
 <h2>📄 PDF Tools</h2>
-
 <div class="features">
 
 <div class="card">
 <h3>Merge PDF</h3>
-<input type="file" id="mergeFiles" multiple>
-<button onclick="mergePDFs()">Merge</button>
+<input type="file">
+<button>Merge</button>
 </div>
 
 <div class="card">
 <h3>Split PDF</h3>
 <input type="file">
-<button>Coming Soon</button>
+<button>Split</button>
 </div>
 
 <div class="card">
 <h3>Compress PDF</h3>
 <input type="file">
-<button>Coming Soon</button>
+<button>Compress</button>
 </div>
 
 <div class="card">
 <h3>PDF to Word</h3>
-<input type="file" id="pdfToWordFile">
-<button onclick="convertPDFToWord()">Extract Text</button>
+<input type="file">
+<button>Convert</button>
 </div>
 
 </div>
@@ -60,20 +36,20 @@
 
 <div class="card">
 <h3>Image to PDF</h3>
-<input type="file" id="imageFiles" multiple>
-<button onclick="convertImageToPDF()">Convert</button>
+<input type="file">
+<button>Convert</button>
 </div>
 
 <div class="card">
 <h3>JPG to PNG</h3>
-<input type="file" id="jpgInput">
-<button onclick="jpgToPng()">Convert</button>
+<input type="file">
+<button>Convert</button>
 </div>
 
 <div class="card">
 <h3>Resize Image</h3>
-<input type="file" id="resizeInput">
-<button onclick="resizeImage()">Resize</button>
+<input type="file">
+<button>Resize</button>
 </div>
 
 </div>
@@ -85,27 +61,21 @@
 
 <div class="card">
 <h3>QR Generator</h3>
-<input id="qrText">
-<button onclick="generateQR()">Generate</button>
-<div id="qr"></div>
+<input>
+<button>Generate</button>
 </div>
 
 <div class="card">
 <h3>Password Generator</h3>
-<button onclick="generatePassword()">Generate</button>
-<p id="password"></p>
+<button>Generate</button>
 </div>
 
 <div class="card">
 <h3>Text Counter</h3>
-<textarea id="textInput"></textarea>
-<button onclick="countText()">Count</button>
-<p id="textResult"></p>
+<textarea></textarea>
+<button>Count</button>
 </div>
 
 </div>
 
 </div>
-
-</body>
-</html>
