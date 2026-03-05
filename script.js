@@ -1,25 +1,19 @@
-function passwordGen(){
-let pass=Math.random().toString(36).slice(-10);
-alert("Generated Password: " + pass);
-}
+let search=document.getElementById("search");
 
-function textCounter(){
-let text=prompt("Enter text");
-alert("Characters: " + text.length);
-}
+if(search){
 
-function qrGenerator(){
-let text=prompt("Enter text for QR");
+search.addEventListener("keyup",function(){
 
-window.open(
-"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+text
-);
-}
+let value=this.value.toLowerCase();
 
-function mergePDF(){
-alert("PDF Merge Tool Coming Soon");
-}
+let cards=document.querySelectorAll(".tool-card");
 
-function imageToPDF(){
-alert("Image to PDF Tool Coming Soon");
+cards.forEach(card=>{
+
+card.style.display=card.innerText.toLowerCase().includes(value) ? "block":"none";
+
+});
+
+});
+
 }
