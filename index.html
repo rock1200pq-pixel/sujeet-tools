@@ -1,125 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Rock Tools</title>
 <link rel="stylesheet" href="style.css">
-<title>Rock Tools - Smart Online Utilities</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/png" href="logo.png">
-<style>
-
-/* Animated Background */
-body{
-background: linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1c92d2);
-background-size:400% 400%;
-animation: gradientBG 10s ease infinite;
-color:white;
-}
-
-@keyframes gradientBG{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* Hero */
-.hero{
-text-align:center;
-padding:100px 20px;
-}
-
-.hero h2{
-font-size:45px;
-margin-bottom:20px;
-}
-
-.hero p{
-font-size:18px;
-opacity:0.9;
-margin-bottom:35px;
-}
-
-.cta-btn{
-padding:15px 35px;
-font-size:16px;
-border:none;
-border-radius:40px;
-background:white;
-color:#203a43;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-.cta-btn:hover{
-transform:scale(1.1);
-}
-
-/* Stats Section */
-.stats{
-display:flex;
-justify-content:center;
-gap:50px;
-margin-top:70px;
-flex-wrap:wrap;
-}
-
-.stat{
-text-align:center;
-}
-
-.stat h3{
-font-size:35px;
-}
-
-.stat p{
-opacity:0.8;
-}
-
-/* Glass Cards */
-.section{
-margin-top:80px;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:25px;
-}
-
-.glass{
-background:rgba(255,255,255,0.1);
-padding:25px;
-border-radius:20px;
-backdrop-filter:blur(15px);
-box-shadow:0 8px 30px rgba(0,0,0,0.4);
-transition:0.3s;
-}
-
-.glass:hover{
-transform:translateY(-8px);
-}
-
-footer{
-text-align:center;
-padding:30px;
-margin-top:80px;
-opacity:0.7;
-}
-
-</style>
 </head>
 
 <body>
+
 <nav>
 <a href="index.html" class="logo">
-<img src="logo.png" alt="Rock Tools Logo">
+<img src="logo.png">
 </a>
 
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="tools.html">Tools</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-</nav>
 <ul>
 <li><a href="index.html">Home</a></li>
 <li><a href="tools.html">Tools</a></li>
@@ -129,65 +21,36 @@ opacity:0.7;
 </nav>
 
 <div class="hero">
-<h2>Next-Gen Online File Tools</h2>
-<p>Experience lightning fast, privacy-first PDF & Image tools — built for the modern web.</p>
+<h1>Next-Gen Online File Tools</h1>
+<p>Fast, secure and powerful tools for PDF & Images.</p>
+
 <a href="tools.html">
 <button class="cta-btn">Launch Tools 🚀</button>
 </a>
 </div>
 
-<div class="stats">
-<div class="stat">
-<h3 id="files">0</h3>
-<p>Files Processed</p>
-</div>
+<div class="features">
 
-<div class="stat">
-<h3>100%</h3>
-<p>Secure Processing</p>
-</div>
-
-<div class="stat">
-<h3>24/7</h3>
-<p>Availability</p>
-</div>
-</div>
-
-<div class="section">
-<div class="glass">
+<div class="card">
 <h3>⚡ Ultra Fast</h3>
-<p>All tools run directly inside your browser without server delay.</p>
+<p>Tools run directly in your browser.</p>
 </div>
 
-<div class="glass">
+<div class="card">
 <h3>🔒 Privacy First</h3>
-<p>Your files never leave your device. Complete security guaranteed.</p>
+<p>Your files never leave your device.</p>
 </div>
 
-<div class="glass">
-<h3>🌍 Universal Access</h3>
-<p>Works on mobile, tablet, and desktop seamlessly.</p>
+<div class="card">
+<h3>🌍 Free Access</h3>
+<p>Use tools anytime anywhere.</p>
 </div>
+
 </div>
 
 <footer>
-© 2026 Rock Tools | Built with 💎 by Rock
+© 2026 Rock Tools
 </footer>
-
-<script>
-
-/* Animated Counter */
-let count = 0;
-const counter = document.getElementById("files");
-
-setInterval(()=>{
-if(count < 50000){
-count += 250;
-counter.innerText = count + "+";
-}
-},50);
-
-</script>
 
 </body>
 </html>
