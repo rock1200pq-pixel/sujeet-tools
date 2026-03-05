@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Tools - Rock Tools</title>
+<title>Rock Tools</title>
 <link rel="stylesheet" href="style.css">
-
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
+<script defer src="script.js"></script>
 </head>
 
 <body>
@@ -24,59 +21,144 @@
 </ul>
 </nav>
 
-
 <div class="hero">
-<h1>Online Tools</h1>
-<p>Convert and manage your files instantly.</p>
+<h1>All Tools</h1>
 </div>
-
 
 <div class="features">
 
 <div class="card">
-<h3>📄 PDF Merge</h3>
-
-<input type="file" id="mergeFiles" multiple>
-<br><br>
-
-<button onclick="mergePDFs()">Merge PDF</button>
-
+<h3>Password Generator</h3>
+<button onclick="generatePassword()">Generate</button>
+<p id="password"></p>
 </div>
-
 
 <div class="card">
-
-<h3>🖼 Image to PDF</h3>
-
-<input type="file" id="imageFiles" multiple>
-<br><br>
-
-<button onclick="convertImageToPDF()">Convert</button>
-
+<h3>Text Counter</h3>
+<textarea id="textInput"></textarea>
+<button onclick="countText()">Count</button>
+<p id="textResult"></p>
 </div>
-
 
 <div class="card">
+<h3>UUID Generator</h3>
+<button onclick="generateUUID()">Generate</button>
+<p id="uuid"></p>
+</div>
 
-<h3>📝 PDF Text Extract</h3>
+<div class="card">
+<h3>Base64 Encode</h3>
+<input id="baseInput">
+<button onclick="encodeBase()">Encode</button>
+<p id="baseOutput"></p>
+</div>
 
-<input type="file" id="pdfToWordFile">
-<br><br>
+<div class="card">
+<h3>Base64 Decode</h3>
+<input id="decodeInput">
+<button onclick="decodeBase()">Decode</button>
+<p id="decodeOutput"></p>
+</div>
 
-<button onclick="convertPDFToWord()">Extract</button>
+<div class="card">
+<h3>Random Number</h3>
+<button onclick="randomNumber()">Generate</button>
+<p id="random"></p>
+</div>
 
+<div class="card">
+<h3>Timestamp</h3>
+<button onclick="getTimestamp()">Get</button>
+<p id="timestamp"></p>
+</div>
+
+<div class="card">
+<h3>Case Converter</h3>
+<input id="caseInput">
+<button onclick="upperCase()">Upper</button>
+<button onclick="lowerCase()">Lower</button>
+<p id="caseOutput"></p>
+</div>
+
+<div class="card">
+<h3>Word Reverse</h3>
+<input id="reverseInput">
+<button onclick="reverseText()">Reverse</button>
+<p id="reverseOutput"></p>
+</div>
+
+<div class="card">
+<h3>Color Generator</h3>
+<button onclick="colorGenerator()">Generate</button>
+<p id="color"></p>
+</div>
+
+<div class="card">
+<h3>QR Code</h3>
+<input id="qrText">
+<button onclick="generateQR()">Generate</button>
+<div id="qr"></div>
+</div>
+
+<div class="card">
+<h3>JSON Formatter</h3>
+<textarea id="jsonInput"></textarea>
+<button onclick="formatJSON()">Format</button>
+<pre id="jsonOutput"></pre>
+</div>
+
+<div class="card">
+<h3>Random Quote</h3>
+<button onclick="randomQuote()">Generate</button>
+<p id="quote"></p>
+</div>
+
+<div class="card">
+<h3>Current Date</h3>
+<button onclick="currentDate()">Show</button>
+<p id="date"></p>
+</div>
+
+<div class="card">
+<h3>Random Emoji</h3>
+<button onclick="randomEmoji()">Generate</button>
+<p id="emoji"></p>
+</div>
+
+<div class="card">
+<h3>IP Viewer</h3>
+<button onclick="showIP()">Get IP</button>
+<p id="ip"></p>
+</div>
+
+<div class="card">
+<h3>Dice Roller</h3>
+<button onclick="rollDice()">Roll</button>
+<p id="dice"></p>
+</div>
+
+<div class="card">
+<h3>Binary Converter</h3>
+<input id="binaryInput">
+<button onclick="toBinary()">Convert</button>
+<p id="binaryOutput"></p>
+</div>
+
+<div class="card">
+<h3>Character Counter</h3>
+<input id="charInput">
+<button onclick="charCount()">Count</button>
+<p id="charOutput"></p>
+</div>
+
+<div class="card">
+<h3>Palindrome Checker</h3>
+<input id="palInput">
+<button onclick="checkPalindrome()">Check</button>
+<p id="palOutput"></p>
 </div>
 
 </div>
-
-
-<div id="result"></div>
-
-<footer>
-© 2026 Rock Tools
-</footer>
-
-<script src="script.js"></script>
 
 </body>
 </html>
