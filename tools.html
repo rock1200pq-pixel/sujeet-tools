@@ -1,81 +1,110 @@
-<div class="container">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rock Tools</title>
 
-<h2>📄 PDF Tools</h2>
-<div class="features">
+<link rel="stylesheet" href="style.css">
+<script defer src="script.js"></script>
 
-<div class="card">
+<!-- icons -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>🪨 Rock Tools</h2>
+
+<input type="text" id="searchTool"
+placeholder="Search tool..."
+onkeyup="searchTools()">
+
+<ul id="toolList">
+
+<li>Merge PDF</li>
+<li>Split PDF</li>
+<li>Compress PDF</li>
+<li>PDF to Word</li>
+<li>PDF to JPG</li>
+
+<li>Image to PDF</li>
+<li>JPG to PNG</li>
+<li>PNG to JPG</li>
+<li>Resize Image</li>
+<li>Crop Image</li>
+
+<li>QR Generator</li>
+<li>Password Generator</li>
+<li>Text Counter</li>
+<li>UUID Generator</li>
+<li>Base64 Encode</li>
+<li>Base64 Decode</li>
+
+<li>Random Number</li>
+<li>Timestamp</li>
+<li>Case Converter</li>
+<li>Reverse Text</li>
+<li>Color Generator</li>
+
+</ul>
+
+<button onclick="toggleTheme()" class="themeBtn">
+🌙 Toggle Theme
+</button>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<h1>All Tools</h1>
+
+<div class="toolsGrid">
+
+<div class="toolCard">
+<i class="fa-solid fa-file-pdf"></i>
 <h3>Merge PDF</h3>
-<input type="file">
-<button>Merge</button>
+<button>Launch</button>
 </div>
 
-<div class="card">
-<h3>Split PDF</h3>
-<input type="file">
-<button>Split</button>
-</div>
-
-<div class="card">
-<h3>Compress PDF</h3>
-<input type="file">
-<button>Compress</button>
-</div>
-
-<div class="card">
-<h3>PDF to Word</h3>
-<input type="file">
-<button>Convert</button>
-</div>
-
-</div>
-
-
-<h2>🖼 Image Tools</h2>
-
-<div class="features">
-
-<div class="card">
+<div class="toolCard">
+<i class="fa-solid fa-file-image"></i>
 <h3>Image to PDF</h3>
-<input type="file">
-<button>Convert</button>
+<button>Launch</button>
 </div>
 
-<div class="card">
-<h3>JPG to PNG</h3>
-<input type="file">
-<button>Convert</button>
-</div>
-
-<div class="card">
-<h3>Resize Image</h3>
-<input type="file">
-<button>Resize</button>
-</div>
-
-</div>
-
-
-<h2>⚙ Utility Tools</h2>
-
-<div class="features">
-
-<div class="card">
+<div class="toolCard">
+<i class="fa-solid fa-qrcode"></i>
 <h3>QR Generator</h3>
-<input>
-<button>Generate</button>
+<button>Launch</button>
 </div>
 
-<div class="card">
+<div class="toolCard">
+<i class="fa-solid fa-lock"></i>
 <h3>Password Generator</h3>
-<button>Generate</button>
+<button>Launch</button>
 </div>
 
-<div class="card">
+<div class="toolCard">
+<i class="fa-solid fa-font"></i>
 <h3>Text Counter</h3>
-<textarea></textarea>
-<button>Count</button>
+<button>Launch</button>
 </div>
 
 </div>
 
 </div>
+
+</div>
+
+</body>
+</html>
