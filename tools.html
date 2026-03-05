@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<meta charset="UTF-8">
-<title>Rock Tools</title>
+<title>Tools</title>
 
 <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="script.js" defer></script>
+<script src="script.js"></script>
 
 </head>
 
@@ -25,100 +22,95 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 <ul>
 
 <li><a href="index.html">Home</a></li>
+
 <li><a href="tools.html">Tools</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
+
+<li><a href="#">About</a></li>
+
+<li><a href="#">Contact</a></li>
 
 </ul>
 
 </nav>
 
+<h1 class="title">All Tools</h1>
 
-<section class="toolsSection">
+<div class="toolsGrid">
 
-<h1>All Tools</h1>
 <div class="toolCard">
 
 <h3>Merge PDF</h3>
 
-<input type="file" id="mergeFiles" multiple>
+<input type="file" multiple id="merge">
 
 <button onclick="mergePDF()">Merge</button>
 
 </div>
 
-
 <div class="toolCard">
 
 <h3>Split PDF</h3>
 
-<input type="file" id="splitFile">
+<input type="file" id="split">
 
 <button onclick="splitPDF()">Split</button>
 
 </div>
 
-
 <div class="toolCard">
 
 <h3>Image Compress</h3>
 
-<input type="file" id="compressImg">
+<input type="file" id="compress">
 
 <button onclick="compressImage()">Compress</button>
 
 </div>
 
-
 <div class="toolCard">
 
 <h3>Image to PDF</h3>
 
-<input type="file" id="imgPDF" multiple>
+<input type="file" multiple id="imgpdf">
 
 <button onclick="imageToPDF()">Convert</button>
 
 </div>
 
-
 <div class="toolCard">
 
 <h3>JPG to PNG</h3>
 
-<input type="file" id="jpgFile">
+<input type="file" id="jpg">
 
-<button onclick="jpgToPng()">Convert</button>
+<button onclick="jpgToPNG()">Convert</button>
 
 </div>
-
 
 <div class="toolCard">
 
 <h3>QR Generator</h3>
 
-<input type="text" id="qrText">
+<input type="text" id="qrtext">
 
-<button onclick="qrGenerator()">Generate</button>
+<button onclick="generateQR()">Generate</button>
 
-<div id="qrResult"></div>
+<div id="qr"></div>
 
 </div>
-
 
 <div class="toolCard">
 
 <h3>Image Text → Excel</h3>
 
-<input type="file" id="ocrImage">
+<input type="file" id="ocr">
 
 <button onclick="extractText()">Extract</button>
 
 </div>
 
-
 </div>
 
-</section>
-
 </body>
+
 </html>
