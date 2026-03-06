@@ -201,18 +201,21 @@ font-size:18px;
 opacity:0.8;
 margin-bottom:25px;
 }
-
 .cta-btn{
 background:linear-gradient(45deg,#00c6ff,#0072ff);
 border:none;
-padding:14px 28px;
-border-radius:25px;
+padding:18px 40px;
+border-radius:35px;
 color:white;
-font-size:16px;
+font-size:18px;
+font-weight:600;
 cursor:pointer;
 transition:0.3s;
+box-shadow:0 6px 20px rgba(0,198,255,0.5);
 }
 
 .cta-btn:hover{
 transform:scale(1.08);
-  }
+box-shadow:0 10px 30px rgba(0,198,255,0.7);
+}
+
