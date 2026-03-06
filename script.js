@@ -43,3 +43,20 @@ function extractText(){
 alert("OCR Tool connected");
 
 }
+function rollDice(){
+
+let dice=document.getElementById("dice");
+
+let result=document.getElementById("dice-result");
+
+let number=Math.floor(Math.random()*6)+1;
+
+dice.style.transform="rotate(360deg)";
+
+setTimeout(()=>{
+
+result.innerText="You rolled: "+number;
+
+},300);
+
+}
