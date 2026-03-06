@@ -217,3 +217,36 @@ box-shadow:0 6px 20px rgba(0,198,255,0.5);
 transform:scale(1.1);
 box-shadow:0 10px 30px rgba(0,198,255,0.7);
 }
+.dice-section{
+text-align:center;
+margin:80px auto;
+}
+
+.dice-box{
+background:rgba(255,255,255,0.08);
+padding:40px;
+border-radius:15px;
+width:300px;
+margin:auto;
+backdrop-filter:blur(10px);
+}
+
+#dice{
+font-size:80px;
+margin:20px 0;
+transition:transform 0.5s;
+}
+
+.dice-box button{
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.dice-box button:hover{
+transform:scale(1.1);
+ }
