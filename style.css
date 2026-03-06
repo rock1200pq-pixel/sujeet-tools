@@ -1,177 +1,119 @@
 body{
-
 margin:0;
-
-font-family:Arial;
-
+font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-
 color:white;
-
 }
+
+/* NAVBAR */
 
 nav{
-
 display:flex;
-
 justify-content:space-between;
-
 align-items:center;
-
 padding:15px 40px;
-
 }
+
+/* LOGO */
+
+.logo img{
+height:90px;
+width:auto;
+}
+
+/* MENU */
 
 nav ul{
-
 display:flex;
-
 gap:30px;
-
 list-style:none;
-
 }
-
-nav a{
-
-color:white;
-
-text-decoration:none;
-
-}
-.logo img{
-height:110px;
-width:auto;
-}
-
-.hero{
-
-text-align:center;
-
-margin-top:150px;
-
-}
-
-.btn{
-
-padding:12px 30px;
-
-background:#00c6ff;
-
-border:none;
-
-border-radius:30px;
-
-color:white;
-
-cursor:pointer;
-
-}
-
-.title{
-
-text-align:center;
-
-margin-top:40px;
-
-}
-
-.toolsGrid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-
-gap:30px;
-
-padding:40px;
-
-}
-
-.toolCard{
-
-background:rgba(255,255,255,0.1);
-
-padding:25px;
-
-border-radius:15px;
-
-text-align:center;
-
-}
-
-.toolCard button{
-
-background:#00c6ff;
-
-border:none;
-
-padding:10px 20px;
-
-border-radius:20px;
-
-color:white;
-
-cursor:pointer;
-
-margin-top:10px;
-
-}
-
-.toolCard:hover{
-
-transform:scale(1.05);
-
-transition:0.3s;
-
-}
-/* LOGO SIZE */
-
-.logo img{
-height:80px;
-width:auto;
-}
-
-
-/* NAVBAR FONT */
 
 nav ul li a{
-font-size:18px;
+color:white;
+text-decoration:none;
+font-size:20px;
 font-weight:600;
 }
 
+/* HERO */
 
-/* HERO TEXT */
+.hero{
+text-align:center;
+margin-top:180px;
+}
 
 .hero h1{
-font-size:42px;
+font-size:50px;
 font-weight:bold;
 }
 
 .hero p{
-font-size:18px;
+font-size:20px;
+margin-top:10px;
 }
 
+/* BUTTON */
 
-/* TOOLS TITLE */
+.btn{
+padding:14px 35px;
+background:#00c6ff;
+border:none;
+border-radius:30px;
+color:white;
+font-size:18px;
+cursor:pointer;
+margin-top:20px;
+}
+
+/* TITLE */
 
 .title{
-font-size:36px;
-font-weight:bold;
+font-size:40px;
+text-align:center;
+margin-top:40px;
 }
 
+/* TOOLS GRID */
 
-/* TOOL CARD TEXT */
+.toolsGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:30px;
+padding:40px;
+}
+
+/* TOOL CARD */
+
+.toolCard{
+background:rgba(255,255,255,0.1);
+padding:25px;
+border-radius:15px;
+text-align:center;
+backdrop-filter:blur(10px);
+}
 
 .toolCard h3{
-font-size:20px;
+font-size:22px;
 margin-bottom:10px;
 }
 
-
-/* BUTTON SIZE */
+/* BUTTON */
 
 .toolCard button{
+background:#00c6ff;
+border:none;
+padding:12px 25px;
+border-radius:20px;
+color:white;
+cursor:pointer;
 font-size:16px;
-padding:10px 22px;
+margin-top:10px;
+}
+
+/* HOVER */
+
+.toolCard:hover{
+transform:scale(1.05);
+transition:0.3s;
 }
