@@ -125,7 +125,53 @@ transform:scale(1.05);
 transition:0.3s;
 
 }
+/* LOGO SIZE */
+
+.logo img{
+height:80px;
+width:auto;
+}
+
+
+/* NAVBAR FONT */
+
 nav ul li a{
 font-size:18px;
 font-weight:600;
+}
+
+
+/* HERO TEXT */
+
+.hero h1{
+font-size:42px;
+font-weight:bold;
+}
+
+.hero p{
+font-size:18px;
+}
+
+
+/* TOOLS TITLE */
+
+.title{
+font-size:36px;
+font-weight:bold;
+}
+
+
+/* TOOL CARD TEXT */
+
+.toolCard h3{
+font-size:20px;
+margin-bottom:10px;
+}
+
+
+/* BUTTON SIZE */
+
+.toolCard button{
+font-size:16px;
+padding:10px 22px;
 }
