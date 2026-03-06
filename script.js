@@ -51,6 +51,10 @@ let result=document.getElementById("dice-result");
 
 let number=Math.floor(Math.random()*6)+1;
 
+let faces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+
+dice.innerHTML=faces[number-1];
+
 dice.style.transform="rotate(360deg)";
 
 setTimeout(()=>{
