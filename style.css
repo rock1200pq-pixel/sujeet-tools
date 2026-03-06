@@ -189,3 +189,35 @@ cursor:pointer;
 transform:scale(1.05);
 background:#00c6ff;
 }
+.hero{
+text-align:center;
+max-width:900px;
+margin:auto;
+padding:120px 20px;
+}
+
+.hero h1{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+opacity:0.8;
+margin-bottom:25px;
+}
+
+.cta-btn{
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+border:none;
+padding:14px 28px;
+border-radius:25px;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.cta-btn:hover{
+transform:scale(1.08);
+  }
