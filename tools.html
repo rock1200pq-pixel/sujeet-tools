@@ -108,7 +108,56 @@
 <button onclick="extractText()">Extract</button>
 
 </div>
+<div class="toolCard">
 
+<h3>PDF to JPG</h3>
+<input type="file" id="pdfToJpgFile">
+<button onclick="pdfToJpg()">Convert</button>
+
+</div>
+
+<div class="toolCard">
+
+<h3>PNG to JPG</h3>
+<input type="file" id="pngFile">
+<button onclick="pngToJpg()">Convert</button>
+
+</div>
+
+<div class="toolCard">
+
+<h3>Resize Image</h3>
+<input type="file" id="resizeImage">
+<input type="number" id="resizeWidth" placeholder="Width">
+<input type="number" id="resizeHeight" placeholder="Height">
+<button onclick="resizeImage()">Resize</button>
+
+</div>
+
+<div class="toolCard">
+
+<h3>Password Generator</h3>
+<button onclick="generatePassword()">Generate</button>
+<p id="passwordResult"></p>
+
+</div>
+
+<div class="toolCard">
+
+<h3>Text Counter</h3>
+<textarea id="textInput"></textarea>
+<button onclick="countText()">Count</button>
+<p id="textResult"></p>
+
+</div>
+
+<div class="toolCard">
+
+<h3>Random Number</h3>
+<button onclick="randomNumber()">Generate</button>
+<p id="randomResult"></p>
+
+</div>
 </div>
 
 </body>
