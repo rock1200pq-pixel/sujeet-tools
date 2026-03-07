@@ -110,21 +110,3 @@ document.getElementById("passwordResult").innerText=password;
 
 }
 
-function countText(){
-
-let text=document.getElementById("textInput").value;
-
-let words=text.trim().split(/\s+/).length;
-let chars=text.length;
-
-document.getElementById("textResult").innerText="Words: "+words+" | Characters: "+chars;
-
-}
-
-function randomNumber(){
-
-let num=Math.floor(Math.random()*1000);
-
-document.getElementById("randomResult").innerText=num;
-
-}
