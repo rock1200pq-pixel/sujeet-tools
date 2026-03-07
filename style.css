@@ -217,3 +217,50 @@ box-shadow:0 6px 20px rgba(0,198,255,0.5);
 transform:scale(1.1);
 box-shadow:0 10px 30px rgba(0,198,255,0.7);
 }
+.howWorks{
+text-align:center;
+margin:80px auto;
+max-width:1000px;
+}
+
+.steps{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+margin-top:30px;
+}
+
+.step{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:12px;
+width:260px;
+transition:0.3s;
+}
+
+.step:hover{
+transform:translateY(-6px);
+}
+
+.statsSection{
+display:flex;
+justify-content:center;
+gap:40px;
+flex-wrap:wrap;
+margin:80px auto;
+max-width:900px;
+}
+
+.statBox{
+background:rgba(255,255,255,0.08);
+padding:25px 35px;
+border-radius:10px;
+text-align:center;
+}
+
+.statBox h3{
+font-size:32px;
+color:#00c6ff;
+margin-bottom:5px;
+}
