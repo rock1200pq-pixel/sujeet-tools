@@ -110,3 +110,36 @@ document.getElementById("passwordResult").innerText=password;
 
 }
 
+async function tableToExcel(){
+
+let file=document.getElementById("tableImage").files[0];
+
+if(!file){
+alert("Upload image first");
+return;
+}
+
+document.getElementById("tableResult").innerText="Processing...";
+
+const { data:{ text } } = await Tesseract.recognize(file,"eng");
+
+let rows=text.split("\n");
+
+let csv="";
+
+rows.forEach(row=>{
+let cols=row.trim().split(/\s+/);
+csv+=cols.join(",")+"\n";
+});
+
+let blob=new Blob([csv],{type:"text/csv"});
+let link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="table.csv";
+
+link.click();
+
+document.getElementById("tableResult").innerText="Excel downloaded";
+
+}
