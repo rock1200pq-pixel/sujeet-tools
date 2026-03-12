@@ -1,160 +1,132 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online tools — PDF merge, split, image compress, QR generator, OCR and more. Runs 100% in your browser.">
+  <!-- FIX: Descriptive title -->
+  <title>All Tools | Sujeet Tools – Free PDF & Image Utilities</title>
+  <link rel="stylesheet" href="style.css">
 
-<title>Tools</title>
-
-<link rel="stylesheet" href="style.css">
-
-<script src="script.js"></script>
-
+  <!-- FIX: script.js yahan se HATA diya (double load tha) -->
+  <!-- FIX: Tesseract ko script.js se PEHLE load karo (race condition fix) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 </head>
-
 <body>
 
-<nav>
+  <nav>
+    <div class="logo">
+      <!-- FIX: alt text add kiya -->
+      <img src="logo.png" alt="Sujeet Tools Logo">
+    </div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <!-- FIX: About aur Contact ke real pages -->
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
-<div class="logo">
-<img src="logo.png">
-</div>
+  <h1 class="title">All Tools</h1>
 
-<ul>
+  <div class="toolsGrid">
 
-<li><a href="index.html">Home</a></li>
+    <!-- Merge PDF — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>Merge PDF <span class="badge">Coming Soon</span></h3>
+      <input type="file" multiple id="merge" accept=".pdf">
+      <button onclick="mergePDF()" disabled>Merge</button>
+    </div>
 
-<li><a href="tools.html">Tools</a></li>
+    <!-- Split PDF — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>Split PDF <span class="badge">Coming Soon</span></h3>
+      <input type="file" id="split" accept=".pdf">
+      <button onclick="splitPDF()" disabled>Split</button>
+    </div>
 
-<li><a href="#">About</a></li>
+    <!-- Image Compress — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>Image Compress <span class="badge">Coming Soon</span></h3>
+      <input type="file" id="compress" accept="image/*">
+      <button onclick="compressImage()" disabled>Compress</button>
+    </div>
 
-<li><a href="#">Contact</a></li>
+    <!-- Image to PDF — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>Image to PDF <span class="badge">Coming Soon</span></h3>
+      <input type="file" multiple id="imgpdf" accept="image/*">
+      <button onclick="imageToPDF()" disabled>Convert</button>
+    </div>
 
-</ul>
+    <!-- JPG to PNG — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>JPG to PNG <span class="badge">Coming Soon</span></h3>
+      <input type="file" id="jpg" accept=".jpg,.jpeg">
+      <button onclick="jpgToPNG()" disabled>Convert</button>
+    </div>
 
-</nav>
+    <!-- QR Generator — WORKING -->
+    <div class="toolCard">
+      <h3>QR Generator</h3>
+      <input type="text" id="qrtext" placeholder="Enter text or URL...">
+      <button onclick="generateQR()">Generate</button>
+      <div id="qr"></div>
+    </div>
 
-<h1 class="title">All Tools</h1>
+    <!-- Image Text → Excel — WORKING (extractText fixed) -->
+    <div class="toolCard">
+      <h3>Image Text → Excel</h3>
+      <input type="file" id="ocr" accept="image/*">
+      <button onclick="extractText()">Extract</button>
+      <p id="ocrResult"></p>
+    </div>
 
-<div class="toolsGrid">
+    <!-- PDF to JPG — Coming Soon badge -->
+    <div class="toolCard">
+      <h3>PDF to JPG <span class="badge">Coming Soon</span></h3>
+      <input type="file" id="pdfToJpgFile" accept=".pdf">
+      <button onclick="pdfToJpg()" disabled>Convert</button>
+    </div>
 
-<div class="toolCard">
+    <!-- PNG to JPG — WORKING -->
+    <div class="toolCard">
+      <h3>PNG to JPG</h3>
+      <input type="file" id="pngFile" accept=".png">
+      <button onclick="pngToJpg()">Convert</button>
+    </div>
 
-<h3>Merge PDF</h3>
+    <!-- Resize Image — WORKING (id clash fix) -->
+    <div class="toolCard">
+      <h3>Resize Image</h3>
+      <!-- FIX: id "resizeImage" → "resizeInput" (function naam clash tha) -->
+      <input type="file" id="resizeInput" accept="image/*">
+      <input type="number" id="resizeWidth" placeholder="Width (px)">
+      <input type="number" id="resizeHeight" placeholder="Height (px)">
+      <!-- FIX: onclick bhi update kiya -->
+      <button onclick="resizeImageFn()">Resize</button>
+    </div>
 
-<input type="file" multiple id="merge">
+    <!-- Password Generator — WORKING -->
+    <div class="toolCard">
+      <h3>Password Generator</h3>
+      <button onclick="generatePassword()">Generate</button>
+      <p id="passwordResult"></p>
+    </div>
 
-<button onclick="mergePDF()">Merge</button>
+    <!-- Image Table → Excel — WORKING -->
+    <div class="toolCard">
+      <h3>Image Table → Excel</h3>
+      <input type="file" id="tableImage" accept="image/*">
+      <button onclick="tableToExcel()">Convert</button>
+      <p id="tableResult"></p>
+    </div>
 
-</div>
+  </div>
 
-<div class="toolCard">
+  <!-- FIX: script.js sirf ek baar, body ke end mein, Tesseract ke BAAD -->
+  <script src="script.js"></script>
 
-<h3>Split PDF</h3>
-
-<input type="file" id="split">
-
-<button onclick="splitPDF()">Split</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>Image Compress</h3>
-
-<input type="file" id="compress">
-
-<button onclick="compressImage()">Compress</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>Image to PDF</h3>
-
-<input type="file" multiple id="imgpdf">
-
-<button onclick="imageToPDF()">Convert</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>JPG to PNG</h3>
-
-<input type="file" id="jpg">
-
-<button onclick="jpgToPNG()">Convert</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>QR Generator</h3>
-
-<input type="text" id="qrtext">
-
-<button onclick="generateQR()">Generate</button>
-
-<div id="qr"></div>
-
-</div>
-
-<div class="toolCard">
-
-<h3>Image Text → Excel</h3>
-
-<input type="file" id="ocr">
-
-<button onclick="extractText()">Extract</button>
-
-</div>
-<div class="toolCard">
-
-<h3>PDF to JPG</h3>
-<input type="file" id="pdfToJpgFile">
-<button onclick="pdfToJpg()">Convert</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>PNG to JPG</h3>
-<input type="file" id="pngFile">
-<button onclick="pngToJpg()">Convert</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>Resize Image</h3>
-<input type="file" id="resizeImage">
-<input type="number" id="resizeWidth" placeholder="Width">
-<input type="number" id="resizeHeight" placeholder="Height">
-<button onclick="resizeImage()">Resize</button>
-
-</div>
-
-<div class="toolCard">
-
-<h3>Password Generator</h3>
-<button onclick="generatePassword()">Generate</button>
-<p id="passwordResult"></p>
-
-</div>
-<div class="toolCard">
-
-<h3>Image Table → Excel</h3>
-
-<input type="file" id="tableImage">
-
-<button onclick="tableToExcel()">Convert</button>
-
-<p id="tableResult"></p>
-
-</div>
-</div>
-<script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 </body>
-
 </html>
