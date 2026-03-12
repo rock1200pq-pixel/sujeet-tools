@@ -1,14 +1,4 @@
-/* ============================================================
-   SUJEET TOOLS — style.css (Fixed Version)
-   Fix: .hero styles duplicate tha — ek hi clean definition rakhi
-   Fix: .btn class update kiya (ab <a> tag ko style karta hai)
-   Fix: .badge class add kiya "Coming Soon" ke liye
-   ============================================================ */
-
-/* ── BASE ── */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -26,92 +16,38 @@ nav {
   padding: 10px 40px;
   height: 90px;
 }
+.logo img { height: 90px; }
+nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+nav ul li a { color: white; text-decoration: none; font-size: 20px; font-weight: 600; transition: opacity 0.2s; }
+nav ul li a:hover { opacity: 0.75; }
 
-.logo img {
-  height: 90px;
-}
+/* ── HERO ── */
+.hero { text-align: center; max-width: 900px; margin: auto; padding: 80px 20px 40px; }
+.hero h1 { font-size: 48px; margin-bottom: 12px; }
+.hero p { font-size: 20px; opacity: 0.85; margin-bottom: 28px; }
 
-nav ul {
-  display: flex;
-  gap: 30px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: 600;
-  transition: opacity 0.2s;
-}
-
-nav ul li a:hover {
-  opacity: 0.75;
-}
-
-/* ── HERO ──
-   FIX: Duplicate .hero blocks hataye — sirf ek clean definition
-*/
-.hero {
-  text-align: center;
-  max-width: 900px;
-  margin: auto;
-  padding: 80px 20px 40px;
-}
-
-.hero h1 {
-  font-size: 48px;
-  margin-bottom: 12px;
-  line-height: 1.2;
-}
-
-.hero p {
-  font-size: 20px;
-  opacity: 0.85;
-  margin-bottom: 28px;
-}
-
-/* ── BUTTONS ──
-   FIX: .btn ab <a> tag pe bhi kaam karta hai (inline-block)
-*/
-.btn,
-.cta-btn {
+/* ── CTA BUTTON ── */
+.btn, .cta-btn {
   display: inline-block;
   padding: 16px 40px;
   background: linear-gradient(45deg, #00c6ff, #0072ff);
-  border: none;
-  border-radius: 40px;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
+  border: none; border-radius: 40px;
+  color: white; font-size: 20px; font-weight: 700;
+  cursor: pointer; text-decoration: none;
   transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0,198,255,0.4);
   margin-top: 10px;
 }
+.btn:hover, .cta-btn:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(0,198,255,0.65); }
 
-.btn:hover,
-.cta-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 10px 30px rgba(0, 198, 255, 0.65);
-}
-
-/* ── TOOLS PAGE TITLE ── */
-.title {
-  text-align: center;
-  font-size: 40px;
-  margin-top: 40px;
-  margin-bottom: 0;
-}
+/* ── TOOLS TITLE ── */
+.title { text-align: center; font-size: 40px; margin-top: 40px; margin-bottom: 0; }
 
 /* ── TOOLS GRID ── */
 .toolsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
   padding: 40px;
   max-width: 1200px;
   margin: auto;
@@ -119,106 +55,118 @@ nav ul li a:hover {
 
 /* ── TOOL CARD ── */
 .toolCard {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 25px;
-  border-radius: 15px;
+  background: rgba(255,255,255,0.1);
+  padding: 24px 20px;
+  border-radius: 16px;
   text-align: center;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
 }
+.toolCard:hover { transform: scale(1.03); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
 
-.toolCard:hover {
-  transform: scale(1.04);
+.toolCard h3 { font-size: 19px; margin: 0 0 4px; text-align: center; }
+
+/* ── FILE LABEL (custom file button) ── */
+.fileLabel {
+  display: block;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px dashed rgba(255,255,255,0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+.fileLabel:hover { border-color: #00c6ff; background: rgba(0,198,255,0.1); color: #fff; }
+.fileLabel input[type="file"] { display: none; }
 
-.toolCard h3 {
-  font-size: 20px;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.toolCard input[type="file"],
+/* ── TEXT / NUMBER INPUTS ── */
 .toolCard input[type="text"],
 .toolCard input[type="number"] {
   width: 100%;
-  padding: 8px 10px;
+  padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.08);
   color: white;
   font-size: 14px;
 }
+.toolCard input::placeholder { color: rgba(255,255,255,0.4); }
+.toolCard input[type="number"]::-webkit-inner-spin-button { opacity: 0.5; }
 
-.toolCard input::placeholder {
-  color: rgba(255,255,255,0.45);
+/* ── INPUT ROW (side by side) ── */
+.inputRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
+.inputRow input[type="number"] { flex: 1; }
 
+/* ── CHECKBOXES ROW ── */
+.checkRow {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.checkRow label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+/* ── BUTTONS ── */
 .toolCard button {
-  background: #00c6ff;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
   border: none;
-  padding: 12px 28px;
-  border-radius: 20px;
+  padding: 12px 20px;
+  border-radius: 10px;
   color: white;
   cursor: pointer;
   font-size: 15px;
   font-weight: 600;
-  transition: background 0.2s, transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
 }
-
 .toolCard button:hover:not(:disabled) {
-  background: #0099ff;
   transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,198,255,0.5);
 }
+.toolCard button:disabled { background: rgba(255,255,255,0.15); cursor: not-allowed; opacity: 0.5; }
 
-.toolCard button:disabled {
-  background: rgba(255,255,255,0.15);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.toolCard p {
-  margin: 4px 0 0;
-  font-size: 14px;
-  word-break: break-all;
+/* ── RESULT TEXT ── */
+.result {
+  margin: 2px 0 0;
+  font-size: 13px;
   min-height: 18px;
+  word-break: break-all;
+  color: #4ade80;
 }
 
-/* ── COMING SOON BADGE ── */
-.badge {
-  font-size: 10px;
-  font-weight: 700;
-  background: rgba(255, 165, 0, 0.25);
-  color: #ffb347;
-  border: 1px solid #ffb34770;
-  border-radius: 20px;
-  padding: 2px 8px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
+/* ── HINT TEXT ── */
+.hint { margin: 0; font-size: 12px; opacity: 0.5; }
 
-/* ── FEATURES SECTION ── */
+/* ── QR image ── */
+#qr img { border-radius: 10px; }
+
+/* ── FEATURES ── */
 .features {
   display: flex;
   justify-content: center;
-  align-items: stretch;
   gap: 20px;
   margin: 40px auto;
   flex-wrap: wrap;
   max-width: 1100px;
   padding: 0 20px;
 }
-
 .featureBox {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
   padding: 28px;
   border-radius: 14px;
   width: 300px;
@@ -226,131 +174,44 @@ nav ul li a:hover {
   backdrop-filter: blur(10px);
   transition: transform 0.3s, background 0.3s;
 }
+.featureBox:hover { transform: translateY(-8px); background: rgba(255,255,255,0.15); }
+.featureBox h2 { font-size: 22px; margin-bottom: 10px; }
 
-.featureBox:hover {
-  transform: translateY(-8px);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.featureBox h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-/* ── POPULAR TOOLS SECTION ── */
-.previewTools {
-  margin: 50px auto;
-  text-align: center;
-  max-width: 1100px;
-  padding: 0 20px;
-}
-
-.previewTools h2 {
-  font-size: 32px;
-  margin-bottom: 28px;
-}
-
-.previewGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
-}
-
+/* ── POPULAR TOOLS ── */
+.previewTools { margin: 50px auto; text-align: center; max-width: 1100px; padding: 0 20px; }
+.previewTools h2 { font-size: 32px; margin-bottom: 28px; }
+.previewGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; }
 .previewCard {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
   padding: 20px;
   border-radius: 12px;
   font-size: 17px;
   transition: transform 0.3s, background 0.3s;
   cursor: pointer;
 }
-
-.previewCard:hover {
-  transform: scale(1.06);
-  background: #00c6ff;
-}
+.previewCard:hover { transform: scale(1.06); background: #00c6ff; }
 
 /* ── HOW IT WORKS ── */
-.howWorks {
-  text-align: center;
-  margin: 70px auto;
-  max-width: 1000px;
-  padding: 0 20px;
-}
+.howWorks { text-align: center; margin: 70px auto; max-width: 1000px; padding: 0 20px; }
+.howWorks h2 { font-size: 32px; margin-bottom: 30px; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.step { background: rgba(255,255,255,0.08); padding: 28px; border-radius: 14px; text-align: center; transition: transform 0.3s; }
+.step:hover { transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
 
-.howWorks h2 {
-  font-size: 32px;
-  margin-bottom: 30px;
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-}
-
-.step {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 28px;
-  border-radius: 14px;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.step:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-
-/* ── STATS SECTION ── */
+/* ── STATS ── */
 .statsSection {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  margin: 70px auto;
-  max-width: 900px;
-  padding: 0 20px 60px;
+  display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;
+  margin: 70px auto; max-width: 900px; padding: 0 20px 60px;
 }
-
-.statBox {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 30px 25px;
-  border-radius: 14px;
-  text-align: center;
-  width: 180px;
-  transition: transform 0.3s;
-}
-
-.statBox:hover {
-  transform: translateY(-6px);
-}
-
-.statBox h3 {
-  font-size: 32px;
-  margin: 0 0 6px;
-  color: #00c6ff;
-}
+.statBox { background: rgba(255,255,255,0.08); padding: 30px 25px; border-radius: 14px; text-align: center; width: 180px; transition: transform 0.3s; }
+.statBox:hover { transform: translateY(-6px); }
+.statBox h3 { font-size: 32px; margin: 0 0 6px; color: #00c6ff; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
-  nav {
-    padding: 10px 20px;
-    height: auto;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  nav ul {
-    gap: 16px;
-  }
-
-  .hero h1 {
-    font-size: 30px;
-  }
-
-  .toolsGrid {
-    padding: 20px;
-    gap: 18px;
-  }
+  nav { padding: 10px 20px; height: auto; flex-direction: column; gap: 12px; }
+  nav ul { gap: 14px; }
+  .hero h1 { font-size: 30px; }
+  .toolsGrid { padding: 20px; gap: 18px; }
+  .title { font-size: 28px; }
 }
