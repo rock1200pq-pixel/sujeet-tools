@@ -1,43 +1,295 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Rock Tools — report a bug, suggest a tool, or just say hello.">
+  <title>Contact | Rock Tools</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-hero { position:relative; z-index:1; text-align:center; padding:100px 24px 60px; }
+    .page-hero .section-title { font-size: clamp(28px,5vw,52px); }
+    .page-hero .section-sub { margin:16px auto 0; }
 
-<meta charset="UTF-8">
-<title>Contact - Rock Tools</title>
+    .contact-section { position:relative; z-index:1; max-width:1100px; margin:auto; padding:60px 50px 100px; }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:48px; align-items:start; }
 
-<link rel="stylesheet" href="style.css">
+    /* Info column */
+    .contact-info { display:flex; flex-direction:column; gap:20px; }
+    .info-card { display:flex; gap:18px; align-items:flex-start; }
+    .info-icon {
+      width:48px; height:48px; flex-shrink:0; border-radius:14px;
+      background:linear-gradient(135deg,rgba(0,198,255,0.15),rgba(0,114,255,0.15));
+      border:1px solid rgba(0,198,255,0.2);
+      display:flex; align-items:center; justify-content:center; font-size:22px;
+    }
+    .info-label { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:4px; font-weight:700; }
+    .info-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+    .info-desc { font-size:13px; color:var(--muted); line-height:1.6; }
 
+    /* Form */
+    .contact-form-card { position:relative; }
+    .form-group { margin-bottom:20px; }
+    .form-label { display:block; font-size:13px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+    .form-input, .form-textarea, .form-select {
+      width:100%; padding:13px 16px;
+      background:rgba(255,255,255,0.04); border:1px solid var(--border);
+      border-radius:12px; color:var(--text);
+      font-family:'Exo 2',sans-serif; font-size:15px;
+      transition:border-color 0.2s, box-shadow 0.2s; outline:none;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,198,255,0.1);
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color:var(--muted); }
+    .form-textarea { height:140px; resize:vertical; }
+    .form-select option { background:#0a1628; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+    .submit-btn {
+      width:100%; padding:16px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      border:none; border-radius:12px; color:#fff;
+      font-family:'Exo 2',sans-serif; font-size:16px; font-weight:700;
+      cursor:pointer; letter-spacing:1px;
+      transition:transform 0.2s, box-shadow 0.2s;
+    }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,198,255,0.45); }
+
+    .form-success {
+      display:none; text-align:center; padding:30px;
+      background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.3);
+      border-radius:14px; margin-top:16px;
+    }
+    .form-success .tick { font-size:40px; margin-bottom:10px; }
+    .form-success h3 { font-size:18px; font-weight:700; color:#4ade80; margin-bottom:8px; }
+    .form-success p { font-size:14px; color:var(--muted); }
+
+    /* FAQ */
+    .faq-section { position:relative; z-index:1; max-width:800px; margin:0 auto; padding:0 50px 100px; }
+    .faq-section .section-title,.faq-section .section-label { text-align:center; }
+    .faq-section .section-sub { text-align:center; margin:0 auto 40px; }
+    .faq-item { border:1px solid var(--border); border-radius:14px; margin-bottom:12px; overflow:hidden; }
+    .faq-q {
+      width:100%; padding:18px 22px; background:transparent; border:none;
+      color:var(--text); font-family:'Exo 2',sans-serif; font-size:15px; font-weight:600;
+      cursor:pointer; text-align:left; display:flex; justify-content:space-between; align-items:center;
+      transition:background 0.2s;
+    }
+    .faq-q:hover { background:rgba(255,255,255,0.04); }
+    .faq-arrow { color:var(--accent); font-size:18px; transition:transform 0.3s; }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s; }
+    .faq-a.open { max-height:200px; }
+    .faq-a p { padding:0 22px 18px; font-size:14px; color:var(--muted); line-height:1.75; }
+
+    @media(max-width:768px) {
+      .contact-grid { grid-template-columns:1fr; }
+      .form-row { grid-template-columns:1fr; }
+      .contact-section,.faq-section { padding:40px 20px 60px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<nav>
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Rock Tools Logo">
+      <span class="logo-text">ROCK TOOLS</span>
+    </a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
 
-<div class="logo">
-<img src="logo.png">
-</div>
+  <div class="page-hero">
+    <div class="section-label fadeUp">Get In Touch</div>
+    <h1 class="section-title fadeUp d1">Contact Us</h1>
+    <p class="section-sub fadeUp d2">Got a question, a bug to report, or a tool idea? We'd love to hear from you.</p>
+  </div>
 
-<ul>
+  <div class="contact-section">
+    <div class="contact-grid">
 
-<li><a href="index.html">Home</a></li>
-<li><a href="tools.html">Tools</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
+      <!-- Info -->
+      <div class="contact-info fadeUp d1">
+        <div class="glass-card info-card">
+          <div class="info-icon">🐛</div>
+          <div>
+            <div class="info-label">Bug Report</div>
+            <div class="info-title">Found something broken?</div>
+            <div class="info-desc">Tell us which tool, what you were trying to do, and what happened. We fix bugs fast.</div>
+          </div>
+        </div>
+        <div class="glass-card info-card">
+          <div class="info-icon">💡</div>
+          <div>
+            <div class="info-label">Tool Suggestion</div>
+            <div class="info-title">Want a new tool?</div>
+            <div class="info-desc">We add tools based on what our users need. If enough people ask for something, we build it.</div>
+          </div>
+        </div>
+        <div class="glass-card info-card">
+          <div class="info-icon">💬</div>
+          <div>
+            <div class="info-label">General</div>
+            <div class="info-title">Just want to say hi?</div>
+            <div class="info-desc">Feedback, compliments, questions — all welcome. We read every message.</div>
+          </div>
+        </div>
+        <div class="glass-card info-card">
+          <div class="info-icon">⏱️</div>
+          <div>
+            <div class="info-label">Response Time</div>
+            <div class="info-title">We reply within 24–48 hrs</div>
+            <div class="info-desc">We're a small team but we take every message seriously. You'll hear back from us.</div>
+          </div>
+        </div>
+      </div>
 
-</ul>
+      <!-- Form -->
+      <div class="glass-card contact-form-card fadeUp d2">
+        <h2 style="font-family:'Orbitron',sans-serif;font-size:20px;margin-bottom:24px;">Send a Message</h2>
+        <form id="contactForm" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" id="fname" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="femail" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-select form-input" id="fsubject" required>
+              <option value="" disabled selected>Choose a topic...</option>
+              <option value="bug">🐛 Bug Report</option>
+              <option value="tool">💡 Tool Suggestion</option>
+              <option value="feedback">⭐ Feedback</option>
+              <option value="other">💬 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" id="fmessage" placeholder="Describe your issue, idea, or message in detail..." required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message 🚀</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <div class="tick">✅</div>
+          <h3>Message Sent!</h3>
+          <p>Thank you for reaching out. We'll get back to you within 24–48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</nav>
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="section-label">Common Questions</div>
+    <h2 class="section-title">FAQ</h2>
+    <p class="section-sub">Quick answers to things people often ask.</p>
 
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        Are Rock Tools really free? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes — completely, unconditionally free. No premium plans, no watermarks, no file size limits based on payment tier. Free means free.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        Do you store my files? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        <p>No. All processing happens entirely in your browser. Your files never leave your device — we have no server receiving or storing them. It's technically impossible for us to have your files.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        Why is a tool not working? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        <p>Try refreshing the page and using a modern browser like Chrome, Firefox, or Edge. Some tools require specific file types — double check you're uploading the correct format. If problems persist, please contact us!</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        Can I suggest a new tool? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        <p>Absolutely — that's how we decide what to build next. Use the contact form above and select "Tool Suggestion". If it's feasible in the browser and useful to others, there's a good chance we'll add it.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        Do the tools work on mobile? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes! Rock Tools is fully responsive and works on phones and tablets. Some tools with file processing work best on desktop, but all tools are accessible on mobile browsers.</p>
+      </div>
+    </div>
+  </div>
 
-<section class="hero">
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text">ROCK TOOLS</div>
+        <p>Free, fast, and private online tools for PDF, images, and utilities. Built for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools.html">Merge PDF</a></li>
+          <li><a href="tools.html">Split PDF</a></li>
+          <li><a href="tools.html">All Tools →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tools.html">Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <span>Rock Tools</span>. All rights reserved.</span>
+      <span>Made with ❤️ for everyone</span>
+    </div>
+  </footer>
 
-<h1>Contact Us</h1>
-
-<p>Email: support@rocktools.com</p>
-
-<p>Location: India</p>
-
-</section>
-
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    }
+    function toggleFAQ(btn) {
+      const answer = btn.nextElementSibling;
+      const arrow = btn.querySelector('.faq-arrow');
+      const isOpen = answer.classList.contains('open');
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-arrow').forEach(a => a.style.transform = 'rotate(0deg)');
+      if (!isOpen) {
+        answer.classList.add('open');
+        arrow.style.transform = 'rotate(180deg)';
+      }
+    }
+  </script>
 </body>
 </html>
