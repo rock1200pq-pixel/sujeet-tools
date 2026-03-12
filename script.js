@@ -214,13 +214,16 @@ function generateQR() {
 }
 
 function downloadQR() {
-  const text = document.getElementById('qrtext').value.trim();
-  if (!text) return;
-  const link = document.createElement('a');
-  link.href = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=' + encodeURIComponent(text);
-  link.download = 'qrcode.png';
-  link.target = '_blank';
-  link.click();
+  const img = document.querySelector("#qr img");
+  if (!img) return;
+  const canvas = document.createElement("canvas");
+  canvas.width = 200; canvas.height = 200;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  const a = document.createElement("a");
+  a.download = "qrcode.png";
+  a.href = canvas.toDataURL("image/png");
+  a.click();
 }
 
 
