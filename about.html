@@ -1,48 +1,282 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Rock Tools — free browser-based tools for PDF, images, and utilities. Learn about our mission, values and the team behind it.">
+  <title>About | Rock Tools</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-hero {
+      position:relative; z-index:1;
+      text-align:center; padding:100px 24px 70px;
+    }
+    .page-hero .section-title { font-size: clamp(28px, 5vw, 56px); }
+    .page-hero .section-sub { margin:16px auto 0; }
 
-<meta charset="UTF-8">
-<title>About - Rock Tools</title>
+    .about-section { position:relative; z-index:1; max-width:1200px; margin:auto; padding:80px 50px; }
 
-<link rel="stylesheet" href="style.css">
+    /* Mission block */
+    .mission-block {
+      display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; margin-bottom:100px;
+    }
+    .mission-visual {
+      background: linear-gradient(135deg, rgba(0,114,255,0.12), rgba(0,198,255,0.06));
+      border:1px solid var(--border); border-radius:24px; height:340px;
+      display:flex; align-items:center; justify-content:center; font-size:80px;
+      position:relative; overflow:hidden;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(0,198,255,0.1);} 50%{box-shadow:0 0 60px rgba(0,198,255,0.3);} }
+    .mission-visual::before {
+      content:''; position:absolute; inset:0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(0,198,255,0.02) 20px, rgba(0,198,255,0.02) 21px);
+    }
+    .mission-text .section-sub { max-width:100%; }
+    .mission-text p { color:var(--muted); font-size:15px; line-height:1.8; margin-top:16px; }
 
+    /* Values grid */
+    .values-section { margin-bottom:100px; }
+    .values-section .section-title,.values-section .section-label { text-align:center; }
+    .values-section .section-sub { text-align:center; margin:0 auto 48px; }
+    .values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+    .value-card { text-align:center; }
+    .value-emoji { font-size:36px; margin-bottom:14px; display:block; animation:float 3s ease-in-out infinite; }
+    .value-card:nth-child(2) .value-emoji { animation-delay:.4s; }
+    .value-card:nth-child(3) .value-emoji { animation-delay:.8s; }
+    .value-card:nth-child(4) .value-emoji { animation-delay:1.2s; }
+    .value-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+    .value-desc { font-size:14px; color:var(--muted); line-height:1.7; }
+
+    /* Story timeline */
+    .story-section { margin-bottom:100px; }
+    .story-section .section-title,.story-section .section-label { text-align:center; }
+    .story-section .section-sub { text-align:center; margin:0 auto 50px; }
+    .timeline { position:relative; max-width:700px; margin:auto; }
+    .timeline::before {
+      content:''; position:absolute; left:50%; top:0; bottom:0; width:1px;
+      background: linear-gradient(180deg, transparent, var(--accent), transparent);
+      transform:translateX(-50%);
+    }
+    .timeline-item { display:flex; gap:30px; align-items:flex-start; margin-bottom:48px; }
+    .timeline-item:nth-child(even) { flex-direction:row-reverse; text-align:right; }
+    .timeline-dot {
+      flex-shrink:0; width:44px; height:44px; border-radius:50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; position:relative; z-index:1;
+      box-shadow:0 0 20px rgba(0,198,255,0.4);
+    }
+    .timeline-content { flex:1; }
+    .timeline-year { font-family:'Orbitron',sans-serif; font-size:12px; color:var(--accent); letter-spacing:2px; margin-bottom:6px; }
+    .timeline-title { font-size:17px; font-weight:700; margin-bottom:6px; }
+    .timeline-desc { font-size:14px; color:var(--muted); line-height:1.7; }
+
+    /* Tech stack */
+    .tech-section { text-align:center; margin-bottom:80px; }
+    .tech-section .section-sub { margin:0 auto 40px; }
+    .tech-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+    .tech-pill {
+      background:rgba(0,198,255,0.08); border:1px solid rgba(0,198,255,0.2);
+      border-radius:50px; padding:10px 22px;
+      font-size:14px; font-weight:600; color:var(--accent);
+      transition: all 0.2s;
+    }
+    .tech-pill:hover { background:rgba(0,198,255,0.18); transform:translateY(-2px); }
+
+    /* CTA */
+    .about-cta {
+      text-align:center; padding:70px 30px;
+      background: linear-gradient(135deg, rgba(0,114,255,0.1), rgba(0,198,255,0.06));
+      border:1px solid var(--border); border-radius:24px; margin-bottom:0;
+    }
+    .about-cta .section-sub { margin:0 auto 32px; }
+    .about-cta-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+    @media(max-width:768px) {
+      .mission-block { grid-template-columns:1fr; gap:32px; }
+      .timeline::before { left:20px; }
+      .timeline-item,.timeline-item:nth-child(even) { flex-direction:column; text-align:left; }
+      .about-section { padding:60px 20px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<nav>
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Rock Tools Logo">
+      <span class="logo-text">ROCK TOOLS</span>
+    </a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
-<div class="logo">
-<img src="logo.png">
-</div>
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="section-label fadeUp">Our Story</div>
+    <h1 class="section-title fadeUp d1">About Rock Tools</h1>
+    <p class="section-sub fadeUp d2">We believe powerful tools should be free, private, and accessible to everyone — no strings attached.</p>
+  </div>
 
-<ul>
+  <div class="about-section">
 
-<li><a href="index.html">Home</a></li>
-<li><a href="tools.html">Tools</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
+    <!-- Mission -->
+    <div class="mission-block">
+      <div class="mission-visual fadeUp">🚀</div>
+      <div class="mission-text fadeUp d2">
+        <div class="section-label">Our Mission</div>
+        <h2 class="section-title">Tools For Everyone.</h2>
+        <p class="section-sub">Rock Tools was built on one belief — that essential file tools should be free, simple, and work without putting your privacy at risk.</p>
+        <p>Too many tools online force you to create accounts, upload your private files to unknown servers, hit paywalls for basic features, or bombard you with ads. We built Rock Tools to be the opposite of all that.</p>
+        <p>Every tool runs entirely in your browser using modern Web APIs. Your files never leave your device. There's no server, no database, no tracking — just you and your files.</p>
+      </div>
+    </div>
 
-</ul>
+    <!-- Values -->
+    <div class="values-section">
+      <div class="section-label">What We Stand For</div>
+      <h2 class="section-title">Our Values</h2>
+      <p class="section-sub">Four principles that guide every decision we make.</p>
+      <div class="values-grid">
+        <div class="glass-card value-card fadeUp d1">
+          <span class="value-emoji">🔒</span>
+          <div class="value-title">Privacy First</div>
+          <div class="value-desc">Your files are yours alone. We process everything locally — nothing is ever uploaded, stored, or shared.</div>
+        </div>
+        <div class="glass-card value-card fadeUp d2">
+          <span class="value-emoji">⚡</span>
+          <div class="value-title">Speed Matters</div>
+          <div class="value-desc">Browser-based processing is instant. No waiting for uploads, server queues, or email delivery of results.</div>
+        </div>
+        <div class="glass-card value-card fadeUp d3">
+          <span class="value-emoji">🌍</span>
+          <div class="value-title">Accessible to All</div>
+          <div class="value-desc">Rock Tools works on any device, any browser, anywhere in the world — with no account needed, ever.</div>
+        </div>
+        <div class="glass-card value-card fadeUp d4">
+          <span class="value-emoji">🆓</span>
+          <div class="value-title">Free, Always</div>
+          <div class="value-desc">No freemium traps. No feature paywalls. Every tool on this site is completely free and will stay that way.</div>
+        </div>
+      </div>
+    </div>
 
-</nav>
+    <!-- Story Timeline -->
+    <div class="story-section">
+      <div class="section-label">How We Got Here</div>
+      <h2 class="section-title">The Journey</h2>
+      <p class="section-sub">From a simple idea to a growing collection of tools.</p>
+      <div class="timeline">
+        <div class="timeline-item fadeUp d1">
+          <div class="timeline-dot">💡</div>
+          <div class="timeline-content">
+            <div class="timeline-year">THE IDEA</div>
+            <div class="timeline-title">Frustrated with existing tools</div>
+            <div class="timeline-desc">Every PDF tool online wanted sign-ups, uploads, and payment for basic features. We knew there had to be a better way.</div>
+          </div>
+        </div>
+        <div class="timeline-item fadeUp d2">
+          <div class="timeline-dot">🔨</div>
+          <div class="timeline-content">
+            <div class="timeline-year">BUILDING</div>
+            <div class="timeline-title">First tools go live</div>
+            <div class="timeline-desc">Starting with PDF merge and image tools, we built everything to run 100% in the browser using modern JavaScript APIs.</div>
+          </div>
+        </div>
+        <div class="timeline-item fadeUp d3">
+          <div class="timeline-dot">🚀</div>
+          <div class="timeline-content">
+            <div class="timeline-year">LAUNCH</div>
+            <div class="timeline-title">Rock Tools goes public</div>
+            <div class="timeline-desc">12+ tools launched. Users love the speed and the fact that their files never leave their devices.</div>
+          </div>
+        </div>
+        <div class="timeline-item fadeUp d4">
+          <div class="timeline-dot">🔮</div>
+          <div class="timeline-content">
+            <div class="timeline-year">FUTURE</div>
+            <div class="timeline-title">More tools, same mission</div>
+            <div class="timeline-desc">We're expanding the toolset every month based on your feedback. Free, private, powerful — always.</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Tech Stack -->
+    <div class="tech-section">
+      <div class="section-label">Under the Hood</div>
+      <h2 class="section-title">Built With</h2>
+      <p class="section-sub">Open-source, battle-tested technologies power every tool.</p>
+      <div class="tech-pills">
+        <span class="tech-pill">HTML5 / CSS3</span>
+        <span class="tech-pill">Vanilla JavaScript</span>
+        <span class="tech-pill">PDF-lib.js</span>
+        <span class="tech-pill">PDF.js</span>
+        <span class="tech-pill">Tesseract.js (OCR)</span>
+        <span class="tech-pill">Canvas API</span>
+        <span class="tech-pill">Web Crypto API</span>
+        <span class="tech-pill">File API</span>
+        <span class="tech-pill">Blob API</span>
+        <span class="tech-pill">GitHub Pages</span>
+      </div>
+    </div>
 
-<section class="hero">
+    <!-- CTA -->
+    <div class="about-cta fadeUp">
+      <div class="section-label">Join Us</div>
+      <h2 class="section-title">Ready to Try?</h2>
+      <p class="section-sub">Explore all 12+ free tools — no sign-up, no limits, no compromise.</p>
+      <div class="about-cta-btns">
+        <a href="tools.html" class="btn-primary">Open All Tools 🚀</a>
+        <a href="contact.html" class="btn-outline">Contact Us</a>
+      </div>
+    </div>
 
-<h1>About Rock Tools</h1>
+  </div>
 
-<p>
-
-Rock Tools is a free online platform that provides
-fast and secure tools for PDF, image and utilities.
-
-All tools work directly in your browser.
-
-</p>
-
-</section>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text">ROCK TOOLS</div>
+        <p>Free, fast, and private online tools for PDF, images, and utilities. Built for everyone — no sign-up required.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools.html">Merge PDF</a></li>
+          <li><a href="tools.html">Split PDF</a></li>
+          <li><a href="tools.html">Compress Image</a></li>
+          <li><a href="tools.html">All Tools →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tools.html">Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="contact.html">Suggest a Tool</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <span>Rock Tools</span>. All rights reserved.</span>
+      <span>Made with ❤️ for everyone</span>
+    </div>
+  </footer>
 
 </body>
 </html>
