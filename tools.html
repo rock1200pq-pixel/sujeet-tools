@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free online tools — PDF merge, split, image compress, QR generator, OCR and more. Runs 100% in your browser.">
-  <!-- FIX: Descriptive title -->
-  <title>All Tools | Sujeet Tools – Free PDF & Image Utilities</title>
+  <meta name="description" content="Free online tools — PDF merge, split, image compress, QR generator, OCR and more.">
+  <title>All Tools | Sujeet Tools</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- FIX: script.js yahan se HATA diya (double load tha) -->
-  <!-- FIX: Tesseract ko script.js se PEHLE load karo (race condition fix) -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      }
+    });
+  </script>
 </head>
 <body>
 
   <nav>
-    <div class="logo">
-      <!-- FIX: alt text add kiya -->
-      <img src="logo.png" alt="Sujeet Tools Logo">
-    </div>
+    <div class="logo"><img src="logo.png" alt="Sujeet Tools Logo"></div>
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="tools.html">Tools</a></li>
-      <!-- FIX: About aur Contact ke real pages -->
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
@@ -32,101 +34,118 @@
 
   <div class="toolsGrid">
 
-    <!-- Merge PDF — Coming Soon badge -->
     <div class="toolCard">
-      <h3>Merge PDF <span class="badge">Coming Soon</span></h3>
-      <input type="file" multiple id="merge" accept=".pdf">
-      <button onclick="mergePDF()" disabled>Merge</button>
+      <h3>📄 Merge PDF</h3>
+      <label class="fileLabel"><input type="file" multiple id="mergeFiles" accept=".pdf" onchange="updateLabel(this,'mergeLabel')"><span id="mergeLabel">Choose PDF files...</span></label>
+      <p class="hint">Multiple files: Ctrl+Click</p>
+      <button onclick="mergePDF()">Merge PDFs</button>
+      <p class="result" id="mergeResult"></p>
     </div>
 
-    <!-- Split PDF — Coming Soon badge -->
     <div class="toolCard">
-      <h3>Split PDF <span class="badge">Coming Soon</span></h3>
-      <input type="file" id="split" accept=".pdf">
-      <button onclick="splitPDF()" disabled>Split</button>
+      <h3>✂️ Split PDF</h3>
+      <label class="fileLabel"><input type="file" id="splitFile" accept=".pdf" onchange="updateLabel(this,'splitLabel')"><span id="splitLabel">Choose PDF file...</span></label>
+      <div class="inputRow">
+        <input type="number" id="splitFrom" placeholder="From page" min="1">
+        <input type="number" id="splitTo" placeholder="To page" min="1">
+      </div>
+      <button onclick="splitPDF()">Split PDF</button>
+      <p class="result" id="splitResult"></p>
     </div>
 
-    <!-- Image Compress — Coming Soon badge -->
     <div class="toolCard">
-      <h3>Image Compress <span class="badge">Coming Soon</span></h3>
-      <input type="file" id="compress" accept="image/*">
-      <button onclick="compressImage()" disabled>Compress</button>
+      <h3>📦 Image Compress</h3>
+      <label class="fileLabel"><input type="file" id="compressFile" accept="image/*" onchange="updateLabel(this,'compressLabel')"><span id="compressLabel">Choose image...</span></label>
+      <div class="inputRow">
+        <label style="font-size:13px;opacity:0.7">Quality:</label>
+        <input type="range" id="quality" min="10" max="95" value="60" style="flex:1" oninput="document.getElementById('qualityVal').innerText=this.value+'%'">
+        <span id="qualityVal">60%</span>
+      </div>
+      <button onclick="compressImage()">Compress</button>
+      <p class="result" id="compressResult"></p>
     </div>
 
-    <!-- Image to PDF — Coming Soon badge -->
     <div class="toolCard">
-      <h3>Image to PDF <span class="badge">Coming Soon</span></h3>
-      <input type="file" multiple id="imgpdf" accept="image/*">
-      <button onclick="imageToPDF()" disabled>Convert</button>
+      <h3>🖼️ Image to PDF</h3>
+      <label class="fileLabel"><input type="file" multiple id="imgpdfFiles" accept="image/*" onchange="updateLabel(this,'imgpdfLabel')"><span id="imgpdfLabel">Choose images...</span></label>
+      <button onclick="imageToPDF()">Convert to PDF</button>
+      <p class="result" id="imgpdfResult"></p>
     </div>
 
-    <!-- JPG to PNG — Coming Soon badge -->
     <div class="toolCard">
-      <h3>JPG to PNG <span class="badge">Coming Soon</span></h3>
-      <input type="file" id="jpg" accept=".jpg,.jpeg">
-      <button onclick="jpgToPNG()" disabled>Convert</button>
+      <h3>🔄 JPG to PNG</h3>
+      <label class="fileLabel"><input type="file" id="jpgFile" accept=".jpg,.jpeg" onchange="updateLabel(this,'jpgLabel')"><span id="jpgLabel">Choose JPG file...</span></label>
+      <button onclick="jpgToPNG()">Convert to PNG</button>
+      <p class="result" id="jpgResult"></p>
     </div>
 
-    <!-- QR Generator — WORKING -->
     <div class="toolCard">
-      <h3>QR Generator</h3>
-      <input type="text" id="qrtext" placeholder="Enter text or URL...">
-      <button onclick="generateQR()">Generate</button>
+      <h3>📱 QR Generator</h3>
+      <input type="text" id="qrtext" placeholder="Text ya URL type karo...">
+      <button onclick="generateQR()">Generate QR</button>
       <div id="qr"></div>
+      <button id="qrDownloadBtn" style="display:none;margin-top:8px" onclick="downloadQR()">⬇️ Download QR</button>
     </div>
 
-    <!-- Image Text → Excel — WORKING (extractText fixed) -->
     <div class="toolCard">
-      <h3>Image Text → Excel</h3>
-      <input type="file" id="ocr" accept="image/*">
-      <button onclick="extractText()">Extract</button>
-      <p id="ocrResult"></p>
+      <h3>🔍 Image Text → Excel</h3>
+      <label class="fileLabel"><input type="file" id="ocr" accept="image/*" onchange="updateLabel(this,'ocrLabel')"><span id="ocrLabel">Choose image...</span></label>
+      <button onclick="extractText()">Extract & Download</button>
+      <p class="result" id="ocrResult"></p>
     </div>
 
-    <!-- PDF to JPG — Coming Soon badge -->
     <div class="toolCard">
-      <h3>PDF to JPG <span class="badge">Coming Soon</span></h3>
-      <input type="file" id="pdfToJpgFile" accept=".pdf">
-      <button onclick="pdfToJpg()" disabled>Convert</button>
+      <h3>📑 PDF to JPG</h3>
+      <label class="fileLabel"><input type="file" id="pdfToJpgFile" accept=".pdf" onchange="updateLabel(this,'pdfJpgLabel')"><span id="pdfJpgLabel">Choose PDF file...</span></label>
+      <input type="number" id="pdfPageNum" placeholder="Page number (default: 1)" min="1">
+      <button onclick="pdfToJpg()">Convert to JPG</button>
+      <p class="result" id="pdfJpgResult"></p>
     </div>
 
-    <!-- PNG to JPG — WORKING -->
     <div class="toolCard">
-      <h3>PNG to JPG</h3>
-      <input type="file" id="pngFile" accept=".png">
-      <button onclick="pngToJpg()">Convert</button>
+      <h3>🔁 PNG to JPG</h3>
+      <label class="fileLabel"><input type="file" id="pngFile" accept=".png" onchange="updateLabel(this,'pngLabel')"><span id="pngLabel">Choose PNG file...</span></label>
+      <button onclick="pngToJpg()">Convert to JPG</button>
+      <p class="result" id="pngResult"></p>
     </div>
 
-    <!-- Resize Image — WORKING (id clash fix) -->
     <div class="toolCard">
-      <h3>Resize Image</h3>
-      <!-- FIX: id "resizeImage" → "resizeInput" (function naam clash tha) -->
-      <input type="file" id="resizeInput" accept="image/*">
-      <input type="number" id="resizeWidth" placeholder="Width (px)">
-      <input type="number" id="resizeHeight" placeholder="Height (px)">
-      <!-- FIX: onclick bhi update kiya -->
+      <h3>📐 Resize Image</h3>
+      <label class="fileLabel"><input type="file" id="resizeInput" accept="image/*" onchange="updateLabel(this,'resizeLabel')"><span id="resizeLabel">Choose image...</span></label>
+      <div class="inputRow">
+        <input type="number" id="resizeWidth" placeholder="Width (px)">
+        <input type="number" id="resizeHeight" placeholder="Height (px)">
+      </div>
       <button onclick="resizeImageFn()">Resize</button>
+      <p class="result" id="resizeResult"></p>
     </div>
 
-    <!-- Password Generator — WORKING -->
     <div class="toolCard">
-      <h3>Password Generator</h3>
+      <h3>🔑 Password Generator</h3>
+      <div class="inputRow">
+        <label style="font-size:13px;opacity:0.7">Length:</label>
+        <input type="range" id="passLength" min="8" max="32" value="14" style="flex:1" oninput="document.getElementById('passLenVal').innerText=this.value">
+        <span id="passLenVal">14</span>
+      </div>
+      <div class="checkRow">
+        <label><input type="checkbox" id="useUpper" checked> A-Z</label>
+        <label><input type="checkbox" id="useLower" checked> a-z</label>
+        <label><input type="checkbox" id="useNum" checked> 0-9</label>
+        <label><input type="checkbox" id="useSym" checked> @#$</label>
+      </div>
       <button onclick="generatePassword()">Generate</button>
-      <p id="passwordResult"></p>
+      <p class="result" id="passwordResult" style="cursor:pointer;word-break:break-all" title="Click to copy" onclick="copyPassword()"></p>
     </div>
 
-    <!-- Image Table → Excel — WORKING -->
     <div class="toolCard">
-      <h3>Image Table → Excel</h3>
-      <input type="file" id="tableImage" accept="image/*">
-      <button onclick="tableToExcel()">Convert</button>
-      <p id="tableResult"></p>
+      <h3>📊 Image Table → CSV</h3>
+      <label class="fileLabel"><input type="file" id="tableImage" accept="image/*" onchange="updateLabel(this,'tableLabel')"><span id="tableLabel">Choose image...</span></label>
+      <button onclick="tableToExcel()">Convert to CSV</button>
+      <p class="result" id="tableResult"></p>
     </div>
 
   </div>
 
-  <!-- FIX: script.js sirf ek baar, body ke end mein, Tesseract ke BAAD -->
   <script src="script.js"></script>
-
 </body>
 </html>
