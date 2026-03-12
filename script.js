@@ -156,14 +156,27 @@ async function imageToPDF() {
     const pdf = await PDFLib.PDFDocument.create();
     for (let i = 0; i < files.length; i++) {
       const dataUrl = await readFileAsDataURL(files[i]);
-      const base64 = dataUrl.split(',')[1];
-      const mimeType = files[i].type;
-      let img;
-      if (mimeType === 'image/png') {
-        img = await pdf.embedPng(Uint8Array.from(atob(base64), c => c.charCodeAt(0)));
-      } else {
-        img = await pdf.embedJpg(Uint8Array.from(atob(base64), c => c.charCodeAt(0)));
-      }
+      const convCanvas = document.createElement('canvas');
+const convImg = new Image();
+convImg.src = dataUrl;
+await new Promise(r => { convImg.onload = r; });
+convCanvas.width = convImg.width;
+convCanvas.height = convImg.height;
+convCanvas.getContext('2d').drawImage(convImg, 0, 0);
+const jpgDataUrl = convCanvas.toDataURL('image/jpeg', 0.95);
+const base64 = jpgDataUrl.split(',')[1];
+const img = await pdf.embedJpg(
+  Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+);
+```
+
+---
+
+**Visual guide:**
+```
+Line 158: const dataUrl = await readFileAsDataURL(files[i]);  ← YEH REHNE DO
+Line 159-166: ❌ YEH SAARI LINES DELETE KARO
+Line 167 onwards: const page = pdf.addPage(...)  ← YEH BHI REHNE DO
       const page = pdf.addPage([img.width, img.height]);
       page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
     }
