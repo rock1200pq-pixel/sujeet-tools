@@ -3,95 +3,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free online tools for PDF merge, split, image compress, QR generator and more. No upload needed — runs in your browser.">
-  <title>Sujeet Tools – Free PDF & Image Utilities</title>
+  <meta name="description" content="Rock Tools — Free, fast, and secure online tools for PDF, images & more. Everything runs in your browser. No uploads, no servers, 100% private.">
+  <title>Rock Tools — Free Online File & Image Tools</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── HOME-ONLY STYLES ── */
+    .hero-section {
+      position: relative; z-index: 1;
+      min-height: 92vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(ellipse, rgba(0,198,255,0.1) 0%, transparent 65%);
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,198,255,0.1);
+      border: 1px solid rgba(0,198,255,0.3);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 13px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .hero-title .line2 {
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--muted); line-height: 1.7;
+      max-width: 620px; margin: 20px auto 40px;
+    }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+      margin-top: 64px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .hero-stat-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 32px; font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
+
+    /* ── FEATURES ── */
+    .features-section { position:relative; z-index:1; padding: 100px 50px; max-width: 1300px; margin: auto; }
+    .features-header { text-align: center; margin-bottom: 60px; }
+    .features-header .section-sub { margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .feature-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,198,255,0.15), rgba(0,114,255,0.15));
+      border: 1px solid rgba(0,198,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 20px;
+    }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* ── POPULAR TOOLS ── */
+    .popular-section { position:relative; z-index:1; padding: 80px 50px; }
+    .popular-section .section-title, .popular-section .section-label { text-align: center; }
+    .popular-section .section-sub { margin: 0 auto 50px; text-align:center; }
+    .tools-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; max-width: 1100px; margin: auto;
+    }
+    .preview-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 16px; text-align: center;
+      cursor: pointer; text-decoration: none; color: var(--text);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .preview-card:hover { transform: translateY(-5px); border-color: rgba(0,198,255,0.4); box-shadow: var(--glow); }
+    .preview-card .icon { font-size: 28px; margin-bottom: 10px; }
+    .preview-card .name { font-size: 14px; font-weight: 600; }
+
+    /* ── HOW IT WORKS ── */
+    .hiw-section { position:relative; z-index:1; padding: 100px 50px; max-width: 1200px; margin: auto; }
+    .hiw-section .section-title, .hiw-section .section-label { text-align:center; }
+    .hiw-section .section-sub { text-align:center; margin:0 auto 60px; }
+    .hiw-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:24px; }
+    .hiw-card { text-align:center; position:relative; }
+    .hiw-num {
+      font-family:'Orbitron',sans-serif; font-size:48px; font-weight:900; line-height:1;
+      background:linear-gradient(135deg,var(--accent),var(--accent3));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:16px;
+    }
+    .hiw-title { font-size:18px; font-weight:700; margin-bottom:10px; }
+    .hiw-desc { font-size:14px; color:var(--muted); line-height:1.7; }
+
+    /* ── CTA BANNER ── */
+    .cta-section {
+      position:relative; z-index:1; margin: 40px 50px 100px;
+      border-radius: 24px; overflow:hidden;
+      background: linear-gradient(135deg, rgba(0,114,255,0.15), rgba(0,198,255,0.08));
+      border: 1px solid rgba(0,198,255,0.25);
+      padding: 70px 40px; text-align:center;
+    }
+    .cta-section::before {
+      content:''; position:absolute; top:-50%; right:-10%; width:60%; height:200%;
+      background: radial-gradient(ellipse, rgba(0,198,255,0.12) 0%, transparent 65%);
+      pointer-events:none;
+    }
+    .cta-section .section-title { font-size:36px; margin-bottom:16px; }
+    .cta-section .section-sub { margin:0 auto 36px; }
+
+    @media(max-width:600px) {
+      .features-section,.popular-section,.hiw-section { padding:60px 20px; }
+      .cta-section { margin:20px 20px 60px; padding:50px 24px; }
+      .hero-stats { gap:28px; }
+    }
+  </style>
 </head>
 <body>
 
   <nav>
-    <div class="logo">
-      <img src="logo.png" alt="Sujeet Tools Logo">
-    </div>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Rock Tools Logo">
+      <span class="logo-text">ROCK TOOLS</span>
+    </a>
     <ul>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html" class="active">Home</a></li>
       <li><a href="tools.html">Tools</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
   </nav>
 
-  <section class="hero">
-    <h1>Next-Gen Online File Tools</h1>
-    <p>Fast • Secure • Free Tools for PDF, Image & Utilities</p>
-    <!-- FIX: button ke andar a tag nahi hona chahiye — a ko hi button style karo -->
-    <a href="tools.html" class="cta-btn">Launch Tools 🚀</a>
-  </section>
-
-  <section class="features">
-    <div class="featureBox">
-      <h2>⚡ Ultra Fast</h2>
-      <p>All tools run directly in your browser without server delay.</p>
-    </div>
-    <div class="featureBox">
-      <h2>🔒 Secure</h2>
-      <p>Your files never leave your device. 100% private processing.</p>
-    </div>
-    <div class="featureBox">
-      <!-- FIX: "40+" ki jagah sahi count -->
-      <h2>🧰 12+ Tools</h2>
-      <p>PDF, Image & Utility tools in one place. More coming soon!</p>
-    </div>
-  </section>
-
-  <section class="previewTools">
-    <h2>Popular Tools</h2>
-    <div class="previewGrid">
-      <div class="previewCard" onclick="location.href='tools.html'">📄 Merge PDF</div>
-      <div class="previewCard" onclick="location.href='tools.html'">✂ Split PDF</div>
-      <div class="previewCard" onclick="location.href='tools.html'">🖼 Image to PDF</div>
-      <div class="previewCard" onclick="location.href='tools.html'">🔍 OCR Extract</div>
-      <div class="previewCard" onclick="location.href='tools.html'">📦 Compress Image</div>
-      <div class="previewCard" onclick="location.href='tools.html'">📱 QR Generator</div>
-    </div>
-  </section>
-
-  <section class="howWorks">
-    <h2>How It Works</h2>
-    <div class="steps">
-      <div class="step">
-        <h3>1️⃣ Upload File</h3>
-        <p>Select the file you want to process.</p>
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-glow"></div>
+    <div>
+      <div class="hero-badge fadeUp">⚡ 100% Free · No Sign Up</div>
+      <h1 class="hero-title">
+        <span class="fadeUp d1">Next-Gen</span><br>
+        <span class="line2 fadeUp d2">Online File Tools</span>
+      </h1>
+      <p class="hero-sub fadeUp d3">
+        Merge PDFs, compress images, generate QR codes, extract text and more —
+        all running directly in your browser. Zero uploads. Zero servers. Zero risk.
+      </p>
+      <div class="hero-btns fadeUp d4">
+        <a href="tools.html" class="btn-primary">Explore All Tools 🚀</a>
+        <a href="about.html" class="btn-outline">Learn More</a>
       </div>
-      <div class="step">
-        <h3>2️⃣ Use Tool</h3>
-        <p>Our tools process your file instantly in the browser.</p>
-      </div>
-      <div class="step">
-        <h3>3️⃣ Download Result</h3>
-        <p>Download the processed file securely.</p>
+
+      <div class="hero-stats fadeUp d5">
+        <div>
+          <div class="hero-stat-num">12+</div>
+          <div class="hero-stat-label">Tools Available</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">100%</div>
+          <div class="hero-stat-label">Browser-Based</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">0</div>
+          <div class="hero-stat-label">Data Uploaded</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">Free</div>
+          <div class="hero-stat-label">Always & Forever</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="statsSection">
-    <div class="statBox">
-      <h3>12+</h3>
-      <p>Tools Available</p>
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="features-header">
+      <div class="section-label">Why Rock Tools?</div>
+      <h2 class="section-title">Built Different.</h2>
+      <p class="section-sub">No nonsense, no paywalls, no file limits. Just powerful tools that respect your privacy.</p>
     </div>
-    <div class="statBox">
-      <h3>1M+</h3>
-      <p>Files Processed</p>
-    </div>
-    <div class="statBox">
-      <h3>100%</h3>
-      <p>Secure Processing</p>
-    </div>
-    <div class="statBox">
-      <h3>24/7</h3>
-      <p>Online Tools</p>
+    <div class="features-grid">
+      <div class="glass-card fadeUp d1">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Lightning Fast</div>
+        <div class="feature-desc">Everything runs in your browser using the latest Web APIs — no server roundtrips, no waiting.</div>
+      </div>
+      <div class="glass-card fadeUp d2">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Fully Private</div>
+        <div class="feature-desc">Your files never leave your device. We don't store, track, or transmit anything you process.</div>
+      </div>
+      <div class="glass-card fadeUp d3">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Works Offline</div>
+        <div class="feature-desc">Once the page loads, most tools work even without an internet connection. Always accessible.</div>
+      </div>
+      <div class="glass-card fadeUp d4">
+        <div class="feature-icon">🆓</div>
+        <div class="feature-title">Always Free</div>
+        <div class="feature-desc">No subscriptions, no watermarks, no hidden limits. Rock Tools is and will always be free for everyone.</div>
+      </div>
+      <div class="glass-card fadeUp d5">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Works on Any Device</div>
+        <div class="feature-desc">Fully responsive — use on your phone, tablet, or desktop. Same powerful experience everywhere.</div>
+      </div>
+      <div class="glass-card fadeUp d6">
+        <div class="feature-icon">🔧</div>
+        <div class="feature-title">More Tools Coming</div>
+        <div class="feature-desc">We're constantly adding new tools based on community feedback. Got an idea? Let us know!</div>
+      </div>
     </div>
   </section>
+
+  <!-- POPULAR TOOLS -->
+  <section class="popular-section">
+    <div class="section-label">Quick Access</div>
+    <h2 class="section-title">Popular Tools</h2>
+    <p class="section-sub">Most used tools — jump straight in.</p>
+    <div class="tools-preview-grid">
+      <a href="tools.html" class="preview-card"><div class="icon">📄</div><div class="name">Merge PDF</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">✂️</div><div class="name">Split PDF</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">📦</div><div class="name">Compress Image</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">🖼️</div><div class="name">Image to PDF</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">📱</div><div class="name">QR Generator</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">🔍</div><div class="name">OCR Extract</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">📐</div><div class="name">Resize Image</div></a>
+      <a href="tools.html" class="preview-card"><div class="icon">🔑</div><div class="name">Password Gen</div></a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="hiw-section">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Three steps. That's all it takes.</p>
+    <div class="hiw-grid">
+      <div class="glass-card hiw-card fadeUp d1">
+        <div class="hiw-num">01</div>
+        <div class="hiw-title">Choose a Tool</div>
+        <div class="hiw-desc">Pick from 12+ tools covering PDF, image conversion, OCR, utilities and more.</div>
+      </div>
+      <div class="glass-card hiw-card fadeUp d2">
+        <div class="hiw-num">02</div>
+        <div class="hiw-title">Upload Your File</div>
+        <div class="hiw-desc">Select your file directly from your device. Nothing gets sent to any server.</div>
+      </div>
+      <div class="glass-card hiw-card fadeUp d3">
+        <div class="hiw-num">03</div>
+        <div class="hiw-title">Download Result</div>
+        <div class="hiw-desc">Your processed file downloads instantly — right back to your device, privately.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-section">
+    <div class="section-label">Get Started</div>
+    <h2 class="section-title">Ready to Rock? 🚀</h2>
+    <p class="section-sub">12+ free tools waiting for you. No sign-up. No limits. Just results.</p>
+    <a href="tools.html" class="btn-primary">Open All Tools</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text">ROCK TOOLS</div>
+        <p>Free, fast, and private online tools for PDF, images, and utilities. Built for everyone — no sign-up required.</p>
+        <div class="footer-social">
+          <a href="#" title="Twitter">𝕏</a>
+          <a href="#" title="GitHub">⌥</a>
+          <a href="#" title="Email">✉</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools.html">Merge PDF</a></li>
+          <li><a href="tools.html">Split PDF</a></li>
+          <li><a href="tools.html">Compress Image</a></li>
+          <li><a href="tools.html">Image to PDF</a></li>
+          <li><a href="tools.html">QR Generator</a></li>
+          <li><a href="tools.html">All Tools →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tools.html">Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="contact.html">Suggest a Tool</a></li>
+          <li><a href="contact.html">Report a Bug</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <span>Rock Tools</span>. All rights reserved.</span>
+      <span>Made with ❤️ for everyone</span>
+    </div>
+  </footer>
 
 </body>
 </html>
