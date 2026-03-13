@@ -204,23 +204,17 @@ async function extractText() {
   const file = document.getElementById('ocr').files[0];
   if (!file) { setResult('ocrResult', '⚠️ Image file select karo!', true); return; }
   setResult('ocrResult', '⏳ Text extract ho raha hai... (30-60 sec lag sakte hain)');
-  let worker;
   try {
-    worker = await Tesseract.createWorker('eng', 1, {
-      workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/worker.min.js',
-      corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@4/tesseract-core.wasm.js',
-      langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-    });
-    const { data: { text } } = await worker.recognize(file);
+    const { data: { text } } = await Tesseract.recognize(file, 'eng');
     if (!text.trim()) { setResult('ocrResult', '⚠️ Koi text nahi mila image mein', true); return; }
     const rows = text.split('\n').filter(function (r) { return r.trim(); });
-    const csv = rows.map(function (row) { return '"' + row.trim().replace(/"/g, '""') + '"'; }).join('\n');
+    const csv = rows.map(function (row) {
+      return '"' + row.trim().replace(/"/g, '""') + '"';
+    }).join('\n');
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'extracted_text.csv');
     setResult('ocrResult', '✅ extracted_text.csv downloaded!');
   } catch (err) {
     setResult('ocrResult', '❌ Error: ' + err.message, true);
-  } finally {
-    if (worker) await worker.terminate();
   }
 }
 
@@ -344,14 +338,8 @@ async function tableToExcel() {
   const file = document.getElementById('tableImage').files[0];
   if (!file) { setResult('tableResult', '⚠️ Image file select karo!', true); return; }
   setResult('tableResult', '⏳ Table extract ho raha hai... (30-60 sec lag sakte hain)');
-  let worker;
   try {
-    worker = await Tesseract.createWorker('eng', 1, {
-      workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/worker.min.js',
-      corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@4/tesseract-core.wasm.js',
-      langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-    });
-    const { data: { text } } = await worker.recognize(file);
+    const { data: { text } } = await Tesseract.recognize(file, 'eng');
     if (!text.trim()) { setResult('tableResult', '⚠️ Koi text nahi mila image mein', true); return; }
     const rows = text.split('\n').filter(function (r) { return r.trim(); });
     const csv = rows.map(function (row) {
@@ -362,7 +350,5 @@ async function tableToExcel() {
     setResult('tableResult', '✅ table.csv downloaded!');
   } catch (err) {
     setResult('tableResult', '❌ Error: ' + err.message, true);
-  } finally {
-    if (worker) await worker.terminate();
   }
 }
