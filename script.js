@@ -1,9 +1,11 @@
 // ============================================================
-//  ROCK TOOLS — script.js (Clean Version — Bugs Checked ✅)
+//  ROCK TOOLS — script.js
+//  Bugs Checked ✅ | OCR via OCR.space direct file upload ✅
 // ============================================================
 
+// ── Utility: File label update ──
 function updateLabel(input, labelId) {
-  const label = document.getElementById(labelId);
+  var label = document.getElementById(labelId);
   if (!label) return;
   if (input.files.length === 1) {
     label.innerText = input.files[0].name;
@@ -14,54 +16,123 @@ function updateLabel(input, labelId) {
   }
 }
 
+// ── Utility: Result message ──
 function setResult(id, msg, isError) {
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   if (!el) return;
   el.innerText = msg;
   el.style.color = isError ? '#ff6b6b' : '#4ade80';
 }
 
+// ── Utility: File to ArrayBuffer ──
 function readFileAsArrayBuffer(file) {
-  return new Promise(function (resolve, reject) {
-    const reader = new FileReader();
-    reader.onload = function (e) { resolve(e.target.result); };
-    reader.onerror = function () { reject(new Error('File read failed')); };
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function(e) { resolve(e.target.result); };
+    reader.onerror = function() { reject(new Error('File read failed')); };
     reader.readAsArrayBuffer(file);
   });
 }
 
+// ── Utility: File to DataURL ──
 function readFileAsDataURL(file) {
-  return new Promise(function (resolve, reject) {
-    const reader = new FileReader();
-    reader.onload = function (e) { resolve(e.target.result); };
-    reader.onerror = function () { reject(new Error('File read failed')); };
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function(e) { resolve(e.target.result); };
+    reader.onerror = function() { reject(new Error('File read failed')); };
     reader.readAsDataURL(file);
   });
 }
 
+// ── Utility: Download blob ──
 function downloadBlob(blob, filename) {
-  const link = document.createElement('a');
+  var link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = filename;
+  document.body.appendChild(link);
   link.click();
-  setTimeout(function () { URL.revokeObjectURL(link.href); }, 5000);
+  document.body.removeChild(link);
+  setTimeout(function() { URL.revokeObjectURL(link.href); }, 5000);
+}
+
+// ── Utility: OCR.space API — direct file upload ──
+// Note: Direct file upload (not base64) is more reliable with free key
+async function runOCR(file, resultId) {
+  if (file.size > 1024 * 1024) {
+    throw new Error('Image 1MB se badi hai! Chhoti image use karo.');
+  }
+
+  setResult(resultId, '⏳ OCR server se text extract ho raha hai... please wait');
+
+  // Direct file upload — DO NOT set Content-Type header manually
+  var formData = new FormData();
+  formData.append('file', file, file.name);
+  formData.append('apikey', 'helloworld');
+  formData.append('language', 'eng');
+  formData.append('isOverlayRequired', 'false');
+  formData.append('detectOrientation', 'true');
+  formData.append('scale', 'true');
+  formData.append('OCREngine', '2');
+
+  var response;
+  try {
+    response = await fetch('https://api.ocr.space/parse/image', {
+      method: 'POST',
+      body: formData
+      // No headers — browser automatically sets multipart/form-data with boundary
+    });
+  } catch (e) {
+    throw new Error('Internet connection check karo. Server se connect nahi hua.');
+  }
+
+  if (!response.ok) {
+    throw new Error('Server error: ' + response.status + '. Thodi der baad try karo.');
+  }
+
+  var result;
+  try {
+    result = await response.json();
+  } catch (e) {
+    throw new Error('Server ka response samajh nahi aaya. Dobara try karo.');
+  }
+
+  // Check for API-level errors
+  if (result.IsErroredOnProcessing === true) {
+    var errMsg = 'OCR failed';
+    if (result.ErrorMessage && result.ErrorMessage.length > 0) {
+      errMsg = result.ErrorMessage[0];
+    }
+    throw new Error(errMsg);
+  }
+
+  // Check for valid results
+  if (!result.ParsedResults || result.ParsedResults.length === 0) {
+    return '';
+  }
+
+  return result.ParsedResults[0].ParsedText || '';
 }
 
 
-// ── 1. MERGE PDF ──
+// ════════════════════════════════════════════
+// 1. MERGE PDF
+// ════════════════════════════════════════════
 async function mergePDF() {
-  const files = document.getElementById('mergeFiles').files;
-  if (files.length < 2) { setResult('mergeResult', '⚠️ Kam se kam 2 PDF files select karo!', true); return; }
+  var files = document.getElementById('mergeFiles').files;
+  if (files.length < 2) {
+    setResult('mergeResult', '⚠️ Kam se kam 2 PDF files select karo!', true);
+    return;
+  }
   setResult('mergeResult', '⏳ Merging...');
   try {
-    const mergedPdf = await PDFLib.PDFDocument.create();
-    for (let i = 0; i < files.length; i++) {
-      const bytes = await readFileAsArrayBuffer(files[i]);
-      const pdf = await PDFLib.PDFDocument.load(bytes);
-      const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-      pages.forEach(function (p) { mergedPdf.addPage(p); });
+    var mergedPdf = await PDFLib.PDFDocument.create();
+    for (var i = 0; i < files.length; i++) {
+      var bytes = await readFileAsArrayBuffer(files[i]);
+      var pdf = await PDFLib.PDFDocument.load(bytes);
+      var pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+      pages.forEach(function(p) { mergedPdf.addPage(p); });
     }
-    const pdfBytes = await mergedPdf.save();
+    var pdfBytes = await mergedPdf.save();
     downloadBlob(new Blob([pdfBytes], { type: 'application/pdf' }), 'merged.pdf');
     setResult('mergeResult', '✅ merged.pdf download ho gaya!');
   } catch (err) {
@@ -70,23 +141,28 @@ async function mergePDF() {
 }
 
 
-// ── 2. SPLIT PDF ──
+// ════════════════════════════════════════════
+// 2. SPLIT PDF
+// ════════════════════════════════════════════
 async function splitPDF() {
-  const file = document.getElementById('splitFile').files[0];
-  const from = parseInt(document.getElementById('splitFrom').value);
-  const to = parseInt(document.getElementById('splitTo').value);
+  var file = document.getElementById('splitFile').files[0];
+  var from = parseInt(document.getElementById('splitFrom').value);
+  var to = parseInt(document.getElementById('splitTo').value);
   if (!file) { setResult('splitResult', '⚠️ PDF file select karo!', true); return; }
-  if (!from || !to || from < 1 || to < from) { setResult('splitResult', '⚠️ Valid page range enter karo (From <= To)', true); return; }
+  if (!from || !to || from < 1 || to < from) {
+    setResult('splitResult', '⚠️ Valid page range do (From <= To)', true);
+    return;
+  }
   setResult('splitResult', '⏳ Splitting...');
   try {
-    const bytes = await readFileAsArrayBuffer(file);
-    const srcPdf = await PDFLib.PDFDocument.load(bytes);
-    const actualTo = Math.min(to, srcPdf.getPageCount());
-    const indices = Array.from({ length: actualTo - from + 1 }, function (_, i) { return from - 1 + i; });
-    const newPdf = await PDFLib.PDFDocument.create();
-    const pages = await newPdf.copyPages(srcPdf, indices);
-    pages.forEach(function (p) { newPdf.addPage(p); });
-    const pdfBytes = await newPdf.save();
+    var bytes = await readFileAsArrayBuffer(file);
+    var srcPdf = await PDFLib.PDFDocument.load(bytes);
+    var actualTo = Math.min(to, srcPdf.getPageCount());
+    var indices = Array.from({ length: actualTo - from + 1 }, function(_, i) { return from - 1 + i; });
+    var newPdf = await PDFLib.PDFDocument.create();
+    var pages = await newPdf.copyPages(srcPdf, indices);
+    pages.forEach(function(p) { newPdf.addPage(p); });
+    var pdfBytes = await newPdf.save();
     downloadBlob(new Blob([pdfBytes], { type: 'application/pdf' }), 'split_page' + from + '-' + actualTo + '.pdf');
     setResult('splitResult', '✅ Pages ' + from + '–' + actualTo + ' download ho gayi!');
   } catch (err) {
@@ -95,56 +171,62 @@ async function splitPDF() {
 }
 
 
-// ── 3. IMAGE COMPRESS ──
+// ════════════════════════════════════════════
+// 3. IMAGE COMPRESS
+// ════════════════════════════════════════════
 function compressImage() {
-  const file = document.getElementById('compressFile').files[0];
-  const quality = parseInt(document.getElementById('quality').value) / 100;
+  var file = document.getElementById('compressFile').files[0];
+  var quality = parseInt(document.getElementById('quality').value) / 100;
   if (!file) { setResult('compressResult', '⚠️ Image file select karo!', true); return; }
-  if (file.type === 'image/png') { setResult('compressResult', '⚠️ PNG lossless hai — JPG file try karo!', true); return; }
+  if (file.type === 'image/png') {
+    setResult('compressResult', '⚠️ PNG lossless hai — JPG file use karo!', true);
+    return;
+  }
   setResult('compressResult', '⏳ Compressing...');
-  const img = new Image();
+  var img = new Image();
   img.src = URL.createObjectURL(file);
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
     canvas.getContext('2d').drawImage(img, 0, 0);
-    canvas.toBlob(function (blob) {
-      const origKB = (file.size / 1024).toFixed(1);
-      const newKB = (blob.size / 1024).toFixed(1);
-      const saved = (((file.size - blob.size) / file.size) * 100).toFixed(0);
+    canvas.toBlob(function(blob) {
+      var origKB = (file.size / 1024).toFixed(1);
+      var newKB = (blob.size / 1024).toFixed(1);
+      var saved = (((file.size - blob.size) / file.size) * 100).toFixed(0);
       downloadBlob(blob, 'compressed.jpg');
       setResult('compressResult', '✅ ' + origKB + 'KB → ' + newKB + 'KB (' + saved + '% saved)');
       URL.revokeObjectURL(img.src);
     }, 'image/jpeg', quality);
   };
-  img.onerror = function () { setResult('compressResult', '❌ Image load nahi hui', true); };
+  img.onerror = function() { setResult('compressResult', '❌ Image load nahi hui', true); };
 }
 
 
-// ── 4. IMAGE TO PDF ──
+// ════════════════════════════════════════════
+// 4. IMAGE TO PDF
+// ════════════════════════════════════════════
 async function imageToPDF() {
-  const files = document.getElementById('imgpdfFiles').files;
+  var files = document.getElementById('imgpdfFiles').files;
   if (files.length === 0) { setResult('imgpdfResult', '⚠️ Kam se kam 1 image select karo!', true); return; }
   setResult('imgpdfResult', '⏳ Converting...');
   try {
-    const pdf = await PDFLib.PDFDocument.create();
-    for (let i = 0; i < files.length; i++) {
-      const dataUrl = await readFileAsDataURL(files[i]);
-      const convCanvas = document.createElement('canvas');
-      const convImg = new Image();
+    var pdf = await PDFLib.PDFDocument.create();
+    for (var i = 0; i < files.length; i++) {
+      var dataUrl = await readFileAsDataURL(files[i]);
+      var convCanvas = document.createElement('canvas');
+      var convImg = new Image();
       convImg.src = dataUrl;
-      await new Promise(function (r) { convImg.onload = r; });
+      await new Promise(function(r) { convImg.onload = r; });
       convCanvas.width = convImg.width;
       convCanvas.height = convImg.height;
       convCanvas.getContext('2d').drawImage(convImg, 0, 0);
-      const jpgDataUrl = convCanvas.toDataURL('image/jpeg', 0.95);
-      const base64 = jpgDataUrl.split(',')[1];
-      const img = await pdf.embedJpg(Uint8Array.from(atob(base64), function (c) { return c.charCodeAt(0); }));
-      const page = pdf.addPage([img.width, img.height]);
+      var jpgBase64 = convCanvas.toDataURL('image/jpeg', 0.95).split(',')[1];
+      var img = await pdf.embedJpg(Uint8Array.from(atob(jpgBase64), function(c) { return c.charCodeAt(0); }));
+      var page = pdf.addPage([img.width, img.height]);
       page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
     }
-    const pdfBytes = await pdf.save();
+    var pdfBytes = await pdf.save();
     downloadBlob(new Blob([pdfBytes], { type: 'application/pdf' }), 'images.pdf');
     setResult('imgpdfResult', '✅ ' + files.length + ' image(s) → images.pdf downloaded!');
   } catch (err) {
@@ -153,89 +235,108 @@ async function imageToPDF() {
 }
 
 
-// ── 5. JPG TO PNG ──
+// ════════════════════════════════════════════
+// 5. JPG TO PNG
+// ════════════════════════════════════════════
 function jpgToPNG() {
-  const file = document.getElementById('jpgFile').files[0];
+  var file = document.getElementById('jpgFile').files[0];
   if (!file) { setResult('jpgResult', '⚠️ JPG file select karo!', true); return; }
   setResult('jpgResult', '⏳ Converting...');
-  const img = new Image();
+  var img = new Image();
   img.src = URL.createObjectURL(file);
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
     canvas.getContext('2d').drawImage(img, 0, 0);
-    canvas.toBlob(function (blob) {
+    canvas.toBlob(function(blob) {
       downloadBlob(blob, file.name.replace(/\.(jpg|jpeg)$/i, '.png'));
       setResult('jpgResult', '✅ PNG file downloaded!');
       URL.revokeObjectURL(img.src);
     }, 'image/png');
   };
-  img.onerror = function () { setResult('jpgResult', '❌ Image load nahi hui', true); };
+  img.onerror = function() { setResult('jpgResult', '❌ Image load nahi hui', true); };
 }
 
 
-// ── 6. QR GENERATOR ──
+// ════════════════════════════════════════════
+// 6. QR GENERATOR
+// ════════════════════════════════════════════
 function generateQR() {
-  const text = document.getElementById('qrtext').value.trim();
+  var text = document.getElementById('qrtext').value.trim();
   if (!text) { alert('Pehle kuch text ya URL type karo!'); return; }
-  const qrDiv = document.getElementById('qr');
-  const imgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(text);
+  var qrDiv = document.getElementById('qr');
+  var imgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(text);
   qrDiv.innerHTML = '<img src="' + imgUrl + '" alt="QR Code" crossorigin="anonymous" style="margin-top:10px;border-radius:8px">';
   document.getElementById('qrDownloadBtn').style.display = 'block';
 }
 
 function downloadQR() {
-  const img = document.querySelector('#qr img');
+  var img = document.querySelector('#qr img');
   if (!img) return;
-  const canvas = document.createElement('canvas');
+  var canvas = document.createElement('canvas');
   canvas.width = 200;
   canvas.height = 200;
-  canvas.getContext('2d').drawImage(img, 0, 0);
-  const a = document.createElement('a');
-  a.download = 'qrcode.png';
-  a.href = canvas.toDataURL('image/png');
-  a.click();
+  var tempImg = new Image();
+  tempImg.crossOrigin = 'anonymous';
+  tempImg.onload = function() {
+    canvas.getContext('2d').drawImage(tempImg, 0, 0, 200, 200);
+    var a = document.createElement('a');
+    a.download = 'qrcode.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  };
+  tempImg.onerror = function() { window.open(img.src, '_blank'); };
+  tempImg.src = img.src;
 }
 
 
-// ── 7. IMAGE TEXT → CSV (OCR) ──
+// ════════════════════════════════════════════
+// 7. IMAGE TEXT → CSV  (OCR.space API)
+// ════════════════════════════════════════════
 async function extractText() {
-  const file = document.getElementById('ocr').files[0];
+  var file = document.getElementById('ocr').files[0];
   if (!file) { setResult('ocrResult', '⚠️ Image file select karo!', true); return; }
-  setResult('ocrResult', '⏳ Text extract ho raha hai... (thoda wait karo)');
   try {
-    const result = await Tesseract.recognize(file, 'eng');
-    const text = result.data.text;
-    if (!text.trim()) { setResult('ocrResult', '⚠️ Koi text nahi mila image mein', true); return; }
-    const rows = text.split('\n').filter(function(r) { return r.trim(); });
-    const csv = rows.map(function(row) {
+    var text = await runOCR(file, 'ocrResult');
+    if (!text.trim()) {
+      setResult('ocrResult', '⚠️ Image mein koi text nahi mila. Clear aur readable image use karo.', true);
+      return;
+    }
+    var rows = text.split('\n').filter(function(r) { return r.trim(); });
+    var csv = rows.map(function(row) {
       return '"' + row.trim().replace(/"/g, '""') + '"';
     }).join('\n');
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'extracted_text.csv');
-    setResult('ocrResult', '✅ extracted_text.csv downloaded!');
+    setResult('ocrResult', '✅ extracted_text.csv downloaded! (' + rows.length + ' lines)');
   } catch (err) {
-    setResult('ocrResult', '❌ Error: ' + err.message, true);
+    setResult('ocrResult', '❌ ' + err.message, true);
   }
 }
 
-// ── 8. PDF TO JPG ──
+
+// ════════════════════════════════════════════
+// 8. PDF TO JPG
+// ════════════════════════════════════════════
 async function pdfToJpg() {
-  const file = document.getElementById('pdfToJpgFile').files[0];
-  const pageNum = parseInt(document.getElementById('pdfPageNum').value) || 1;
+  var file = document.getElementById('pdfToJpgFile').files[0];
+  var pageNum = parseInt(document.getElementById('pdfPageNum').value) || 1;
   if (!file) { setResult('pdfJpgResult', '⚠️ PDF file select karo!', true); return; }
   setResult('pdfJpgResult', '⏳ Converting page ' + pageNum + '...');
   try {
-    const arrayBuffer = await readFileAsArrayBuffer(file);
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    if (pageNum > pdf.numPages) { setResult('pdfJpgResult', '⚠️ Sirf ' + pdf.numPages + ' pages hain!', true); return; }
-    const page = await pdf.getPage(pageNum);
-    const viewport = page.getViewport({ scale: 2.0 });
-    const canvas = document.createElement('canvas');
+    var arrayBuffer = await readFileAsArrayBuffer(file);
+    var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    if (pageNum > pdf.numPages) {
+      setResult('pdfJpgResult', '⚠️ Sirf ' + pdf.numPages + ' pages hain!', true);
+      return;
+    }
+    var page = await pdf.getPage(pageNum);
+    var viewport = page.getViewport({ scale: 2.0 });
+    var canvas = document.createElement('canvas');
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-    canvas.toBlob(function (blob) {
+    canvas.toBlob(function(blob) {
       downloadBlob(blob, 'page_' + pageNum + '.jpg');
       setResult('pdfJpgResult', '✅ page_' + pageNum + '.jpg downloaded!');
     }, 'image/jpeg', 0.95);
@@ -245,87 +346,96 @@ async function pdfToJpg() {
 }
 
 
-// ── 9. PNG TO JPG ──
+// ════════════════════════════════════════════
+// 9. PNG TO JPG
+// ════════════════════════════════════════════
 function pngToJpg() {
-  const file = document.getElementById('pngFile').files[0];
+  var file = document.getElementById('pngFile').files[0];
   if (!file) { setResult('pngResult', '⚠️ PNG file select karo!', true); return; }
   setResult('pngResult', '⏳ Converting...');
-  const img = new Image();
+  var img = new Image();
   img.src = URL.createObjectURL(file);
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
-    canvas.toBlob(function (blob) {
+    canvas.toBlob(function(blob) {
       downloadBlob(blob, file.name.replace(/\.png$/i, '.jpg'));
       setResult('pngResult', '✅ JPG file downloaded!');
       URL.revokeObjectURL(img.src);
     }, 'image/jpeg', 0.95);
   };
-  img.onerror = function () { setResult('pngResult', '❌ Image load nahi hui', true); };
+  img.onerror = function() { setResult('pngResult', '❌ Image load nahi hui', true); };
 }
 
 
-// ── 10. RESIZE IMAGE ──
+// ════════════════════════════════════════════
+// 10. RESIZE IMAGE
+// ════════════════════════════════════════════
 function resizeImageFn() {
-  const file = document.getElementById('resizeInput').files[0];
-  const width = parseInt(document.getElementById('resizeWidth').value);
-  const height = parseInt(document.getElementById('resizeHeight').value);
+  var file = document.getElementById('resizeInput').files[0];
+  var width = parseInt(document.getElementById('resizeWidth').value);
+  var height = parseInt(document.getElementById('resizeHeight').value);
   if (!file) { setResult('resizeResult', '⚠️ Image file select karo!', true); return; }
-  if (!width || !height || width <= 0 || height <= 0) { setResult('resizeResult', '⚠️ Valid width aur height do!', true); return; }
+  if (!width || !height || width <= 0 || height <= 0) {
+    setResult('resizeResult', '⚠️ Valid width aur height do (0 se zyada)!', true);
+    return;
+  }
   setResult('resizeResult', '⏳ Resizing...');
-  const img = new Image();
+  var img = new Image();
   img.src = URL.createObjectURL(file);
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-    canvas.toBlob(function (blob) {
+    canvas.toBlob(function(blob) {
       downloadBlob(blob, 'resized_' + width + 'x' + height + '.png');
       setResult('resizeResult', '✅ ' + width + '×' + height + 'px image downloaded!');
       URL.revokeObjectURL(img.src);
     }, 'image/png');
   };
-  img.onerror = function () { setResult('resizeResult', '❌ Image load nahi hui', true); };
+  img.onerror = function() { setResult('resizeResult', '❌ Image load nahi hui', true); };
 }
 
 
-// ── 11. PASSWORD GENERATOR ──
+// ════════════════════════════════════════════
+// 11. PASSWORD GENERATOR
+// ════════════════════════════════════════════
 function generatePassword() {
-  const len = parseInt(document.getElementById('passLength').value);
-  const useUpper = document.getElementById('useUpper').checked;
-  const useLower = document.getElementById('useLower').checked;
-  const useNum = document.getElementById('useNum').checked;
-  const useSym = document.getElementById('useSym').checked;
-  let chars = '';
+  var len = parseInt(document.getElementById('passLength').value);
+  var useUpper = document.getElementById('useUpper').checked;
+  var useLower = document.getElementById('useLower').checked;
+  var useNum = document.getElementById('useNum').checked;
+  var useSym = document.getElementById('useSym').checked;
+  var chars = '';
   if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
   if (useNum) chars += '0123456789';
   if (useSym) chars += '@#$!%^&*()-_=+';
   if (!chars) { setResult('passwordResult', '⚠️ Kam se kam ek option select karo!', true); return; }
-  const arr = new Uint32Array(len);
+  var arr = new Uint32Array(len);
   window.crypto.getRandomValues(arr);
-  let password = '';
-  for (let i = 0; i < len; i++) {
+  var password = '';
+  for (var i = 0; i < len; i++) {
     password += chars[arr[i] % chars.length];
   }
-  const el = document.getElementById('passwordResult');
+  var el = document.getElementById('passwordResult');
   el.innerText = '🔑 ' + password;
   el.style.color = '#4ade80';
 }
 
 function copyPassword() {
-  const el = document.getElementById('passwordResult');
-  const text = el.innerText.replace('🔑 ', '').replace('✅ Copied: ', '');
+  var el = document.getElementById('passwordResult');
+  var text = el.innerText.replace('🔑 ', '').replace('✅ Copied: ', '');
   if (!text) return;
-  navigator.clipboard.writeText(text).then(function () {
+  navigator.clipboard.writeText(text).then(function() {
     setResult('passwordResult', '✅ Copied: ' + text);
-    setTimeout(function () {
+    setTimeout(function() {
       el.innerText = '🔑 ' + text;
       el.style.color = '#4ade80';
     }, 1500);
@@ -333,25 +443,28 @@ function copyPassword() {
 }
 
 
-// ── 12. IMAGE TABLE → CSV (OCR) ──
+// ════════════════════════════════════════════
+// 12. IMAGE TABLE → CSV  (OCR.space API)
+// ════════════════════════════════════════════
 async function tableToExcel() {
-  const file = document.getElementById('tableImage').files[0];
+  var file = document.getElementById('tableImage').files[0];
   if (!file) { setResult('tableResult', '⚠️ Image file select karo!', true); return; }
-  setResult('tableResult', '⏳ Table extract ho raha hai... (thoda wait karo)');
   try {
-    const result = await Tesseract.recognize(file, 'eng');
-    const text = result.data.text;
-    if (!text.trim()) { setResult('tableResult', '⚠️ Koi text nahi mila image mein', true); return; }
-    const rows = text.split('\n').filter(function(r) { return r.trim(); });
-    const csv = rows.map(function(row) {
-      const cols = row.trim().split(/\s{2,}/);
+    var text = await runOCR(file, 'tableResult');
+    if (!text.trim()) {
+      setResult('tableResult', '⚠️ Image mein koi text nahi mila. Clear table image use karo.', true);
+      return;
+    }
+    var rows = text.split('\n').filter(function(r) { return r.trim(); });
+    var csv = rows.map(function(row) {
+      var cols = row.trim().split(/\s{2,}/);
       return cols.map(function(c) {
         return '"' + c.replace(/"/g, '""') + '"';
       }).join(',');
     }).join('\n');
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'table.csv');
-    setResult('tableResult', '✅ table.csv downloaded!');
+    setResult('tableResult', '✅ table.csv downloaded! (' + rows.length + ' rows)');
   } catch (err) {
-    setResult('tableResult', '❌ Error: ' + err.message, true);
+    setResult('tableResult', '❌ ' + err.message, true);
   }
 }
