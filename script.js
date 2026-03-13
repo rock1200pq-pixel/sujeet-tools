@@ -203,12 +203,13 @@ function downloadQR() {
 async function extractText() {
   const file = document.getElementById('ocr').files[0];
   if (!file) { setResult('ocrResult', '⚠️ Image file select karo!', true); return; }
-  setResult('ocrResult', '⏳ Text extract ho raha hai... (30-60 sec lag sakte hain)');
+  setResult('ocrResult', '⏳ Text extract ho raha hai... (thoda wait karo)');
   try {
-    const { data: { text } } = await Tesseract.recognize(file, 'eng');
+    const result = await Tesseract.recognize(file, 'eng');
+    const text = result.data.text;
     if (!text.trim()) { setResult('ocrResult', '⚠️ Koi text nahi mila image mein', true); return; }
-    const rows = text.split('\n').filter(function (r) { return r.trim(); });
-    const csv = rows.map(function (row) {
+    const rows = text.split('\n').filter(function(r) { return r.trim(); });
+    const csv = rows.map(function(row) {
       return '"' + row.trim().replace(/"/g, '""') + '"';
     }).join('\n');
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'extracted_text.csv');
@@ -217,7 +218,6 @@ async function extractText() {
     setResult('ocrResult', '❌ Error: ' + err.message, true);
   }
 }
-
 
 // ── 8. PDF TO JPG ──
 async function pdfToJpg() {
@@ -337,14 +337,17 @@ function copyPassword() {
 async function tableToExcel() {
   const file = document.getElementById('tableImage').files[0];
   if (!file) { setResult('tableResult', '⚠️ Image file select karo!', true); return; }
-  setResult('tableResult', '⏳ Table extract ho raha hai... (30-60 sec lag sakte hain)');
+  setResult('tableResult', '⏳ Table extract ho raha hai... (thoda wait karo)');
   try {
-    const { data: { text } } = await Tesseract.recognize(file, 'eng');
+    const result = await Tesseract.recognize(file, 'eng');
+    const text = result.data.text;
     if (!text.trim()) { setResult('tableResult', '⚠️ Koi text nahi mila image mein', true); return; }
-    const rows = text.split('\n').filter(function (r) { return r.trim(); });
-    const csv = rows.map(function (row) {
+    const rows = text.split('\n').filter(function(r) { return r.trim(); });
+    const csv = rows.map(function(row) {
       const cols = row.trim().split(/\s{2,}/);
-      return cols.map(function (c) { return '"' + c.replace(/"/g, '""') + '"'; }).join(',');
+      return cols.map(function(c) {
+        return '"' + c.replace(/"/g, '""') + '"';
+      }).join(',');
     }).join('\n');
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'table.csv');
     setResult('tableResult', '✅ table.csv downloaded!');
