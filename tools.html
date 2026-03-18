@@ -132,7 +132,22 @@
       <button onclick="generatePassword()">Generate</button>
       <p class="result" id="passwordResult" style="cursor:pointer;word-break:break-all" title="Click to copy" onclick="copyPassword()"></p>
     </div>
+<!-- PDF TO WORD TOOL CARD -->
+<!-- tools.html mein toolsGrid ke andar paste karo -->
 
+<div class="toolCard">
+  <h3>📃 PDF to Word</h3>
+  <label class="fileLabel">
+    <input type="file" id="pdfToWordFile" accept=".pdf"
+      onchange="updateLabel(this,'pdfToWordLabel')">
+    <span id="pdfToWordLabel">Choose PDF file...</span>
+  </label>
+  <p style="font-size:11px;color:#888;margin:4px 0 8px;">
+    ⚠️ Text-based PDFs ke liye best — image PDFs ka text extract nahi hoga
+  </p>
+  <button onclick="pdfToWord()">Convert to Word</button>
+  <p class="result" id="pdfToWordResult"></p>
+</div>
   </div>
 
   <script src="script.js"></script>
