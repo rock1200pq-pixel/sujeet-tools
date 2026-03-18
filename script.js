@@ -290,31 +290,6 @@ function downloadQR() {
   tempImg.src = img.src;
 }
 
-
-// ════════════════════════════════════════════
-// 7. IMAGE TEXT → CSV  (OCR.space API)
-// ════════════════════════════════════════════
-async function extractText() {
-  var file = document.getElementById('ocr').files[0];
-  if (!file) { setResult('ocrResult', '⚠️ Image file select karo!', true); return; }
-  try {
-    var text = await runOCR(file, 'ocrResult');
-    if (!text.trim()) {
-      setResult('ocrResult', '⚠️ Image mein koi text nahi mila. Clear aur readable image use karo.', true);
-      return;
-    }
-    var rows = text.split('\n').filter(function(r) { return r.trim(); });
-    var csv = rows.map(function(row) {
-      return '"' + row.trim().replace(/"/g, '""') + '"';
-    }).join('\n');
-    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'extracted_text.csv');
-    setResult('ocrResult', '✅ extracted_text.csv downloaded! (' + rows.length + ' lines)');
-  } catch (err) {
-    setResult('ocrResult', '❌ ' + err.message, true);
-  }
-}
-
-
 // ════════════════════════════════════════════
 // 8. PDF TO JPG
 // ════════════════════════════════════════════
@@ -440,31 +415,4 @@ function copyPassword() {
       el.style.color = '#4ade80';
     }, 1500);
   });
-}
-
-
-// ════════════════════════════════════════════
-// 12. IMAGE TABLE → CSV  (OCR.space API)
-// ════════════════════════════════════════════
-async function tableToExcel() {
-  var file = document.getElementById('tableImage').files[0];
-  if (!file) { setResult('tableResult', '⚠️ Image file select karo!', true); return; }
-  try {
-    var text = await runOCR(file, 'tableResult');
-    if (!text.trim()) {
-      setResult('tableResult', '⚠️ Image mein koi text nahi mila. Clear table image use karo.', true);
-      return;
-    }
-    var rows = text.split('\n').filter(function(r) { return r.trim(); });
-    var csv = rows.map(function(row) {
-      var cols = row.trim().split(/\s{2,}/);
-      return cols.map(function(c) {
-        return '"' + c.replace(/"/g, '""') + '"';
-      }).join(',');
-    }).join('\n');
-    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'table.csv');
-    setResult('tableResult', '✅ table.csv downloaded! (' + rows.length + ' rows)');
-  } catch (err) {
-    setResult('tableResult', '❌ ' + err.message, true);
-  }
 }
