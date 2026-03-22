@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Snake Pro</title>
+<title>Snake Ultra Pro</title>
 <style>
-body { background:#000; color:#0f0; text-align:center; font-family:sans-serif; }
-canvas { background:#111; margin-top:20px; border:2px solid #0f0; }
+body { background:#050d05; color:#0f0; text-align:center; font-family:sans-serif; }
+canvas { background:#0d1f0d; margin-top:20px; border-radius:12px; }
 button { padding:10px 20px; margin-top:10px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<h2>🐍 Snake Pro</h2>
+<h2>🐍 Snake Ultra</h2>
 <p>Arrow keys | Space = Pause</p>
 <canvas id="game" width="400" height="400"></canvas><br>
 <button onclick="startGame()">Start / Restart</button>
@@ -20,168 +20,142 @@ button { padding:10px 20px; margin-top:10px; cursor:pointer; }
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const GRID = 20;
-const COLS = 20;
+const GRID=20, COLS=20;
+let snake, dir, nextDir, food, score, best;
+let speed, loop, paused=false;
+let foodType="normal", obstacles=[], shield=false;
 
-let snake, dir, food, score, best;
-let speed, gameLoop;
-let isPaused = false;
-let foodType = "normal";
-let obstacles = [];
-let shield = false;
-
-// Sounds
-let eatSound = new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
-let gameOverSound = new Audio("https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3");
+// Smooth wave
+const AMP=6, FREQ=0.6;
 
 // Load best
-best = localStorage.getItem("bestSnake") || 0;
+best = localStorage.getItem("snakeBest") || 0;
 
-// ───────── START GAME ─────────
+// START
 function startGame(){
-  snake = [{x:10,y:10}];
-  dir = {x:1,y:0};
-  score = 0;
-  speed = 150;
-  isPaused = false;
-  shield = false;
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir={x:1,y:0}; nextDir={x:1,y:0};
+  score=0; speed=140; paused=false; shield=false;
 
   spawnObstacles();
   spawnFood();
 
-  clearInterval(gameLoop);
-  gameLoop = setInterval(update, speed);
-
+  clearInterval(loop);
+  loop=setInterval(update,speed);
   draw();
 }
 
-// ───────── SAFE SPAWN FOOD ─────────
+// SAFE FOOD
 function spawnFood(){
-  let valid = false;
-
-  while(!valid){
-    food = {
-      x: Math.floor(Math.random()*COLS),
-      y: Math.floor(Math.random()*COLS)
-    };
-
-    valid = !snake.some(s=>s.x===food.x && s.y===food.y) &&
-            !obstacles.some(o=>o.x===food.x && o.y===food.y);
+  let ok=false;
+  while(!ok){
+    food={x:rand(),y:rand()};
+    ok=!snake.some(s=>same(s,food)) &&
+       !obstacles.some(o=>same(o,food));
   }
 
-  let r = Math.random();
-  if(r<0.7) foodType="normal";
-  else if(r<0.85) foodType="bonus";
-  else if(r<0.95) foodType="speed";
-  else foodType="shield";
+  let r=Math.random();
+  foodType = r<0.7?"normal":r<0.85?"bonus":r<0.95?"speed":"shield";
 }
 
-// ───────── SAFE OBSTACLES ─────────
+// SAFE OBSTACLES
 function spawnObstacles(){
-  obstacles = [];
-
+  obstacles=[];
   for(let i=0;i<5;i++){
-    let pos;
-    do{
-      pos = {
-        x: Math.floor(Math.random()*COLS),
-        y: Math.floor(Math.random()*COLS)
-      };
-    }while(snake && snake.some(s=>s.x===pos.x && s.y===pos.y));
-
-    obstacles.push(pos);
+    let p;
+    do{ p={x:rand(),y:rand()} }
+    while(snake && snake.some(s=>same(s,p)));
+    obstacles.push(p);
   }
 }
 
-// ───────── GAME UPDATE ─────────
+function rand(){ return Math.floor(Math.random()*COLS); }
+function same(a,b){ return a.x===b.x && a.y===b.y; }
+
+// UPDATE
 function update(){
-  if(isPaused) return;
+  if(paused) return;
 
-  let head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+  dir=nextDir;
+  let head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
 
-  // Wrap
+  // wrap
   if(head.x<0) head.x=COLS-1;
   if(head.y<0) head.y=COLS-1;
   if(head.x>=COLS) head.x=0;
   if(head.y>=COLS) head.y=0;
 
-  // Collision
+  // collision
   if(!shield && (
-    snake.some(s=>s.x===head.x && s.y===head.y) ||
-    obstacles.some(o=>o.x===head.x && o.y===head.y)
-  )){
-    gameOver();
-    return;
-  }
+    snake.some(s=>same(s,head)) ||
+    obstacles.some(o=>same(o,head))
+  )) return gameOver();
 
   snake.unshift(head);
 
-  // Eat food
-  if(head.x===food.x && head.y===food.y){
-    eatSound.play();
-
-    if(foodType==="normal") score+=1;
+  // eat
+  if(same(head,food)){
+    if(foodType==="normal") score++;
     if(foodType==="bonus") score+=5;
 
     if(foodType==="speed"){
-      let oldSpeed = speed;
-      speed = Math.max(60, speed-40);
-      resetLoop();
-
-      setTimeout(()=>{
-        speed = oldSpeed;
-        resetLoop();
-      },3000);
+      let old=speed;
+      speed=Math.max(60,speed-40);
+      reset();
+      setTimeout(()=>{speed=old;reset();},3000);
     }
 
     if(foodType==="shield"){
-      shield = true;
-      setTimeout(()=> shield=false, 3000);
+      shield=true;
+      setTimeout(()=>shield=false,3000);
     }
 
     spawnFood();
-  } else {
-    snake.pop();
-  }
+  } else snake.pop();
 
-  // Difficulty scaling
-  if(score !== 0 && score % 5 === 0){
-    speed = Math.max(60, speed-5);
-    resetLoop();
+  // difficulty
+  if(score && score%5===0){
+    speed=Math.max(60,speed-3);
+    reset();
   }
 
   draw();
 }
 
-// ───────── RESET LOOP ─────────
-function resetLoop(){
-  clearInterval(gameLoop);
-  gameLoop = setInterval(update, speed);
+function reset(){
+  clearInterval(loop);
+  loop=setInterval(update,speed);
 }
 
-// ───────── DRAW ─────────
+// DRAW
 function draw(){
-  ctx.fillStyle="#000";
+  ctx.fillStyle="#0d1f0d";
   ctx.fillRect(0,0,400,400);
 
-  // Snake
-  ctx.fillStyle = shield ? "cyan" : "lime";
-  snake.forEach(s=>{
-    ctx.fillRect(s.x*GRID, s.y*GRID, GRID, GRID);
+  // snake (smooth wave effect)
+  snake.forEach((s,i)=>{
+    let offset = Math.sin(i*FREQ + Date.now()/200)*AMP;
+    let px = s.x*GRID + (dir.y*offset);
+    let py = s.y*GRID + (-dir.x*offset);
+
+    ctx.fillStyle = shield?"cyan":"lime";
+    ctx.fillRect(px,py,GRID,GRID);
   });
 
-  // Food
-  if(foodType==="normal") ctx.fillStyle="red";
-  if(foodType==="bonus") ctx.fillStyle="gold";
-  if(foodType==="speed") ctx.fillStyle="cyan";
-  if(foodType==="shield") ctx.fillStyle="white";
+  // food
+  let colors={
+    normal:"red",
+    bonus:"gold",
+    speed:"cyan",
+    shield:"white"
+  };
+  ctx.fillStyle=colors[foodType];
+  ctx.fillRect(food.x*GRID,food.y*GRID,GRID,GRID);
 
-  ctx.fillRect(food.x*GRID, food.y*GRID, GRID, GRID);
-
-  // Obstacles
+  // obstacles
   ctx.fillStyle="gray";
   obstacles.forEach(o=>{
-    ctx.fillRect(o.x*GRID, o.y*GRID, GRID, GRID);
+    ctx.fillRect(o.x*GRID,o.y*GRID,GRID,GRID);
   });
 
   // UI
@@ -189,39 +163,38 @@ function draw(){
   ctx.fillText("Score: "+score,10,20);
   ctx.fillText("Best: "+best,10,40);
 
-  if(isPaused){
+  if(paused){
     ctx.fillStyle="yellow";
     ctx.fillText("PAUSED",160,200);
   }
 }
 
-// ───────── GAME OVER ─────────
+// GAME OVER
 function gameOver(){
-  clearInterval(gameLoop);
-  gameOverSound.play();
+  clearInterval(loop);
 
-  if(score > best){
-    best = score;
-    localStorage.setItem("bestSnake", best);
+  if(score>best){
+    best=score;
+    localStorage.setItem("snakeBest",best);
   }
 
   alert("Game Over! Score: "+score);
 }
 
-// ───────── CONTROLS ─────────
-document.addEventListener("keydown", e=>{
-  if(e.key==="ArrowUp" && dir.y!==1) dir={x:0,y:-1};
-  if(e.key==="ArrowDown" && dir.y!==-1) dir={x:0,y:1};
-  if(e.key==="ArrowLeft" && dir.x!==1) dir={x:-1,y:0};
-  if(e.key==="ArrowRight" && dir.x!==-1) dir={x:1,y:0};
+// CONTROLS
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowUp" && dir.y!==1) nextDir={x:0,y:-1};
+  if(e.key==="ArrowDown" && dir.y!==-1) nextDir={x:0,y:1};
+  if(e.key==="ArrowLeft" && dir.x!==1) nextDir={x:-1,y:0};
+  if(e.key==="ArrowRight" && dir.x!==-1) nextDir={x:1,y:0};
 
   if(e.key===" "){
-    isPaused = !isPaused;
+    paused=!paused;
     draw();
   }
 });
 
-// Initial screen
+// INIT
 draw();
 </script>
 
