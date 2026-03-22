@@ -43,7 +43,7 @@ body::after {
 nav {
   position: sticky; top: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0 50px; height: 72px;
+  padding: 0 24px; height: 72px;
   background: rgba(3,10,18,0.88);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -51,7 +51,7 @@ nav {
 .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .logo img { height: 44px; }
 .logo-text {
-  font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: 2px;
+  font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 1px;
   background: linear-gradient(90deg, var(--accent), var(--accent3));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
@@ -164,4 +164,13 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   footer { padding:40px 20px 20px; }
   .footer-grid { grid-template-columns:1fr; }
   .footer-bottom { flex-direction:column; gap:8px; text-align:center; }
+}
+h1.title {
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+.toolsGrid {
+  width: 100%;
+  margin: 0 auto;
 }
