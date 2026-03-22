@@ -42,6 +42,20 @@
     }
     .back-link { display:inline-block; margin-top:20px; color:#666; font-size:13px; text-decoration:none; }
     .back-link:hover { color:#00c6ff; }
+
+    /* ── snake_slither animation ── */
+    @keyframes snake_slither {
+      0%   { transform: rotate(-2deg) translateY(-1px); }
+      25%  { transform: rotate( 0deg) translateY( 0px); }
+      50%  { transform: rotate( 2deg) translateY( 1px); }
+      75%  { transform: rotate( 0deg) translateY( 0px); }
+      100% { transform: rotate(-2deg) translateY(-1px); }
+    }
+    @keyframes tongue_flicker {
+      0%,100% { opacity:1; transform:scaleX(1); }
+      40%     { opacity:0.4; transform:scaleX(0.6); }
+      60%     { opacity:1; transform:scaleX(1.2); }
+    }
   </style>
 </head>
 <body>
@@ -87,6 +101,14 @@
   </div>
 
 <script>
+// ══════════════════════════════════════════════
+//  ROCK TOOLS — Snake Game
+//  Animation: snake_slither
+//  Function:  moveSerpentine()
+//  Description: Snake moves in smooth S-shaped wave motion
+//  Updated: 22 March 2026
+// ══════════════════════════════════════════════
+
 var canvas = document.getElementById('gameCanvas');
 var ctx    = canvas.getContext('2d');
 var GRID   = 20;
@@ -94,19 +116,51 @@ var COLS   = canvas.width  / GRID;
 var ROWS   = canvas.height / GRID;
 var HALF   = GRID / 2;
 
+// Wave parameters for serpentine motion
+var WAVE_FREQ  = 0.75;  // S-shape frequency (per segment)
+var WAVE_AMP   = 5.5;   // Amplitude of wave (pixels)
+var WAVE_SPEED = 4.0;   // How fast wave travels
+var MOVE_SPEED = 160;   // ms per grid step
+
 var snake, dir, nextDir, food, score, bestScore;
-var animFrame, lastTime, moveInterval;
+var animFrame, moveInterval, lastTime, interpFactor;
 bestScore = 0;
 
-// Smooth interpolation
-var interpFactor = 0;   // 0 → 1 between steps
-var MOVE_SPEED   = 180; // ms per grid step (lower = faster)
+function cx(s){ return s.x * GRID + HALF; }
+function cy(s){ return s.y * GRID + HALF; }
+function isWrapped(a,b){ return Math.abs(a.x-b.x)>2 || Math.abs(a.y-b.y)>2; }
 
-function cx(seg){ return seg.x * GRID + HALF; }
-function cy(seg){ return seg.y * GRID + HALF; }
+// ── moveSerpentine() ──
+// Description: Snake moves in smooth S-shaped wave motion
+// Calculates perpendicular sine-wave offset for each segment
+// Returns array of {x,y} visual positions with wave applied
+function moveSerpentine(segmentIndex, baseX, baseY, time) {
+  // Movement direction vector (normalized)
+  var mvx = dir.x, mvy = dir.y;
+  // If stopped, use last known direction
+  if(mvx===0 && mvy===0){ mvx=1; mvy=0; }
 
-function isWrapped(a,b){
-  return Math.abs(a.x-b.x)>2 || Math.abs(a.y-b.y)>2;
+  // Perpendicular vector (rotate 90°)
+  var px = -mvy;
+  var py =  mvx;
+
+  // Sine wave: travels from tail to head (negative index offset)
+  var waveOffset = Math.sin(
+    segmentIndex * WAVE_FREQ + time * WAVE_SPEED
+  ) * WAVE_AMP;
+
+  // Taper amplitude near head (first 3 segments) and tail (last 3)
+  var totalSegs = snake.length;
+  var taperHead = Math.min(segmentIndex / 3, 1);
+  var taperTail = Math.min((totalSegs - segmentIndex) / 3, 1);
+  var taper     = Math.min(taperHead, taperTail);
+
+  waveOffset *= taper;
+
+  return {
+    x: baseX + px * waveOffset,
+    y: baseY + py * waveOffset
+  };
 }
 
 function startGame(){
@@ -120,25 +174,22 @@ function startGame(){
   spawnFood();
 
   document.getElementById('startBtn').innerText = '🔄 Restart';
-
   if(window.innerWidth<=500) document.getElementById('dpad').style.display='flex';
 
-  // Cancel any previous loops
   cancelAnimationFrame(animFrame);
   clearInterval(moveInterval);
-
   lastTime = null;
 
-  // Move on interval (grid step)
+  // Grid step
   moveInterval = setInterval(step, MOVE_SPEED);
 
   // Smooth render loop
   function renderLoop(ts){
-    if(lastTime===null) lastTime=ts;
+    if(lastTime===null) lastTime = ts;
     var dt = ts - lastTime;
     lastTime = ts;
-    interpFactor = Math.min(interpFactor + dt/MOVE_SPEED, 1);
-    draw();
+    interpFactor = Math.min(interpFactor + dt / MOVE_SPEED, 1);
+    draw(ts);
     animFrame = requestAnimationFrame(renderLoop);
   }
   animFrame = requestAnimationFrame(renderLoop);
@@ -148,76 +199,70 @@ function spawnFood(){
   var pos;
   do { pos={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}; }
   while(snake.some(function(s){return s.x===pos.x&&s.y===pos.y;}));
-  food=pos;
+  food = pos;
 }
 
 function setDir(dx,dy){
-  if(dx===-dir.x&&dy===-dir.y) return;
-  nextDir={x:dx,y:dy};
+  if(dx===-dir.x && dy===-dir.y) return;
+  nextDir = {x:dx, y:dy};
 }
 
 function step(){
-  dir=nextDir;
-  var head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+  dir = nextDir;
+  var head = {x: snake[0].x+dir.x, y: snake[0].y+dir.y};
   // Nokia wrap
-  if(head.x<0)     head.x=COLS-1;
-  if(head.x>=COLS) head.x=0;
-  if(head.y<0)     head.y=ROWS-1;
-  if(head.y>=ROWS) head.y=0;
-  // Self collision
-  var body=snake.slice(0,snake.length-1);
+  if(head.x<0)     head.x = COLS-1;
+  if(head.x>=COLS) head.x = 0;
+  if(head.y<0)     head.y = ROWS-1;
+  if(head.y>=ROWS) head.y = 0;
+  // Self collision (grid-based, not visual)
+  var body = snake.slice(0, snake.length-1);
   if(body.some(function(s){return s.x===head.x&&s.y===head.y;})){
     gameOver(); return;
   }
   snake.unshift(head);
-  if(head.x===food.x&&head.y===food.y){ score++; updateScore(); spawnFood(); }
+  if(head.x===food.x && head.y===food.y){ score++; updateScore(); spawnFood(); }
   else snake.pop();
-  interpFactor=0; // reset interpolation on each step
+  interpFactor = 0;
 }
 
-// ── Get interpolated position of each segment ──
-function getInterp(idx){
+// ── Interpolated base position (smooth grid movement) ──
+function getBasePos(idx){
   var cur  = snake[idx];
   var prev = snake[idx+1];
-  // Head: interpolate toward current from previous position
   if(idx===0){
-    // Head moves from snake[1] toward snake[0]
-    if(!prev || isWrapped(cur,prev)){
-      return {x:cx(cur), y:cy(cur)};
-    }
-    var t = interpFactor;
+    if(!prev || isWrapped(cur,prev)) return {x:cx(cur), y:cy(cur)};
     return {
-      x: cx(prev) + (cx(cur)-cx(prev))*t,
-      y: cy(prev) + (cy(cur)-cy(prev))*t
+      x: cx(prev) + (cx(cur)-cx(prev)) * interpFactor,
+      y: cy(prev) + (cy(cur)-cy(prev)) * interpFactor
     };
   }
-  // Body: follow the segment ahead
   var ahead = snake[idx-1];
-  if(isWrapped(cur,ahead)){
-    return {x:cx(cur), y:cy(cur)};
-  }
-  var t = interpFactor;
+  if(isWrapped(cur,ahead)) return {x:cx(cur), y:cy(cur)};
   return {
-    x: cx(cur) + (cx(ahead)-cx(cur))*t,
-    y: cy(cur) + (cy(ahead)-cy(cur))*t
+    x: cx(cur) + (cx(ahead)-cx(cur)) * interpFactor,
+    y: cy(cur) + (cy(ahead)-cy(cur)) * interpFactor
   };
 }
 
 // ══════════════════════════════════════
 //  DRAW
 // ══════════════════════════════════════
-function draw(){
-  ctx.fillStyle='#0d1f0d';
+function draw(ts){
+  var time = ts ? ts/1000 : 0;
+
+  ctx.fillStyle = '#0d1f0d';
   ctx.fillRect(0,0,canvas.width,canvas.height);
-  // Grid lines
+
+  // Grid
   ctx.strokeStyle='rgba(0,70,0,0.18)'; ctx.lineWidth=0.5;
   for(var i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*GRID,0);ctx.lineTo(i*GRID,canvas.height);ctx.stroke();}
   for(var j=0;j<=ROWS;j++){ctx.beginPath();ctx.moveTo(0,j*GRID);ctx.lineTo(canvas.width,j*GRID);ctx.stroke();}
 
   drawFood();
   if(snake && snake.length>0){
-    drawSnakeBody();
-    drawSnakeHead();
+    drawBody(time);
+    drawHead(time);
   }
 }
 
@@ -237,114 +282,155 @@ function drawFood(){
   ctx.beginPath(); ctx.ellipse(x+4,y-r-4,4,2,0.8,0,Math.PI*2); ctx.fill();
 }
 
-function drawSnakeBody(){
-  if(snake.length<2) return;
+// ── Body with S-wave via moveSerpentine() ──
+function drawBody(time){
+  if(snake.length < 2) return;
 
-  // Draw each segment as a smooth thick line using interpolated positions
-  for(var i=0; i<snake.length-1; i++){
-    if(isWrapped(snake[i],snake[i+1])) continue;
+  // Build visual points using moveSerpentine()
+  var pts = [];
+  for(var i=0; i<snake.length; i++){
+    var base = getBasePos(i);
+    var vis  = moveSerpentine(i, base.x, base.y, time);
+    pts.push(vis);
+  }
 
-    var p1 = getInterp(i);
-    var p2 = getInterp(i+1);
+  // Draw thick ribbon through all points using bezier curve
+  // First pass: dark shadow
+  ctx.save();
+  ctx.strokeStyle = 'rgba(0,20,0,0.6)';
+  ctx.lineWidth   = GRID - 1;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+  drawSmoothPath(pts, true);
+  ctx.restore();
 
-    var progress = i/(snake.length-1);
+  // Second pass: main body color gradient
+  for(var s=0; s<pts.length-1; s++){
+    if(isWrapped(snake[s], snake[s+1])) continue;
+    var p1 = pts[s], p2 = pts[s+1];
+    var progress = s / (pts.length-1);
+
     var g = ctx.createLinearGradient(p1.x,p1.y,p2.x,p2.y);
-    if(progress<0.3){
-      g.addColorStop(0,'#8fbd30'); g.addColorStop(1,'#5a9020');
-    } else if(progress<0.7){
-      g.addColorStop(0,'#5a9020'); g.addColorStop(1,'#3a7010');
+    if(progress < 0.25){
+      g.addColorStop(0,'#a0c030'); g.addColorStop(1,'#70a020');
+    } else if(progress < 0.6){
+      g.addColorStop(0,'#70a020'); g.addColorStop(1,'#4a7818');
     } else {
-      g.addColorStop(0,'#3a7010'); g.addColorStop(1,'#1e4a08');
+      g.addColorStop(0,'#4a7818'); g.addColorStop(1,'#2a5008');
     }
 
-    // Body
-    ctx.strokeStyle=g;
-    ctx.lineWidth  =GRID-3;
-    ctx.lineCap    ='round';
-    ctx.lineJoin   ='round';
+    ctx.strokeStyle = g;
+    ctx.lineWidth   = GRID - 3;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
     ctx.beginPath();
-    ctx.moveTo(p1.x,p1.y);
-    ctx.lineTo(p2.x,p2.y);
-    ctx.stroke();
-
-    // Dark outline
-    ctx.strokeStyle='rgba(0,30,0,0.45)';
-    ctx.lineWidth  =GRID-3;
-    ctx.beginPath();
-    ctx.moveTo(p1.x,p1.y);
-    ctx.lineTo(p2.x,p2.y);
-    ctx.stroke();
-
-    // Belly stripe
-    ctx.strokeStyle='rgba(200,210,80,0.2)';
-    ctx.lineWidth=4;
-    ctx.beginPath();
-    ctx.moveTo(p1.x,p1.y);
-    ctx.lineTo(p2.x,p2.y);
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
   }
 
-  // Scale marks at each segment
-  for(var s=1; s<snake.length-1; s++){
-    if(isWrapped(snake[s-1],snake[s])||isWrapped(snake[s],snake[s+1])) continue;
-    var mp = getInterp(s);
-    var dx = getInterp(s-1).x - getInterp(s+1).x;
-    var dy = getInterp(s-1).y - getInterp(s+1).y;
-    var len= Math.sqrt(dx*dx+dy*dy)||1;
-    var nx = -dy/len*(HALF-2);
-    var ny =  dx/len*(HALF-2);
-    ctx.strokeStyle='rgba(0,50,0,0.5)';
-    ctx.lineWidth=1;
+  // Belly stripe
+  ctx.save();
+  ctx.strokeStyle = 'rgba(210,220,80,0.18)';
+  ctx.lineWidth   = 3;
+  ctx.lineCap     = 'round';
+  drawSmoothPath(pts, false);
+  ctx.restore();
+
+  // Scale marks perpendicular to movement at each point
+  for(var s=1; s<pts.length-1; s++){
+    if(isWrapped(snake[s-1],snake[s]) || isWrapped(snake[s],snake[s+1])) continue;
+    var mp = pts[s];
+    var dx = pts[s-1].x - pts[s+1].x;
+    var dy = pts[s-1].y - pts[s+1].y;
+    var len= Math.sqrt(dx*dx+dy*dy) || 1;
+    var nx = -dy/len * (HALF-2);
+    var ny =  dx/len * (HALF-2);
+    ctx.strokeStyle = 'rgba(0,40,0,0.5)';
+    ctx.lineWidth   = 0.9;
     ctx.beginPath();
-    ctx.moveTo(mp.x+nx,mp.y+ny);
-    ctx.lineTo(mp.x-nx,mp.y-ny);
+    ctx.moveTo(mp.x+nx, mp.y+ny);
+    ctx.lineTo(mp.x-nx, mp.y-ny);
     ctx.stroke();
-    ctx.fillStyle=s%2===0?'rgba(120,180,40,0.25)':'rgba(80,140,20,0.18)';
+    // Scale dot
+    ctx.fillStyle = s%2===0 ? 'rgba(130,190,40,0.28)' : 'rgba(90,150,20,0.2)';
     ctx.beginPath();
-    ctx.arc(mp.x,mp.y,3,0,Math.PI*2);
+    ctx.arc(mp.x, mp.y, 2.5, 0, Math.PI*2);
     ctx.fill();
   }
 }
 
-function drawSnakeHead(){
-  var p = getInterp(0);
+// Draw smooth bezier path through points
+function drawSmoothPath(pts, skipWrapped){
+  if(pts.length < 2) return;
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for(var i=1; i<pts.length; i++){
+    if(skipWrapped && isWrapped(snake[i-1],snake[i])){
+      ctx.moveTo(pts[i].x, pts[i].y);
+      continue;
+    }
+    if(i < pts.length-1 && !isWrapped(snake[i],snake[i+1])){
+      var mx = (pts[i].x + pts[i+1].x)/2;
+      var my = (pts[i].y + pts[i+1].y)/2;
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+    } else {
+      ctx.lineTo(pts[i].x, pts[i].y);
+    }
+  }
+  ctx.stroke();
+}
+
+// ── Head with snake_slither animation feel ──
+function drawHead(time){
+  // Head base position
+  var base = getBasePos(0);
+  // Apply serpentine to head too (subtle)
+  var headVis = moveSerpentine(0, base.x, base.y, time);
+
+  // snake_slither: head sways slightly side to side
+  var slitherSway = Math.sin(time * WAVE_SPEED) * 1.5;
+  var px = -dir.y, py = dir.x; // perpendicular
+  var hx = headVis.x + px * slitherSway;
+  var hy = headVis.y + py * slitherSway;
 
   ctx.save();
-  ctx.translate(p.x, p.y);
-  var angle = Math.atan2(dir.y,dir.x);
-  ctx.rotate(angle);
+  ctx.translate(hx, hy);
+  var angle = Math.atan2(dir.y, dir.x);
+  // snake_slither: slight head bob
+  var headBob = Math.sin(time * WAVE_SPEED * 0.5) * 0.06;
+  ctx.rotate(angle + headBob);
 
-  var hw=HALF+3, hh=HALF-1;
+  var hw = HALF+3, hh = HALF-1;
 
-  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=7; ctx.shadowOffsetY=2;
-  var hg=ctx.createLinearGradient(-hw,-hh,hw,hh);
-  hg.addColorStop(0,'#a0c840'); hg.addColorStop(0.4,'#6a9a28'); hg.addColorStop(1,'#2d5a10');
-  ctx.fillStyle=hg;
+  // Shadow
+  ctx.shadowColor='rgba(0,0,0,0.55)'; ctx.shadowBlur=8; ctx.shadowOffsetY=2;
+  // Head gradient
+  var hg = ctx.createLinearGradient(-hw,-hh,hw,hh);
+  hg.addColorStop(0,'#b0d040'); hg.addColorStop(0.4,'#78aa30'); hg.addColorStop(1,'#3a6818');
+  ctx.fillStyle = hg;
   ctx.beginPath(); ctx.ellipse(1,0,hw,hh,0,0,Math.PI*2); ctx.fill();
   ctx.shadowBlur=0; ctx.shadowOffsetY=0;
 
   // Yellow stripe
-  ctx.fillStyle='rgba(180,200,60,0.4)';
+  ctx.fillStyle='rgba(190,210,60,0.42)';
   ctx.beginPath(); ctx.ellipse(-1,-2,hw-3,hh-5,0,0,Math.PI*2); ctx.fill();
 
   // Scale lines
-  ctx.strokeStyle='rgba(0,50,0,0.35)'; ctx.lineWidth=0.8;
+  ctx.strokeStyle='rgba(0,50,0,0.38)'; ctx.lineWidth=0.8;
   for(var si=-2;si<=2;si++){
     ctx.beginPath(); ctx.arc(si*4,0,5,-Math.PI*0.5,Math.PI*0.5); ctx.stroke();
   }
 
-  // Upper jaw
+  // Jaws
   ctx.fillStyle='#c8a060';
   ctx.beginPath(); ctx.ellipse(hw+1,-2.5,5,2.5,-0.25,0,Math.PI*2); ctx.fill();
-  // Lower jaw
-  ctx.fillStyle='#c8a060';
-  ctx.beginPath(); ctx.ellipse(hw+1,2.5,5,2.5,0.25,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(hw+1, 2.5,5,2.5, 0.25,0,Math.PI*2); ctx.fill();
   // Inner mouth
   ctx.fillStyle='#7a1818';
   ctx.beginPath();
   ctx.moveTo(hw-2,-3); ctx.quadraticCurveTo(hw+6,0,hw-2,3);
   ctx.quadraticCurveTo(hw+2,0,hw-2,-3); ctx.fill();
-  // Pink
   ctx.fillStyle='rgba(220,120,120,0.45)';
   ctx.beginPath(); ctx.ellipse(hw+2,0,4,2,0,0,Math.PI*2); ctx.fill();
 
@@ -353,15 +439,20 @@ function drawSnakeHead(){
   ctx.beginPath(); ctx.moveTo(hw,-1.5); ctx.lineTo(hw+5,0.5); ctx.lineTo(hw,1); ctx.closePath(); ctx.fill();
   ctx.beginPath(); ctx.moveTo(hw,1.5); ctx.lineTo(hw+5,-0.5); ctx.lineTo(hw,-1); ctx.closePath(); ctx.fill();
 
-  // Tongue
+  // Tongue — snake_slither: tongue flickers with time
+  var tongueScale = 0.7 + Math.abs(Math.sin(time * 6)) * 0.6;
+  ctx.save();
+  ctx.translate(hw+3, 0);
+  ctx.scale(tongueScale, 1);
   ctx.strokeStyle='#cc0000'; ctx.lineWidth=1.6; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(hw+3,0); ctx.lineTo(hw+8,0); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(hw+8,0); ctx.quadraticCurveTo(hw+10,-1,hw+12,-3); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(hw+8,0); ctx.quadraticCurveTo(hw+10,1,hw+12,3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(5,0); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,0); ctx.quadraticCurveTo(7,-1,9,-3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,0); ctx.quadraticCurveTo(7, 1,9, 3); ctx.stroke();
+  ctx.restore();
 
   // Eyes
   drawEye(3,-(hh-2));
-  drawEye(3, (hh-2));
+  drawEye(3,  hh-2);
 
   // Nostrils
   ctx.fillStyle='#1a5010';
@@ -387,8 +478,7 @@ function gameOver(){
   cancelAnimationFrame(animFrame);
   if(score>bestScore){ bestScore=score; document.getElementById('best').innerText=bestScore; }
   document.getElementById('startBtn').innerText='🔄 Play Again';
-  // Final draw
-  draw();
+  draw(performance.now());
   ctx.fillStyle='rgba(0,0,0,0.72)'; ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.textAlign='center';
   ctx.fillStyle='#ff4444'; ctx.font='bold 26px Orbitron,sans-serif';
@@ -404,16 +494,15 @@ function updateScore(){
   if(score>bestScore){ bestScore=score; document.getElementById('best').innerText=bestScore; }
 }
 
-// Idle screen — no text, just background
+// Idle screen
 function drawIdle(){
   ctx.fillStyle='#0d1f0d'; ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='rgba(0,70,0,0.18)'; ctx.lineWidth=0.5;
   for(var i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*GRID,0);ctx.lineTo(i*GRID,canvas.height);ctx.stroke();}
   for(var j=0;j<=ROWS;j++){ctx.beginPath();ctx.moveTo(0,j*GRID);ctx.lineTo(canvas.width,j*GRID);ctx.stroke();}
-  // Only snake emoji hint
   ctx.textAlign='center';
-  ctx.fillStyle='rgba(100,180,40,0.5)'; ctx.font='48px sans-serif';
-  ctx.fillText('🐍',canvas.width/2,canvas.height/2+16);
+  ctx.fillStyle='rgba(100,180,40,0.5)'; ctx.font='52px sans-serif';
+  ctx.fillText('🐍',canvas.width/2,canvas.height/2+18);
 }
 drawIdle();
 
@@ -431,7 +520,7 @@ document.addEventListener('keydown',function(e){
 var tx=0,ty=0;
 canvas.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;e.preventDefault();},{passive:false});
 canvas.addEventListener('touchend',function(e){
-  var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
   if(Math.abs(dx)>Math.abs(dy)) setDir(dx>0?1:-1,0);
   else setDir(0,dy>0?1:-1);
   e.preventDefault();
