@@ -7,100 +7,44 @@
   <title>Snake Game | Rock Tools</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .game-wrap {
-      max-width: 480px;
-      margin: 30px auto;
-      padding: 0 16px 60px;
-      text-align: center;
-    }
-    .game-title {
-      font-family: 'Orbitron', sans-serif;
-      color: #00c6ff;
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-    .game-hint {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-    .score-bar {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 12px 0;
-    }
-    .score-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(0,198,255,0.2);
-      border-radius: 10px;
-      padding: 7px 22px;
-    }
-    .score-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-    .score-val   { font-size: 22px; font-weight: 700; color: #00c6ff; }
-    .canvas-wrap {
-      position: relative;
-      display: inline-block;
-      margin: 0 auto;
-    }
-    canvas {
-      display: block;
-      border-radius: 14px;
-      background: #0a1a0a;
-    }
+    .game-wrap { max-width:480px; margin:30px auto; padding:0 16px 60px; text-align:center; }
+    .game-title { font-family:'Orbitron',sans-serif; color:#00c6ff; font-size:1.6rem; margin-bottom:4px; }
+    .game-hint  { font-size:12px; color:#555; margin-bottom:10px; }
+    .score-bar  { display:flex; justify-content:center; gap:20px; margin:12px 0; }
+    .score-box  { background:rgba(255,255,255,0.04); border:1px solid rgba(0,198,255,0.2); border-radius:10px; padding:7px 22px; }
+    .score-label{ font-size:11px; color:#666; text-transform:uppercase; letter-spacing:1px; }
+    .score-val  { font-size:22px; font-weight:700; color:#00c6ff; }
+    .canvas-wrap{ position:relative; display:inline-block; }
+    canvas      { display:block; border-radius:14px; background:#0d1f0d; }
     .canvas-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      border: 2px dashed rgba(80,200,80,0.2);
-      pointer-events: none;
-    }
-    .status-msg {
-      margin: 10px 0 0;
-      font-size: 14px;
-      color: #4ade80;
-      min-height: 20px;
+      content:''; position:absolute; inset:0; border-radius:14px;
+      border:2px dashed rgba(80,200,80,0.18); pointer-events:none;
     }
     .game-btn {
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      border: none; border-radius: 10px;
-      color: #000; font-weight: 700; font-size: 15px;
-      padding: 11px 34px; cursor: pointer; margin-top: 14px;
-      font-family: 'Exo 2', sans-serif;
+      background:linear-gradient(135deg,#00c6ff,#0072ff);
+      border:none; border-radius:10px; color:#000; font-weight:700;
+      font-size:15px; padding:11px 34px; cursor:pointer; margin-top:14px;
+      font-family:'Exo 2',sans-serif;
     }
-    .game-btn:hover { opacity: 0.85; }
-    .dpad {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px; margin-top: 14px;
-    }
-    .dpad-row { display: flex; gap: 4px; }
+    .game-btn:hover { opacity:0.85; }
+    .dpad { display:none; flex-direction:column; align-items:center; gap:4px; margin-top:14px; }
+    .dpad-row { display:flex; gap:4px; }
     .dpad-btn {
-      width: 60px; height: 60px;
-      background: rgba(0,180,0,0.1);
-      border: 1px solid rgba(0,200,0,0.3);
-      border-radius: 12px; color: #4ade80;
-      font-size: 24px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      user-select: none;
+      width:60px; height:60px;
+      background:rgba(0,180,0,0.1); border:1px solid rgba(0,200,0,0.3);
+      border-radius:12px; color:#4ade80; font-size:24px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; user-select:none;
     }
-    .dpad-btn:active { background: rgba(0,200,0,0.25); }
-    @media (max-width: 500px) {
-      canvas { width: 320px !important; height: 320px !important; }
-      .dpad { display: flex; }
+    .dpad-btn:active { background:rgba(0,200,0,0.25); }
+    @media(max-width:500px){
+      canvas { width:320px !important; height:320px !important; }
+      .dpad { display:flex; }
     }
-    .back-link {
-      display: inline-block; margin-top: 20px;
-      color: #666; font-size: 13px; text-decoration: none;
-    }
-    .back-link:hover { color: #00c6ff; }
-    .nokia-note { font-size: 11px; color: #444; margin-top: 8px; }
+    .back-link { display:inline-block; margin-top:20px; color:#666; font-size:13px; text-decoration:none; }
+    .back-link:hover { color:#00c6ff; }
   </style>
 </head>
 <body>
-
   <nav>
     <a href="index.html" class="logo">
       <img src="logo.png" alt="Rock Tools Logo">
@@ -120,30 +64,22 @@
     <p class="game-hint">Arrow keys / WASD — Border se niklo opposite side se aao!</p>
 
     <div class="score-bar">
-      <div class="score-box">
-        <div class="score-label">Score</div>
-        <div class="score-val" id="score">0</div>
-      </div>
-      <div class="score-box">
-        <div class="score-label">Best</div>
-        <div class="score-val" id="best">0</div>
-      </div>
+      <div class="score-box"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+      <div class="score-box"><div class="score-label">Best</div><div class="score-val"  id="best">0</div></div>
     </div>
 
     <div class="canvas-wrap">
       <canvas id="gameCanvas" width="400" height="400"></canvas>
     </div>
 
-    <p class="nokia-note">💡 Nokia style — border se wrap hoga, khud se takrao toh game over!</p>
-    <div class="status-msg" id="statusMsg">▶ Start dabao aur khelo!</div>
     <button class="game-btn" id="startBtn" onclick="startGame()">▶ Start Game</button>
 
     <div class="dpad" id="dpad">
       <div class="dpad-row"><div class="dpad-btn" onclick="setDir(0,-1)">▲</div></div>
       <div class="dpad-row">
         <div class="dpad-btn" onclick="setDir(-1,0)">◀</div>
-        <div class="dpad-btn" onclick="setDir(0,1)">▼</div>
-        <div class="dpad-btn" onclick="setDir(1,0)">▶</div>
+        <div class="dpad-btn" onclick="setDir(0, 1)">▼</div>
+        <div class="dpad-btn" onclick="setDir( 1,0)">▶</div>
       </div>
     </div>
 
@@ -156,486 +92,350 @@ var ctx    = canvas.getContext('2d');
 var GRID   = 20;
 var COLS   = canvas.width  / GRID;
 var ROWS   = canvas.height / GRID;
+var HALF   = GRID / 2;
 
-var snake, dir, nextDir, food, score, bestScore, gameLoop;
+var snake, dir, nextDir, food, score, bestScore;
+var animFrame, lastTime, moveInterval;
 bestScore = 0;
 
-// ── Colors ──
-var C = {
-  darkGreen:  '#2d5a1b',
-  midGreen:   '#4a7c2f',
-  lightGreen: '#6aab3f',
-  yellow:     '#c8b820',
-  yellowGreen:'#8fad25',
-  belly:      '#d4c870',
-  eyeGold:    '#c8a020',
-  tongue:     '#cc0000',
-  fang:       '#f5f5f5',
-  mouthInner: '#8b2020',
-  mouthRim:   '#f0c090'
-};
+// Smooth interpolation
+var interpFactor = 0;   // 0 → 1 between steps
+var MOVE_SPEED   = 180; // ms per grid step (lower = faster)
 
-function startGame() {
+function cx(seg){ return seg.x * GRID + HALF; }
+function cy(seg){ return seg.y * GRID + HALF; }
+
+function isWrapped(a,b){
+  return Math.abs(a.x-b.x)>2 || Math.abs(a.y-b.y)>2;
+}
+
+function startGame(){
   snake = [
-    {x:12,y:10},{x:11,y:10},{x:10,y:10},
-    {x:9,y:10},{x:8,y:10}
+    {x:14,y:10},{x:13,y:10},{x:12,y:10},{x:11,y:10},
+    {x:10,y:10},{x:9,y:10},{x:8,y:10},{x:7,y:10}
   ];
-  dir     = {x:1,y:0};
-  nextDir = {x:1,y:0};
-  score   = 0;
+  dir = {x:1,y:0}; nextDir = {x:1,y:0};
+  score = 0; interpFactor = 0;
   updateScore();
   spawnFood();
 
-  document.getElementById('startBtn').innerText    = '🔄 Restart';
-  document.getElementById('statusMsg').innerText   = '🎮 Khel raha hai...';
-  document.getElementById('statusMsg').style.color = '#4ade80';
+  document.getElementById('startBtn').innerText = '🔄 Restart';
 
-  if (window.innerWidth <= 500) {
-    document.getElementById('dpad').style.display = 'flex';
+  if(window.innerWidth<=500) document.getElementById('dpad').style.display='flex';
+
+  // Cancel any previous loops
+  cancelAnimationFrame(animFrame);
+  clearInterval(moveInterval);
+
+  lastTime = null;
+
+  // Move on interval (grid step)
+  moveInterval = setInterval(step, MOVE_SPEED);
+
+  // Smooth render loop
+  function renderLoop(ts){
+    if(lastTime===null) lastTime=ts;
+    var dt = ts - lastTime;
+    lastTime = ts;
+    interpFactor = Math.min(interpFactor + dt/MOVE_SPEED, 1);
+    draw();
+    animFrame = requestAnimationFrame(renderLoop);
   }
-
-  clearInterval(gameLoop);
-  gameLoop = setInterval(step, 145);
+  animFrame = requestAnimationFrame(renderLoop);
 }
 
-function spawnFood() {
+function spawnFood(){
   var pos;
-  do {
-    pos = {
-      x: Math.floor(Math.random() * COLS),
-      y: Math.floor(Math.random() * ROWS)
-    };
-  } while (snake.some(function(s) { return s.x===pos.x && s.y===pos.y; }));
-  food = pos;
+  do { pos={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}; }
+  while(snake.some(function(s){return s.x===pos.x&&s.y===pos.y;}));
+  food=pos;
 }
 
-function setDir(dx, dy) {
-  if (dx === -dir.x && dy === -dir.y) return;
-  nextDir = {x:dx, y:dy};
+function setDir(dx,dy){
+  if(dx===-dir.x&&dy===-dir.y) return;
+  nextDir={x:dx,y:dy};
 }
 
-function step() {
-  dir = nextDir;
-  var head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-
+function step(){
+  dir=nextDir;
+  var head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
   // Nokia wrap
-  if (head.x < 0)     head.x = COLS - 1;
-  if (head.x >= COLS) head.x = 0;
-  if (head.y < 0)     head.y = ROWS - 1;
-  if (head.y >= ROWS) head.y = 0;
-
-  // Self collision only (exclude tail which moves away)
-  var body = snake.slice(0, snake.length - 1);
-  if (body.some(function(s) { return s.x===head.x && s.y===head.y; })) {
+  if(head.x<0)     head.x=COLS-1;
+  if(head.x>=COLS) head.x=0;
+  if(head.y<0)     head.y=ROWS-1;
+  if(head.y>=ROWS) head.y=0;
+  // Self collision
+  var body=snake.slice(0,snake.length-1);
+  if(body.some(function(s){return s.x===head.x&&s.y===head.y;})){
     gameOver(); return;
   }
-
   snake.unshift(head);
-  if (head.x===food.x && head.y===food.y) {
-    score++;
-    updateScore();
-    spawnFood();
-  } else {
-    snake.pop();
-  }
-  draw();
+  if(head.x===food.x&&head.y===food.y){ score++; updateScore(); spawnFood(); }
+  else snake.pop();
+  interpFactor=0; // reset interpolation on each step
 }
 
-// ════════════════════
-// DRAW ENGINE
-// ════════════════════
-function draw() {
-  // Background — dark jungle floor
-  ctx.fillStyle = '#0d1f0d';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+// ── Get interpolated position of each segment ──
+function getInterp(idx){
+  var cur  = snake[idx];
+  var prev = snake[idx+1];
+  // Head: interpolate toward current from previous position
+  if(idx===0){
+    // Head moves from snake[1] toward snake[0]
+    if(!prev || isWrapped(cur,prev)){
+      return {x:cx(cur), y:cy(cur)};
+    }
+    var t = interpFactor;
+    return {
+      x: cx(prev) + (cx(cur)-cx(prev))*t,
+      y: cy(prev) + (cy(cur)-cy(prev))*t
+    };
+  }
+  // Body: follow the segment ahead
+  var ahead = snake[idx-1];
+  if(isWrapped(cur,ahead)){
+    return {x:cx(cur), y:cy(cur)};
+  }
+  var t = interpFactor;
+  return {
+    x: cx(cur) + (cx(ahead)-cx(cur))*t,
+    y: cy(cur) + (cy(ahead)-cy(cur))*t
+  };
+}
 
-  // Subtle grid
-  ctx.strokeStyle = 'rgba(0,80,0,0.12)';
-  ctx.lineWidth   = 0.5;
-  for (var gx=0; gx<=COLS; gx++) {
-    ctx.beginPath();
-    ctx.moveTo(gx*GRID,0);
-    ctx.lineTo(gx*GRID,canvas.height);
-    ctx.stroke();
-  }
-  for (var gy=0; gy<=ROWS; gy++) {
-    ctx.beginPath();
-    ctx.moveTo(0,gy*GRID);
-    ctx.lineTo(canvas.width,gy*GRID);
-    ctx.stroke();
-  }
+// ══════════════════════════════════════
+//  DRAW
+// ══════════════════════════════════════
+function draw(){
+  ctx.fillStyle='#0d1f0d';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  // Grid lines
+  ctx.strokeStyle='rgba(0,70,0,0.18)'; ctx.lineWidth=0.5;
+  for(var i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*GRID,0);ctx.lineTo(i*GRID,canvas.height);ctx.stroke();}
+  for(var j=0;j<=ROWS;j++){ctx.beginPath();ctx.moveTo(0,j*GRID);ctx.lineTo(canvas.width,j*GRID);ctx.stroke();}
 
   drawFood();
-
-  // Draw from tail to head
-  for (var i = snake.length-1; i >= 0; i--) {
-    if (i === 0)                  drawHead(snake[0]);
-    else if (i === snake.length-1) drawTail(snake[i], snake[i-1]);
-    else                           drawBody(snake[i], i);
+  if(snake && snake.length>0){
+    drawSnakeBody();
+    drawSnakeHead();
   }
 }
 
-// ── HEAD ──
-function drawHead(seg) {
-  var cx = seg.x * GRID + GRID/2;
-  var cy = seg.y * GRID + GRID/2;
+function drawFood(){
+  var x=food.x*GRID+HALF, y=food.y*GRID+HALF, r=HALF-2;
+  ctx.shadowColor='#ff2222'; ctx.shadowBlur=14;
+  var g=ctx.createRadialGradient(x-3,y-3,1,x,y,r);
+  g.addColorStop(0,'#ff6666'); g.addColorStop(0.5,'#dd2222'); g.addColorStop(1,'#881111');
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(255,180,180,0.4)';
+  ctx.beginPath(); ctx.ellipse(x-3,y-3,r/2,r/3,-0.5,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#5a3010'; ctx.lineWidth=1.5; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(x,y-r); ctx.quadraticCurveTo(x+4,y-r-5,x+2,y-r-7); ctx.stroke();
+  ctx.fillStyle='#2a8a2a';
+  ctx.beginPath(); ctx.ellipse(x+4,y-r-4,4,2,0.8,0,Math.PI*2); ctx.fill();
+}
 
-  ctx.save();
-  ctx.translate(cx, cy);
+function drawSnakeBody(){
+  if(snake.length<2) return;
 
-  // Rotate to face movement direction
-  var angle = Math.atan2(dir.y, dir.x);
-  ctx.rotate(angle);
+  // Draw each segment as a smooth thick line using interpolated positions
+  for(var i=0; i<snake.length-1; i++){
+    if(isWrapped(snake[i],snake[i+1])) continue;
 
-  var hw = GRID/2 + 3;  // half-width
-  var hh = GRID/2 - 1;  // half-height
+    var p1 = getInterp(i);
+    var p2 = getInterp(i+1);
 
-  // ── Shadow ──
-  ctx.shadowColor = 'rgba(0,0,0,0.5)';
-  ctx.shadowBlur  = 6;
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 2;
+    var progress = i/(snake.length-1);
+    var g = ctx.createLinearGradient(p1.x,p1.y,p2.x,p2.y);
+    if(progress<0.3){
+      g.addColorStop(0,'#8fbd30'); g.addColorStop(1,'#5a9020');
+    } else if(progress<0.7){
+      g.addColorStop(0,'#5a9020'); g.addColorStop(1,'#3a7010');
+    } else {
+      g.addColorStop(0,'#3a7010'); g.addColorStop(1,'#1e4a08');
+    }
 
-  // ── Main head body ──
-  var hg = ctx.createLinearGradient(-hw, -hh, hw, hh);
-  hg.addColorStop(0,   C.lightGreen);
-  hg.addColorStop(0.4, C.midGreen);
-  hg.addColorStop(1,   C.darkGreen);
-  ctx.fillStyle = hg;
-  ctx.beginPath();
-  ctx.ellipse(1, 0, hw, hh, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.shadowBlur = 0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-
-  // ── Yellow-green pattern on top ──
-  ctx.fillStyle = C.yellowGreen;
-  ctx.globalAlpha = 0.55;
-  ctx.beginPath();
-  ctx.ellipse(0, -2, hw-3, hh-4, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  // ── Scale lines on head ──
-  ctx.strokeStyle = C.darkGreen;
-  ctx.lineWidth   = 0.7;
-  for (var si = -1; si <= 1; si++) {
+    // Body
+    ctx.strokeStyle=g;
+    ctx.lineWidth  =GRID-3;
+    ctx.lineCap    ='round';
+    ctx.lineJoin   ='round';
     ctx.beginPath();
-    ctx.arc(si*4, 0, 4, -Math.PI*0.6, Math.PI*0.6);
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
+    ctx.stroke();
+
+    // Dark outline
+    ctx.strokeStyle='rgba(0,30,0,0.45)';
+    ctx.lineWidth  =GRID-3;
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
+    ctx.stroke();
+
+    // Belly stripe
+    ctx.strokeStyle='rgba(200,210,80,0.2)';
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
     ctx.stroke();
   }
 
-  // ── OPEN MOUTH ──
-  // Jaw (lower)
-  ctx.fillStyle = C.mouthRim;
-  ctx.beginPath();
-  ctx.ellipse(hw+1, 3, 5, 3, 0.3, 0, Math.PI*2);
-  ctx.fill();
+  // Scale marks at each segment
+  for(var s=1; s<snake.length-1; s++){
+    if(isWrapped(snake[s-1],snake[s])||isWrapped(snake[s],snake[s+1])) continue;
+    var mp = getInterp(s);
+    var dx = getInterp(s-1).x - getInterp(s+1).x;
+    var dy = getInterp(s-1).y - getInterp(s+1).y;
+    var len= Math.sqrt(dx*dx+dy*dy)||1;
+    var nx = -dy/len*(HALF-2);
+    var ny =  dx/len*(HALF-2);
+    ctx.strokeStyle='rgba(0,50,0,0.5)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(mp.x+nx,mp.y+ny);
+    ctx.lineTo(mp.x-nx,mp.y-ny);
+    ctx.stroke();
+    ctx.fillStyle=s%2===0?'rgba(120,180,40,0.25)':'rgba(80,140,20,0.18)';
+    ctx.beginPath();
+    ctx.arc(mp.x,mp.y,3,0,Math.PI*2);
+    ctx.fill();
+  }
+}
 
-  // Upper lip
-  ctx.fillStyle = C.mouthRim;
-  ctx.beginPath();
-  ctx.ellipse(hw+1, -3, 5, 3, -0.3, 0, Math.PI*2);
-  ctx.fill();
+function drawSnakeHead(){
+  var p = getInterp(0);
 
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  var angle = Math.atan2(dir.y,dir.x);
+  ctx.rotate(angle);
+
+  var hw=HALF+3, hh=HALF-1;
+
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=7; ctx.shadowOffsetY=2;
+  var hg=ctx.createLinearGradient(-hw,-hh,hw,hh);
+  hg.addColorStop(0,'#a0c840'); hg.addColorStop(0.4,'#6a9a28'); hg.addColorStop(1,'#2d5a10');
+  ctx.fillStyle=hg;
+  ctx.beginPath(); ctx.ellipse(1,0,hw,hh,0,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+
+  // Yellow stripe
+  ctx.fillStyle='rgba(180,200,60,0.4)';
+  ctx.beginPath(); ctx.ellipse(-1,-2,hw-3,hh-5,0,0,Math.PI*2); ctx.fill();
+
+  // Scale lines
+  ctx.strokeStyle='rgba(0,50,0,0.35)'; ctx.lineWidth=0.8;
+  for(var si=-2;si<=2;si++){
+    ctx.beginPath(); ctx.arc(si*4,0,5,-Math.PI*0.5,Math.PI*0.5); ctx.stroke();
+  }
+
+  // Upper jaw
+  ctx.fillStyle='#c8a060';
+  ctx.beginPath(); ctx.ellipse(hw+1,-2.5,5,2.5,-0.25,0,Math.PI*2); ctx.fill();
+  // Lower jaw
+  ctx.fillStyle='#c8a060';
+  ctx.beginPath(); ctx.ellipse(hw+1,2.5,5,2.5,0.25,0,Math.PI*2); ctx.fill();
   // Inner mouth
-  ctx.fillStyle = C.mouthInner;
+  ctx.fillStyle='#7a1818';
   ctx.beginPath();
-  ctx.ellipse(hw+2, 0, 5, 5, 0, -Math.PI*0.6, Math.PI*0.6);
-  ctx.fill();
+  ctx.moveTo(hw-2,-3); ctx.quadraticCurveTo(hw+6,0,hw-2,3);
+  ctx.quadraticCurveTo(hw+2,0,hw-2,-3); ctx.fill();
+  // Pink
+  ctx.fillStyle='rgba(220,120,120,0.45)';
+  ctx.beginPath(); ctx.ellipse(hw+2,0,4,2,0,0,Math.PI*2); ctx.fill();
 
-  // ── Fangs ──
-  ctx.fillStyle = C.fang;
-  // Upper fang
-  ctx.beginPath();
-  ctx.moveTo(hw+1, -1);
-  ctx.lineTo(hw+5, 1);
-  ctx.lineTo(hw+1, 2);
-  ctx.closePath();
-  ctx.fill();
-  // Lower fang
-  ctx.beginPath();
-  ctx.moveTo(hw+1, 1);
-  ctx.lineTo(hw+5, -1);
-  ctx.lineTo(hw+1, -2);
-  ctx.closePath();
-  ctx.fill();
+  // Fangs
+  ctx.fillStyle='#f5f5f5';
+  ctx.beginPath(); ctx.moveTo(hw,-1.5); ctx.lineTo(hw+5,0.5); ctx.lineTo(hw,1); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(hw,1.5); ctx.lineTo(hw+5,-0.5); ctx.lineTo(hw,-1); ctx.closePath(); ctx.fill();
 
-  // ── Tongue ──
-  ctx.strokeStyle = C.tongue;
-  ctx.lineWidth   = 1.4;
-  ctx.lineCap     = 'round';
-  // Base
-  ctx.beginPath();
-  ctx.moveTo(hw+3, 0);
-  ctx.lineTo(hw+9, 0);
-  ctx.stroke();
-  // Fork top
-  ctx.beginPath();
-  ctx.moveTo(hw+9, 0);
-  ctx.quadraticCurveTo(hw+11, -1, hw+13, -3);
-  ctx.stroke();
-  // Fork bottom
-  ctx.beginPath();
-  ctx.moveTo(hw+9, 0);
-  ctx.quadraticCurveTo(hw+11,  1, hw+13,  3);
-  ctx.stroke();
+  // Tongue
+  ctx.strokeStyle='#cc0000'; ctx.lineWidth=1.6; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(hw+3,0); ctx.lineTo(hw+8,0); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(hw+8,0); ctx.quadraticCurveTo(hw+10,-1,hw+12,-3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(hw+8,0); ctx.quadraticCurveTo(hw+10,1,hw+12,3); ctx.stroke();
 
-  // ── Eyes ──
-  var eyeOff = hh - 3;
-  drawEye(4, -eyeOff);
-  drawEye(4,  eyeOff);
+  // Eyes
+  drawEye(3,-(hh-2));
+  drawEye(3, (hh-2));
 
-  // ── Nostril dots ──
-  ctx.fillStyle = C.darkGreen;
-  ctx.beginPath();
-  ctx.arc(hw-1, -3, 1.2, 0, Math.PI*2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(hw-1,  3, 1.2, 0, Math.PI*2);
-  ctx.fill();
+  // Nostrils
+  ctx.fillStyle='#1a5010';
+  ctx.beginPath(); ctx.arc(hw-1,-3,1.2,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(hw-1, 3,1.2,0,Math.PI*2); ctx.fill();
 
   ctx.restore();
 }
 
-function drawEye(ex, ey) {
-  // Gold iris
-  ctx.fillStyle = C.eyeGold;
-  ctx.beginPath();
-  ctx.arc(ex, ey, 3.5, 0, Math.PI*2);
-  ctx.fill();
-  // Dark pupil (vertical slit)
-  ctx.fillStyle = '#111';
-  ctx.beginPath();
-  ctx.ellipse(ex, ey, 1.2, 2.8, 0, 0, Math.PI*2);
-  ctx.fill();
-  // White shine
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.beginPath();
-  ctx.arc(ex+1, ey-1, 1, 0, Math.PI*2);
-  ctx.fill();
-  // Eye outline
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth   = 0.8;
-  ctx.beginPath();
-  ctx.arc(ex, ey, 3.5, 0, Math.PI*2);
-  ctx.stroke();
+function drawEye(ex,ey){
+  ctx.fillStyle='#c8a020';
+  ctx.beginPath(); ctx.arc(ex,ey,3.5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.ellipse(ex,ey,1.2,2.8,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.8)';
+  ctx.beginPath(); ctx.arc(ex+1,ey-1,1,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#111'; ctx.lineWidth=0.7;
+  ctx.beginPath(); ctx.arc(ex,ey,3.5,0,Math.PI*2); ctx.stroke();
 }
 
-// ── BODY ──
-function drawBody(seg, idx) {
-  var cx = seg.x * GRID + GRID/2;
-  var cy = seg.y * GRID + GRID/2;
-  var r  = GRID/2 - 1;
-
-  ctx.save();
-  ctx.translate(cx, cy);
-
-  // Shadow
-  ctx.shadowColor   = 'rgba(0,0,0,0.35)';
-  ctx.shadowBlur    = 4;
-  ctx.shadowOffsetY = 2;
-
-  // Body gradient — dark green top, lighter belly hint
-  var bg = ctx.createRadialGradient(-2,-3,1, 0,0,r);
-  if (idx % 2 === 0) {
-    bg.addColorStop(0, C.lightGreen);
-    bg.addColorStop(0.6, C.midGreen);
-    bg.addColorStop(1,   C.darkGreen);
-  } else {
-    bg.addColorStop(0, C.yellowGreen);
-    bg.addColorStop(0.5, C.midGreen);
-    bg.addColorStop(1,   C.darkGreen);
-  }
-  ctx.fillStyle = bg;
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI*2);
-  ctx.fill();
-  ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
-
-  // Scale highlight
-  ctx.fillStyle = idx%2===0 ? 'rgba(150,220,80,0.2)' : 'rgba(200,200,50,0.15)';
-  ctx.beginPath();
-  ctx.ellipse(-2, -3, r-3, r-5, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // Scale outline — diamond
-  ctx.strokeStyle = C.darkGreen;
-  ctx.lineWidth   = 0.9;
-  ctx.beginPath();
-  ctx.moveTo(0, -(r-2));
-  ctx.lineTo(r-2, 0);
-  ctx.lineTo(0,  r-2);
-  ctx.lineTo(-(r-2), 0);
-  ctx.closePath();
-  ctx.stroke();
-
-  // Center dot (scale texture)
-  ctx.fillStyle = 'rgba(0,60,0,0.3)';
-  ctx.beginPath();
-  ctx.arc(0, 0, 2, 0, Math.PI*2);
-  ctx.fill();
-
-  ctx.restore();
+function gameOver(){
+  clearInterval(moveInterval);
+  cancelAnimationFrame(animFrame);
+  if(score>bestScore){ bestScore=score; document.getElementById('best').innerText=bestScore; }
+  document.getElementById('startBtn').innerText='🔄 Play Again';
+  // Final draw
+  draw();
+  ctx.fillStyle='rgba(0,0,0,0.72)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.textAlign='center';
+  ctx.fillStyle='#ff4444'; ctx.font='bold 26px Orbitron,sans-serif';
+  ctx.fillText('GAME OVER',canvas.width/2,canvas.height/2-20);
+  ctx.fillStyle='#fff'; ctx.font='16px Exo 2,sans-serif';
+  ctx.fillText('Score: '+score,canvas.width/2,canvas.height/2+14);
+  ctx.fillStyle='#888'; ctx.font='13px Exo 2,sans-serif';
+  ctx.fillText('Play Again dabao',canvas.width/2,canvas.height/2+40);
 }
 
-// ── TAIL ──
-function drawTail(seg, prev) {
-  var cx = seg.x * GRID + GRID/2;
-  var cy = seg.y * GRID + GRID/2;
-
-  var dx = prev.x - seg.x;
-  var dy = prev.y - seg.y;
-  // Wrap correction
-  if (dx >  1) dx = -1;
-  if (dx < -1) dx =  1;
-  if (dy >  1) dy = -1;
-  if (dy < -1) dy =  1;
-
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(Math.atan2(dy, dx));
-
-  // Tail gradient
-  var tg = ctx.createLinearGradient(-GRID/2, 0, GRID/2, 0);
-  tg.addColorStop(0, C.darkGreen);
-  tg.addColorStop(1, 'rgba(30,70,10,0)');
-  ctx.fillStyle = tg;
-
-  ctx.beginPath();
-  ctx.moveTo(-GRID/2+2, 0);
-  ctx.quadraticCurveTo(-2, -(GRID/2-3), GRID/2-2, 0);
-  ctx.quadraticCurveTo(-2,  (GRID/2-3), -GRID/2+2, 0);
-  ctx.closePath();
-  ctx.fill();
-
-  // Scale on tail
-  ctx.strokeStyle = C.darkGreen;
-  ctx.lineWidth   = 0.7;
-  ctx.beginPath();
-  ctx.arc(-GRID/4, 0, GRID/4-2, -Math.PI*0.7, Math.PI*0.7);
-  ctx.stroke();
-
-  ctx.restore();
+function updateScore(){
+  document.getElementById('score').innerText=score;
+  if(score>bestScore){ bestScore=score; document.getElementById('best').innerText=bestScore; }
 }
 
-// ── FOOD (apple) ──
-function drawFood() {
-  var cx = food.x * GRID + GRID/2;
-  var cy = food.y * GRID + GRID/2;
-  var r  = GRID/2 - 2;
-
-  ctx.shadowColor = '#ff3333';
-  ctx.shadowBlur  = 14;
-
-  // Apple body
-  var ag = ctx.createRadialGradient(cx-3, cy-3, 1, cx, cy, r);
-  ag.addColorStop(0,   '#ff6666');
-  ag.addColorStop(0.5, '#dd2222');
-  ag.addColorStop(1,   '#881111');
-  ctx.fillStyle = ag;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI*2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // Shine
-  ctx.fillStyle = 'rgba(255,180,180,0.45)';
-  ctx.beginPath();
-  ctx.ellipse(cx-3, cy-3, r/2, r/3, -0.5, 0, Math.PI*2);
-  ctx.fill();
-
-  // Stem
-  ctx.strokeStyle = '#5a3010';
-  ctx.lineWidth   = 1.5;
-  ctx.lineCap     = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx,   cy-r);
-  ctx.quadraticCurveTo(cx+4, cy-r-5, cx+2, cy-r-7);
-  ctx.stroke();
-
-  // Leaf
-  ctx.fillStyle = '#2a8a2a';
-  ctx.beginPath();
-  ctx.ellipse(cx+4, cy-r-4, 4, 2, 0.8, 0, Math.PI*2);
-  ctx.fill();
-}
-
-// ── GAME OVER ──
-function gameOver() {
-  clearInterval(gameLoop);
-  if (score > bestScore) {
-    bestScore = score;
-    document.getElementById('best').innerText = bestScore;
-  }
-  document.getElementById('statusMsg').innerText   = '💀 Game Over! Score: ' + score;
-  document.getElementById('statusMsg').style.color = '#ff6b6b';
-  document.getElementById('startBtn').innerText    = '🔄 Play Again';
-
-  ctx.fillStyle = 'rgba(0,0,0,0.72)';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ff4444';
-  ctx.font      = 'bold 26px Orbitron, sans-serif';
-  ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 20);
-  ctx.fillStyle = '#fff';
-  ctx.font      = '16px Exo 2, sans-serif';
-  ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 14);
-  ctx.fillStyle = '#888';
-  ctx.font      = '13px Exo 2, sans-serif';
-  ctx.fillText('Play Again dabao', canvas.width/2, canvas.height/2 + 40);
-}
-
-function updateScore() {
-  document.getElementById('score').innerText = score;
-  if (score > bestScore) {
-    bestScore = score;
-    document.getElementById('best').innerText = bestScore;
-  }
-}
-
-// ── IDLE SCREEN ──
-function drawIdle() {
-  ctx.fillStyle = '#0d1f0d';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle = 'rgba(0,80,0,0.12)';
-  ctx.lineWidth   = 0.5;
-  for (var gx=0; gx<=COLS; gx++) {
-    ctx.beginPath(); ctx.moveTo(gx*GRID,0); ctx.lineTo(gx*GRID,canvas.height); ctx.stroke();
-  }
-  for (var gy=0; gy<=ROWS; gy++) {
-    ctx.beginPath(); ctx.moveTo(0,gy*GRID); ctx.lineTo(canvas.width,gy*GRID); ctx.stroke();
-  }
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(106,171,63,0.7)';
-  ctx.font      = 'bold 26px Orbitron, sans-serif';
-  ctx.fillText('SNAKE', canvas.width/2, canvas.height/2 - 14);
-  ctx.fillStyle = '#3a5a3a';
-  ctx.font      = '13px Exo 2, sans-serif';
-  ctx.fillText('Nokia 1200 style', canvas.width/2, canvas.height/2 + 14);
+// Idle screen — no text, just background
+function drawIdle(){
+  ctx.fillStyle='#0d1f0d'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='rgba(0,70,0,0.18)'; ctx.lineWidth=0.5;
+  for(var i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*GRID,0);ctx.lineTo(i*GRID,canvas.height);ctx.stroke();}
+  for(var j=0;j<=ROWS;j++){ctx.beginPath();ctx.moveTo(0,j*GRID);ctx.lineTo(canvas.width,j*GRID);ctx.stroke();}
+  // Only snake emoji hint
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(100,180,40,0.5)'; ctx.font='48px sans-serif';
+  ctx.fillText('🐍',canvas.width/2,canvas.height/2+16);
 }
 drawIdle();
 
-// ── KEYBOARD ──
-document.addEventListener('keydown', function(e) {
-  switch(e.key) {
-    case 'ArrowUp':   case 'w': case 'W': setDir(0,-1); e.preventDefault(); break;
-    case 'ArrowDown': case 's': case 'S': setDir(0, 1); e.preventDefault(); break;
-    case 'ArrowLeft': case 'a': case 'A': setDir(-1,0); e.preventDefault(); break;
-    case 'ArrowRight':case 'd': case 'D': setDir( 1,0); e.preventDefault(); break;
+// Keyboard
+document.addEventListener('keydown',function(e){
+  switch(e.key){
+    case'ArrowUp':   case'w':case'W': setDir(0,-1);e.preventDefault();break;
+    case'ArrowDown': case's':case'S': setDir(0, 1);e.preventDefault();break;
+    case'ArrowLeft': case'a':case'A': setDir(-1,0);e.preventDefault();break;
+    case'ArrowRight':case'd':case'D': setDir( 1,0);e.preventDefault();break;
   }
 });
 
-// ── TOUCH / SWIPE ──
-var tx=0, ty=0;
-canvas.addEventListener('touchstart', function(e) {
-  tx=e.touches[0].clientX; ty=e.touches[0].clientY; e.preventDefault();
-}, {passive:false});
-canvas.addEventListener('touchend', function(e) {
-  var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
-  if (Math.abs(dx)>Math.abs(dy)) setDir(dx>0?1:-1,0);
+// Touch
+var tx=0,ty=0;
+canvas.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;e.preventDefault();},{passive:false});
+canvas.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)) setDir(dx>0?1:-1,0);
   else setDir(0,dy>0?1:-1);
   e.preventDefault();
-}, {passive:false});
+},{passive:false});
 </script>
 </body>
 </html>
