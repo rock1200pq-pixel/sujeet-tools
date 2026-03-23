@@ -416,3 +416,95 @@ function copyPassword() {
     }, 1500);
   });
 }
+//tictac toe
+let board = ["","","","","","","","",""];
+let gameActive = true;
+
+function makeMove(index){
+
+if(board[index] !== "" || !gameActive) return;
+
+board[index] = "X";
+updateBoard();
+
+if(checkWinner()) return;
+
+setTimeout(()=>{
+computerMove();
+},300);
+
+}
+
+function computerMove(){
+
+if(!gameActive) return;
+
+let empty = board.map((v,i)=> v==="" ? i : null).filter(v=>v!==null);
+
+if(empty.length === 0) return;
+
+let move = empty[Math.floor(Math.random()*empty.length)];
+
+board[move] = "O";
+updateBoard();
+
+checkWinner();
+
+}
+
+function updateBoard(){
+
+let cells = document.getElementsByClassName("cell");
+
+for(let i=0;i<9;i++){
+cells[i].innerText = board[i];
+}
+
+}
+
+function checkWinner(){
+
+let winPatterns = [
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+for(let p of winPatterns){
+
+let [a,b,c] = p;
+
+if(board[a] && board[a] === board[b] && board[a] === board[c]){
+
+document.getElementById("status").innerText = "🎉 " + board[a] + " Wins!";
+gameActive = false;
+return true;
+
+}
+
+}
+
+if(!board.includes("")){
+document.getElementById("status").innerText = "🤝 Draw!";
+gameActive = false;
+return true;
+}
+
+return false;
+
+}
+
+function resetGame(){
+
+board = ["","","","","","","","",""];
+gameActive = true;
+
+let cells = document.getElementsByClassName("cell");
+
+for(let i=0;i<9;i++){
+cells[i].innerText = "";
+}
+
+document.getElementById("status").innerText = "Player X Turn";
+
+}
