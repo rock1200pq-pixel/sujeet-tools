@@ -8,22 +8,105 @@
 <link rel="stylesheet" href="../style.css">
 
 <style>
-/* SAME STYLE — NO CHANGE */
-.game-wrap{max-width:440px;margin:24px auto;padding:0 16px 60px;text-align:center;}
-.game-title{color:#00c6ff;font-size:1.6rem;}
-.mode-wrap{display:flex;gap:10px;margin:14px 0;}
-.mode-btn{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,198,255,.25);background:transparent;color:#555;cursor:pointer;}
-.mode-btn.active{background:rgba(0,198,255,.12);border-color:#00c6ff;color:#00c6ff;}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:320px;margin:auto;}
-.cell{aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:52px;cursor:pointer;background:rgba(255,255,255,0.04);}
-.mark-x{color:#00ffd5;}
-.mark-o{color:#ff6b6b;}
+body{
+  background:#f4f6f8;
+}
+
+.game-wrap{
+  max-width:440px;
+  margin:24px auto;
+  padding:0 16px 60px;
+  text-align:center;
+}
+
+.game-title{
+  color:#00c6ff;
+  font-size:1.6rem;
+  margin-bottom:10px;
+}
+
+/* MODE BUTTON */
+.mode-wrap{
+  display:flex;
+  gap:10px;
+  margin:14px 0;
+}
+
+.mode-btn{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:2px solid #00c6ff;
+  background:#ffffff;
+  color:#00c6ff;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.mode-btn.active{
+  background:#00c6ff;
+  color:#fff;
+}
+
+/* BOARD */
+.board{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  max-width:320px;
+  margin:20px auto;
+}
+
+/* 🔥 FIXED CELL DESIGN */
+.cell{
+  aspect-ratio:1;
+  background:#ffffff;
+  border:2px solid #00c6ff;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:52px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  transition:0.2s;
+}
+
+.cell:hover{
+  transform:scale(1.05);
+}
+
+.mark-x{
+  color:#00ffd5;
+  font-weight:bold;
+}
+
+.mark-o{
+  color:#ff6b6b;
+  font-weight:bold;
+}
+
+#statusMsg{
+  font-size:18px;
+  margin:10px 0;
+}
+
+/* BUTTON */
+button{
+  padding:10px 16px;
+  border:none;
+  background:#00c6ff;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
 <div class="game-wrap">
+
 <h1 class="game-title">⭕ Tic Tac Toe</h1>
 
 <div class="mode-wrap">
@@ -36,6 +119,7 @@
 <p id="statusMsg"></p>
 
 <button onclick="resetBoard()">Restart</button>
+
 </div>
 
 <script>
@@ -51,7 +135,7 @@ var current = 'X';
 var isOver = false;
 var mode = 'ai';
 
-// BOARD
+// BUILD
 function buildBoard(){
 let el=document.getElementById('board');
 el.innerHTML='';
@@ -174,7 +258,7 @@ if(s.length) return s[Math.floor(Math.random()*s.length)];
 return -1;
 }
 
-// FIND WIN/BLOCK
+// FIND MOVE
 function findMove(p){
 for(let l of WIN_LINES){
 let v=l.map(i=>board[i]);
@@ -184,7 +268,7 @@ return l[v.indexOf(null)];
 return -1;
 }
 
-// 🔥 FORK LOGIC
+// 🔥 FORK FIX
 function findFork(p){
 for(let i=0;i<9;i++){
 if(!board[i]){
