@@ -1,1 +1,391 @@
+<!DOCTYPE html>
+<!-- Rock Tools | game-tictactoe.html | Updated: 23 March 2026 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe | Rock Tools</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .game-wrap {
+      max-width: 440px;
+      margin: 24px auto;
+      padding: 0 16px 60px;
+      text-align: center;
+    }
+    .game-title {
+      font-family: 'Orbitron', sans-serif;
+      color: #00c6ff;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+    .mode-wrap { display:flex; gap:10px; justify-content:center; margin:14px 0; }
+    .mode-btn {
+      flex:1; padding:10px; border-radius:10px;
+      border:1px solid rgba(0,198,255,0.25);
+      background:transparent; color:#555;
+      font-size:13px; font-weight:600; cursor:pointer;
+      font-family:'Exo 2',sans-serif; transition:all .2s;
+    }
+    .mode-btn.active {
+      background:rgba(0,198,255,0.12);
+      border-color:#00c6ff; color:#00c6ff;
+    }
+    .score-bar { display:flex; justify-content:center; gap:10px; margin:12px 0; }
+    .score-box {
+      flex:1; background:rgba(255,255,255,0.04);
+      border:1px solid rgba(0,198,255,0.2);
+      border-radius:10px; padding:8px 6px;
+    }
+    .score-label { font-size:11px; color:#555; text-transform:uppercase; letter-spacing:1px; }
+    .score-val   { font-size:22px; font-weight:700; }
+    .score-x { color:#00ffd5; }
+    .score-o { color:#ff6b6b; }
+    .score-d { color:#888; }
+    .turn-bar {
+      font-size:14px; color:#aaa; margin:10px 0 4px;
+      min-height:22px; font-weight:500;
+    }
+    .turn-bar .tx { color:#00ffd5; font-weight:700; }
+    .turn-bar .to { color:#ff6b6b; font-weight:700; }
+    .thinking { font-size:12px; color:#ff6b6b; min-height:18px; margin-bottom:4px; }
+    .board {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:10px; margin:10px auto; max-width:320px;
+    }
+    .cell {
+      aspect-ratio:1;
+      background:rgba(255,255,255,0.04);
+      border:1.5px solid rgba(0,198,255,0.18);
+      border-radius:14px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:52px;
+      transition:background .15s, border-color .15s, transform .1s;
+      user-select:none;
+    }
+    .cell:hover:not(.taken):not(.blocked) {
+      background:rgba(0,198,255,0.07);
+      border-color:rgba(0,198,255,0.4);
+      transform:scale(1.03);
+    }
+    .cell.taken   { cursor:default; }
+    .cell.blocked { cursor:not-allowed; }
+    .mark-x {
+      color:#00ffd5;
+      text-shadow:0 0 18px rgba(0,255,213,0.5);
+      animation:popIn .2s ease;
+    }
+    .mark-o {
+      color:#ff6b6b;
+      text-shadow:0 0 18px rgba(255,107,107,0.5);
+      animation:popIn .2s ease;
+    }
+    @keyframes popIn {
+      0%  { transform:scale(0.4); opacity:0; }
+      70% { transform:scale(1.15); }
+      100%{ transform:scale(1);   opacity:1; }
+    }
+    .cell.win-cell {
+      background:rgba(0,198,255,0.14);
+      border-color:#00c6ff;
+      animation:winPulse .5s ease infinite alternate;
+    }
+    @keyframes winPulse {
+      from { box-shadow:0 0 8px rgba(0,198,255,0.3); }
+      to   { box-shadow:0 0 22px rgba(0,198,255,0.7); }
+    }
+    .status-msg { font-size:16px; font-weight:600; min-height:26px; margin:8px 0; }
+    .btn-row { display:flex; gap:10px; justify-content:center; margin-top:14px; }
+    .game-btn {
+      flex:1; background:linear-gradient(135deg,#00c6ff,#0072ff);
+      border:none; border-radius:10px; color:#000;
+      font-weight:700; font-size:14px; padding:11px;
+      cursor:pointer; font-family:'Exo 2',sans-serif;
+    }
+    .game-btn:hover { opacity:0.85; }
+    .game-btn.outline {
+      background:transparent; border:1px solid #00c6ff44; color:#00c6ff;
+    }
+    .game-btn.outline:hover { background:rgba(0,198,255,0.08); }
+    .back-link {
+      display:inline-block; margin-top:20px;
+      color:#555; font-size:13px; text-decoration:none;
+    }
+    .back-link:hover { color:#00c6ff; }
+  </style>
+</head>
+<body>
 
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Rock Tools Logo">
+      <span class="logo-text">ROCK TOOLS</span>
+    </a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <li><a href="games.html" class="active">Games</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="game-wrap">
+    <h1 class="game-title">⭕ Tic Tac Toe</h1>
+
+    <!-- Mode -->
+    <div class="mode-wrap">
+      <button class="mode-btn active" id="btnAI" onclick="setMode('ai')">🤖 vs Computer</button>
+      <button class="mode-btn"        id="btn2P" onclick="setMode('2p')">👥 vs Friend</button>
+    </div>
+
+    <!-- Score -->
+    <div class="score-bar">
+      <div class="score-box">
+        <div class="score-label" id="labelX">You (X)</div>
+        <div class="score-val score-x" id="scoreX">0</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">Draw</div>
+        <div class="score-val score-d" id="scoreD">0</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label" id="labelO">Computer</div>
+        <div class="score-val score-o" id="scoreO">0</div>
+      </div>
+    </div>
+
+    <!-- Turn -->
+    <div class="turn-bar"  id="turnBar"></div>
+    <div class="thinking"  id="thinking"></div>
+
+    <!-- Board -->
+    <div class="board" id="board"></div>
+
+    <!-- Status -->
+    <div class="status-msg" id="statusMsg"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="game-btn outline" onclick="newGame()">🗑️ New Game</button>
+      <button class="game-btn"         onclick="resetBoard()">🔄 Restart</button>
+    </div>
+
+    <a href="games.html" class="back-link">← Back to Games</a>
+  </div>
+
+<script>
+// Rock Tools | Tic Tac Toe | 23 March 2026
+
+var WIN_LINES=[
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+var board    = Array(9).fill(null);
+var current  = 'X';
+var isOver   = false;
+var mode     = 'ai';
+var scores   = {X:0,O:0,D:0};
+var aiTimer  = null;
+
+// ── Set mode ──
+function setMode(m){
+  mode=m;
+  document.getElementById('btnAI').classList.toggle('active',m==='ai');
+  document.getElementById('btn2P').classList.toggle('active',m==='2p');
+  document.getElementById('labelX').innerText = m==='ai' ? 'You (X)' : 'Player X';
+  document.getElementById('labelO').innerText = m==='ai' ? 'Computer' : 'Player O';
+  scores={X:0,O:0,D:0};
+  updateScoreUI();
+  resetBoard();
+}
+
+// ── Build cells ──
+function buildBoard(){
+  var el=document.getElementById('board');
+  el.innerHTML='';
+  for(var i=0;i<9;i++){
+    var c=document.createElement('div');
+    c.className='cell';
+    c.dataset.i=i;
+    c.onclick=handleClick;
+    el.appendChild(c);
+  }
+}
+
+// ── Click handler ──
+function handleClick(e){
+  var i=parseInt(e.currentTarget.dataset.i);
+  if(isOver||board[i]) return;
+  if(mode==='ai'&&current==='O') return;
+  makeMove(i);
+}
+
+// ── Make move ──
+function makeMove(i){
+  board[i]=current;
+  renderCells();
+
+  var res=checkResult();
+  if(res){ endGame(res); return; }
+
+  current=current==='X'?'O':'X';
+  updateTurnBar();
+
+  if(mode==='ai'&&current==='O'&&!isOver){
+    setThinking(true);
+    aiTimer=setTimeout(function(){
+      setThinking(false);
+      var mv=getAIMove();
+      if(mv!==-1) makeMove(mv);
+    },430);
+  }
+}
+
+// ── Render cells ──
+function renderCells(){
+  var cells=document.querySelectorAll('.cell');
+  cells.forEach(function(cell,i){
+    cell.innerHTML='';
+    cell.className='cell';
+    if(board[i]==='X'){
+      cell.innerHTML='<span class="mark-x">✕</span>';
+      cell.classList.add('taken');
+    } else if(board[i]==='O'){
+      cell.innerHTML='<span class="mark-o">◯</span>';
+      cell.classList.add('taken');
+    } else if(mode==='ai'&&current==='O'&&!isOver){
+      cell.classList.add('blocked');
+    }
+  });
+}
+
+// ── Check result ──
+function checkResult(){
+  for(var li=0;li<WIN_LINES.length;li++){
+    var ln=WIN_LINES[li];
+    if(board[ln[0]]&&board[ln[0]]===board[ln[1]]&&board[ln[0]]===board[ln[2]]){
+      return{type:'win',player:board[ln[0]],line:ln};
+    }
+  }
+  if(board.every(function(v){return v!==null;})) return{type:'draw'};
+  return null;
+}
+
+// ── End game ──
+function endGame(res){
+  isOver=true;
+  clearTimeout(aiTimer);
+  setThinking(false);
+  document.getElementById('turnBar').innerText='';
+
+  var cells=document.querySelectorAll('.cell');
+  var status=document.getElementById('statusMsg');
+
+  if(res.type==='win'){
+    res.line.forEach(function(i){ cells[i].classList.add('win-cell'); });
+    scores[res.player]++;
+    updateScoreUI();
+
+    var name='';
+    if(res.player==='X') name=mode==='ai'?'Tum (X)':'Player X';
+    else name=mode==='ai'?'Computer (O)':'Player O';
+
+    status.innerText='🎉 '+name+' jeet gaya!';
+    status.style.color=res.player==='X'?'#00ffd5':'#ff6b6b';
+  } else {
+    scores.D++;
+    updateScoreUI();
+    status.innerText='🤝 Draw hai!';
+    status.style.color='#aaa';
+  }
+}
+
+// ── Reset board (keep scores) ──
+function resetBoard(){
+  clearTimeout(aiTimer);
+  board=Array(9).fill(null);
+  current='X';
+  isOver=false;
+  setThinking(false);
+  document.getElementById('statusMsg').innerText='';
+  buildBoard();
+  updateTurnBar();
+}
+
+// ── New game (reset scores) ──
+function newGame(){
+  scores={X:0,O:0,D:0};
+  updateScoreUI();
+  resetBoard();
+}
+
+// ── Turn bar ──
+function updateTurnBar(){
+  var bar=document.getElementById('turnBar');
+  if(isOver){ bar.innerText=''; return; }
+  var xName=mode==='ai'?'Tum (X)':'Player X';
+  var oName=mode==='ai'?'Computer (O)':'Player O';
+  if(current==='X'){
+    bar.innerHTML='<span class="tx">'+xName+'</span> ki baari hai';
+  } else {
+    bar.innerHTML='<span class="to">'+oName+'</span> ki baari hai';
+  }
+  renderCells(); // update blocked state
+}
+
+function setThinking(on){
+  document.getElementById('thinking').innerText=on?'🤖 Computer soch raha hai...':'';
+}
+
+function updateScoreUI(){
+  document.getElementById('scoreX').innerText=scores.X;
+  document.getElementById('scoreO').innerText=scores.O;
+  document.getElementById('scoreD').innerText=scores.D;
+}
+
+// ══════════════════════════════════════
+//  AI — win > block > center > corner > side
+// ══════════════════════════════════════
+function getAIMove(){
+  // 1. Win
+  var m=findMove('O'); if(m!==-1) return m;
+  // 2. Block
+  m=findMove('X'); if(m!==-1) return m;
+  // 3. Center
+  if(!board[4]) return 4;
+  // 4. Opposite corner
+  var opp=[[0,8],[2,6],[6,2],[8,0]];
+  for(var i=0;i<opp.length;i++){
+    if(board[opp[i][0]]==='X'&&!board[opp[i][1]]) return opp[i][1];
+  }
+  // 5. Free corner
+  var corners=[0,2,6,8].filter(function(c){return !board[c];});
+  if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+  // 6. Free side
+  var sides=[1,3,5,7].filter(function(s){return !board[s];});
+  if(sides.length) return sides[Math.floor(Math.random()*sides.length)];
+  return -1;
+}
+
+function findMove(player){
+  for(var li=0;li<WIN_LINES.length;li++){
+    var ln=WIN_LINES[li];
+    var vals=ln.map(function(i){return board[i];});
+    if(vals.filter(function(v){return v===player;}).length===2&&
+       vals.filter(function(v){return v===null;}).length===1){
+      return ln[vals.indexOf(null)];
+    }
+  }
+  return -1;
+}
+
+// ── Init ──
+buildBoard();
+updateTurnBar();
+updateScoreUI();
+</script>
+</body>
+</html>
