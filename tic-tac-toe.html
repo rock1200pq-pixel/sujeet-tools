@@ -349,72 +349,43 @@ function updateScoreUI(){
 // ══════════════════════════════════════
 //  AI — win > block > center > corner > side
 // ══════════════════════════════════════
-function getForkMove(player){
-  for(let i=0;i<9;i++){
-    if(!board[i]){
-      board[i]=player;
+function getAIMove(){
+  // 1. Win
+  var m=findMove('O'); if(m!==-1) return m;
+  // 2. Block
+  m=findMove('X'); if(m!==-1) return m;
+  // 3. Center
+  if(!board[4]) return 4;
+  // 4. Opposite corner
+  var opp=[[0,8],[2,6],[6,2],[8,0]];
+  for(var i=0;i<opp.length;i++){
+    if(board[opp[i][0]]==='X'&&!board[opp[i][1]]) return opp[i][1];
+  }
+  // 5. Free corner
+  var corners=[0,2,6,8].filter(function(c){return !board[c];});
+  if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+  // 6. Free side
+  var sides=[1,3,5,7].filter(function(s){return !board[s];});
+  if(sides.length) return sides[Math.floor(Math.random()*sides.length)];
+  return -1;
+}
 
-      let winCount=0;
-
-      for(let j=0;j<WIN_LINES.length;j++){
-        let line=WIN_LINES[j];
-        let vals=line.map(idx=>board[idx]);
-
-        if(vals.filter(v=>v===player).length===2 &&
-           vals.includes(null)){
-          winCount++;
-        }
-      }
-
-      board[i]=null;
-
-      if(winCount>=2){
-        return i; // fork move
-      }
+function findMove(player){
+  for(var li=0;li<WIN_LINES.length;li++){
+    var ln=WIN_LINES[li];
+    var vals=ln.map(function(i){return board[i];});
+    if(vals.filter(function(v){return v===player;}).length===2&&
+       vals.filter(function(v){return v===null;}).length===1){
+      return ln[vals.indexOf(null)];
     }
   }
   return -1;
-  }
- function getAIMove(){
-
-  // 1. Win
-  let m = findMove('O');
-  if(m !== -1) return m;
-
-  // 2. Block
-  m = findMove('X');
-  if(m !== -1) return m;
-
-  // 3. Create fork (AI)
-  m = getForkMove('O');
-  if(m !== -1) return m;
-
-  // 4. Block opponent fork 🔥 IMPORTANT
-  m = getForkMove('X');
-  if(m !== -1){
-    // Special case: force side move
-    let sides = [1,3,5,7].filter(i => !board[i]);
-    if(sides.length) return sides[Math.floor(Math.random()*sides.length)];
-    return m;
-  }
-
-  // 5. Center
-  if(!board[4]) return 4;
-
-  // 6. Opposite corner
-  let opp=[[0,8],[2,6],[6,2],[8,0]];
-  for(let i=0;i<opp.length;i++){
-    if(board[opp[i][0]]==='X' && !board[opp[i][1]])
-      return opp[i][1];
-  }
-
-  // 7. Corner
-  let corners=[0,2,6,8].filter(i=>!board[i]);
-  if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
-
-  // 8. Side
-  let sides=[1,3,5,7].filter(i=>!board[i]);
-  if(sides.length) return sides[Math.floor(Math.random()*sides.length)];
-
-  return -1;
 }
+
+// ── Init ──
+buildBoard();
+updateTurnBar();
+updateScoreUI();
+</script>
+</body>
+</html>
