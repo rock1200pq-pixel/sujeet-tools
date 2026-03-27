@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ludo Multiplayer</title>
 
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#0b1220;
+  color:white;
+  text-align:center;
+}
+
+.board{
+  width:360px;
+  height:360px;
+  margin:20px auto;
+  display:grid;
+  grid-template-columns:repeat(15,1fr);
+  grid-template-rows:repeat(15,1fr);
+}
+
+.cell{
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.red{background:red;}
+.green{background:green;}
+.yellow{background:gold;}
+.blue{background:blue;}
+
+.safe{background:#999;}
+
+.token{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  margin:auto;
+  margin-top:2px;
+}
+
+.controls{
+  margin-top:20px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#00c6ff;
+  font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🎲 Online Ludo</h2>
+
+<div id="board" class="board"></div>
+
+<div class="controls">
+  <button onclick="rollDice()">Roll Dice</button>
+  <h3 id="dice">-</h3>
+</div>
+
+<script>
+
+// CREATE BOARD
+let board = document.getElementById("board");
+
+for(let i=0;i<225;i++){
+  let cell=document.createElement("div");
+  cell.className="cell";
+  board.appendChild(cell);
+}
+
+// GAME STATE
+let players=["red","green","yellow","blue"];
+let currentPlayer=0;
+let diceValue=0;
+
+// TOKENS
+let tokens={
+  red:[0],
+  green:[0],
+  yellow:[0],
+  blue:[0]
+};
+
+// ROLL DICE
+function rollDice(){
+  diceValue=Math.floor(Math.random()*6)+1;
+  document.getElementById("dice").innerText=diceValue;
+
+  moveToken(players[currentPlayer]);
+}
+
+// MOVE TOKEN (basic)
+function moveToken(player){
+  tokens[player][0]+=diceValue;
+
+  console.log(player,"moved to",tokens[player][0]);
+
+  nextTurn();
+}
+
+// NEXT TURN
+function nextTurn(){
+  currentPlayer=(currentPlayer+1)%4;
+}
+
+</script>
+
+</body>
+</html>
