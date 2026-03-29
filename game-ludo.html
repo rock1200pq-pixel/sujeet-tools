@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ludo</title>
+<title>Ludo | Rock Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #1a237e 0%, #283593 40%, #1565c0 100%);
+  background: linear-gradient(135deg, #030a12 0%, #0a1628 50%, #0d1e35 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,28 +20,36 @@ body {
   overflow-x: hidden;
 }
 
+/* Override Rock Tools nav for this page */
+nav {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
 .screen { display:none; width:100%; max-width:420px; padding:16px; }
 .screen.active { display:flex; flex-direction:column; align-items:center; }
 
 .logo {
   font-family:'Baloo 2',cursive;
   font-size:2.8rem; font-weight:800;
-  color:#FFD700;
-  text-shadow: 0 3px 0 #b8860b, 0 6px 12px rgba(0,0,0,0.4);
+  color:#00c6ff;
+  text-shadow: 0 3px 0 #005a8c, 0 6px 12px rgba(0,0,0,0.6);
   margin: 20px 0 4px; letter-spacing:2px;
 }
-.logo-sub { color:#90caf9; font-size:0.85rem; margin-bottom:20px; }
+.logo-sub { color:#4fc3f7; font-size:0.85rem; margin-bottom:20px; }
 
 .panel {
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,198,255,0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(0,198,255,0.2);
   border-radius: 20px;
   padding: 20px; width:100%; margin-bottom:14px;
 }
 .panel-title {
   font-family:'Baloo 2',cursive; font-size:1rem;
-  color:#FFD700; margin-bottom:12px;
+  color:#00c6ff; margin-bottom:12px;
   display:flex; align-items:center; gap:8px;
 }
 
@@ -74,7 +83,7 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 }
 .btn:active { transform:scale(0.97); }
 .btn:disabled { opacity:0.45; cursor:not-allowed; }
-.btn-gold  { background:linear-gradient(135deg,#FFD700,#FFA000); color:#1a237e; box-shadow:0 4px 15px rgba(255,160,0,0.4); }
+.btn-gold  { background:linear-gradient(135deg,#00c6ff,#0072ff); color:#000; box-shadow:0 4px 15px rgba(0,198,255,0.4); }
 .btn-blue  { background:linear-gradient(135deg,#42a5f5,#1565c0); color:#fff;    box-shadow:0 4px 15px rgba(66,165,245,0.3); }
 .btn-green { background:linear-gradient(135deg,#66bb6a,#2e7d32); color:#fff;    box-shadow:0 4px 15px rgba(102,187,106,0.3); }
 .btn-ghost { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.15); font-size:0.9rem; }
@@ -83,7 +92,6 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 .status.err { color:#ef5350; }
 .status.ok  { color:#66bb6a; }
 
-/* WAITING ROOM */
 .room-code-box {
   background:rgba(0,0,0,0.35); border-radius:16px; padding:14px;
   text-align:center; margin-bottom:14px;
@@ -92,8 +100,8 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 .room-code-box .lbl { font-size:0.75rem; color:rgba(255,255,255,0.5); margin-bottom:4px; }
 .room-code-box .code {
   font-family:'Baloo 2',cursive; font-size:2.8rem; font-weight:800;
-  letter-spacing:10px; color:#FFD700;
-  text-shadow:0 2px 8px rgba(255,215,0,0.4);
+  letter-spacing:10px; color:#00c6ff;
+  text-shadow:0 2px 8px rgba(0,198,255,0.4);
 }
 .player-row {
   display:flex; align-items:center; gap:10px; padding:10px 14px;
@@ -105,18 +113,16 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 .pr-badge { font-size:0.68rem; padding:2px 8px; border-radius:20px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); }
 .pr-badge.host { background:rgba(255,215,0,0.2); color:#FFD700; }
 
-/* GAME */
 #game-screen { max-width:480px; padding:10px; }
 .top-bar {
   display:flex; justify-content:space-between; align-items:center;
   padding:8px 14px; margin-bottom:8px;
-  background:rgba(0,0,0,0.3); border-radius:14px;
-  border:1px solid rgba(255,255,255,0.08); width:100%;
+  background:rgba(0,198,255,0.06); border-radius:14px;
+  border:1px solid rgba(0,198,255,0.2); width:100%;
 }
 .turn-info { display:flex; align-items:center; gap:8px; font-family:'Baloo 2',cursive; font-size:1rem; color:#fff; }
 .turn-dot  { width:14px; height:14px; border-radius:50%; }
 
-/* BOARD */
 .board-container { width:100%; position:relative; margin:0 auto 10px; }
 .ludo-board {
   width:100%; aspect-ratio:1;
@@ -131,30 +137,32 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
   border:0.5px solid #ddd; position:relative;
   display:flex; align-items:center; justify-content:center; overflow:hidden;
 }
-.home-red    { background:#ffcdd2; }
-.home-green  { background:#c8e6c9; }
-.home-blue   { background:#bbdefb; }
-.home-yellow { background:#fff9c4; }
+.home-red    { background:#b71c1c; }
+.home-green  { background:#1b5e20; }
+.home-blue   { background:#0d47a1; }
+.home-yellow { background:#e65100; }
 .path        { background:#fff; }
-.safe        { background:#ffe0b2; }
-.strip-red   { background:#ef9a9a; }
-.strip-green { background:#a5d6a7; }
-.strip-blue  { background:#90caf9; }
-.strip-yellow{ background:#fff176; }
-.center-r    { background:#ef9a9a; }
-.center-g    { background:#a5d6a7; }
-.center-b    { background:#90caf9; }
-.center-y    { background:#fff176; }
+.safe        { background:#fff8e1; }
+.strip-red   { background:#e53935; }
+.strip-green { background:#43a047; }
+.strip-blue  { background:#1e88e5; }
+.strip-yellow{ background:#fdd835; }
+.center-r    { background:#e53935; }
+.center-g    { background:#43a047; }
+.center-b    { background:#1e88e5; }
+.center-y    { background:#fdd835; }
 .center-w    { background:#fff; }
 
 .home-circle {
-  position:absolute; width:55%; height:55%;
+  position:absolute; width:70%; height:70%;
   border-radius:50%; top:50%; left:50%;
-  transform:translate(-50%,-50%); opacity:0.3; pointer-events:none;
+  transform:translate(-50%,-50%);
+  opacity:0.85; pointer-events:none;
+  border:3px solid rgba(255,255,255,0.4);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,0.3);
 }
 .star-icon { font-size:0.7em; color:rgba(0,0,0,0.2); pointer-events:none; }
 
-/* TOKENS */
 .token {
   position:absolute; border-radius:50%;
   border:2px solid rgba(255,255,255,0.95);
@@ -177,7 +185,6 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
   to   { transform:translate(-50%,-50%) scale(1.2); }
 }
 
-/* CONTROLS */
 .bottom-controls { display:flex; gap:10px; align-items:center; width:100%; margin-bottom:8px; }
 .dice-wrap { flex-shrink:0; text-align:center; }
 #dice-btn {
@@ -200,18 +207,16 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 .log-box::-webkit-scrollbar { width:3px; }
 .log-box::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:2px; }
 
-/* SCORE */
 .score-row { display:flex; gap:6px; width:100%; margin-bottom:8px; }
 .score-card {
   flex:1; padding:6px 4px; border-radius:10px;
   background:rgba(0,0,0,0.25); border:1.5px solid transparent;
   text-align:center; transition:border 0.2s;
 }
-.score-card.active { border-color:#FFD700; }
+.score-card.active { border-color:#00c6ff; }
 .score-card .sc-name   { font-size:0.65rem; color:rgba(255,255,255,0.6); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .score-card .sc-tokens { font-size:0.9rem; color:#fff; }
 
-/* WIN */
 #win-overlay {
   display:none; position:fixed; inset:0;
   background:rgba(0,0,0,0.9); z-index:999;
@@ -223,7 +228,6 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 @keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-18px)} }
 .win-name { font-family:'Baloo 2',cursive; font-size:2.2rem; font-weight:800; margin:10px 0 20px; }
 
-/* TOAST */
 #toast {
   position:fixed; bottom:24px; left:50%;
   transform:translateX(-50%) translateY(80px);
@@ -238,6 +242,21 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
 </style>
 </head>
 <body>
+
+<!-- Rock Tools Navbar -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Rock Tools Logo">
+    <span class="logo-text">ROCK TOOLS</span>
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="tools.html">Tools</a></li>
+    <li><a href="games.html" class="active">Games</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
 
 <!-- LOBBY -->
 <div id="lobby-screen" class="screen active">
@@ -265,6 +284,9 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
   </div>
 
   <div class="panel">
+    <div class="panel-title">🤖 Play vs Computer</div>
+    <button class="btn btn-green" onclick="playAI()">🤖 Play vs Computer</button>
+    <div class="divider">— or multiplayer —</div>
     <div class="panel-title">🏠 Create New Room</div>
     <button class="btn btn-gold" onclick="createRoom()">Create Room</button>
     <div class="divider">— or —</div>
@@ -272,10 +294,9 @@ input[type=text]::placeholder { color:rgba(255,255,255,0.35); }
     <input type="text" id="room-input" placeholder="Enter 6-digit code..."
            maxlength="6" style="text-transform:uppercase;letter-spacing:6px;text-align:center;font-size:1.3rem;">
     <button class="btn btn-blue" onclick="joinRoom()">Join Room</button>
-    <div class="divider">— or —</div>
-    <button class="btn btn-green" onclick="playAI()">🤖 Play vs Computer</button>
   </div>
   <div id="lobby-msg" class="status"></div>
+  <a href="games.html" style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:8px;text-decoration:none">← Back to Games</a>
 </div>
 
 <!-- WAITING ROOM -->
@@ -344,16 +365,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-// ── Constants ──────────────────────────────────────────
 const COLORS   = ['red','green','blue','yellow'];
 const C_HEX    = { red:'#e53935', green:'#43a047', blue:'#1e88e5', yellow:'#fdd835' };
 const C_NAME   = { red:'Red', green:'Green', blue:'Blue', yellow:'Yellow' };
 const DICE_ICO = ['','⚀','⚁','⚂','⚃','⚄','⚅'];
-
-// Safe squares — tokens here cannot be captured
 const SAFE = new Set(['6-1','1-6','6-13','8-13','13-8','13-6','8-1','1-8']);
 
-// Full 52-cell clockwise path [row, col]
 const PATH = [
   [6,1],[6,2],[6,3],[6,4],[6,5],
   [5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
@@ -369,7 +386,6 @@ const PATH = [
   [7,0],[6,0]
 ];
 
-// Home stretch (6 steps toward center) for each color
 const STRETCH = {
   red:    [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
   green:  [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
@@ -377,13 +393,8 @@ const STRETCH = {
   yellow: [[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]]
 };
 
-// PATH index where each color enters the board
 const ENTRY = { red:0, green:13, blue:26, yellow:39 };
-
-// PATH index that is the LAST cell before the home stretch entry
 const LAST_BEFORE_STRETCH = { red:51, green:12, blue:25, yellow:38 };
-
-// Home base (yard) positions for 4 tokens per color
 const HOME_POS = {
   red:    [[1,1],[1,3],[3,1],[3,3]],
   green:  [[1,11],[1,13],[3,11],[3,13]],
@@ -391,7 +402,6 @@ const HOME_POS = {
   yellow: [[11,11],[11,13],[13,11],[13,13]]
 };
 
-// ── Session ────────────────────────────────────────────
 const myId = 'p_' + Math.random().toString(36).substr(2,8);
 let myColor  = 'red';
 let myName   = '';
@@ -401,9 +411,8 @@ let unsub    = null;
 let isHost   = false;
 let isAIGame = false;
 let GS       = null;
-let pendingMove = null; // { color, idxs, dice }
+let pendingMove = null;
 
-// ── UI Helpers ─────────────────────────────────────────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -423,14 +432,12 @@ function addLog(txt) {
   b.appendChild(d); b.scrollTop = b.scrollHeight;
 }
 
-// ── Color Picker ───────────────────────────────────────
 window.selectColor = function(el) {
   document.querySelectorAll('.color-opt').forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
   myColor = el.dataset.color;
 };
 
-// ── Board Builder ──────────────────────────────────────
 function buildBoard() {
   const board = document.getElementById('ludo-board');
   board.innerHTML = '';
@@ -439,12 +446,15 @@ function buildBoard() {
       const cell = document.createElement('div');
       cell.className = 'cell ' + getCellClass(r,c);
       cell.id = `cell_${r}_${c}`;
-      // Decorative circles inside home quadrants
-      if (r>=1&&r<=4&&c>=1&&c<=4)   addCircle(cell,'red');
-      if (r>=1&&r<=4&&c>=10&&c<=13) addCircle(cell,'green');
-      if (r>=10&&r<=13&&c>=1&&c<=4) addCircle(cell,'blue');
-      if (r>=10&&r<=13&&c>=10&&c<=13) addCircle(cell,'yellow');
-      // Star on safe cells
+      // Only 4 circles per home (2x2 layout like Ludo King)
+      const redDots    = [[2,2],[2,4],[4,2],[4,4]];
+      const greenDots  = [[2,10],[2,12],[4,10],[4,12]];
+      const blueDots   = [[10,2],[10,4],[12,2],[12,4]];
+      const yellowDots = [[10,10],[10,12],[12,10],[12,12]];
+      if (redDots.some(p=>p[0]===r&&p[1]===c))    addCircle(cell,'red');
+      if (greenDots.some(p=>p[0]===r&&p[1]===c))  addCircle(cell,'green');
+      if (blueDots.some(p=>p[0]===r&&p[1]===c))   addCircle(cell,'blue');
+      if (yellowDots.some(p=>p[0]===r&&p[1]===c)) addCircle(cell,'yellow');
       if (SAFE.has(`${r}-${c}`)) {
         const s=document.createElement('span'); s.className='star-icon'; s.textContent='★';
         cell.appendChild(s);
@@ -466,7 +476,6 @@ function getCellClass(r,c) {
   if (r<=5&&c>=9) return 'home-green';
   if (r>=9&&c<=5) return 'home-blue';
   if (r>=9&&c>=9) return 'home-yellow';
-  // Center 3×3
   if (r>=6&&r<=8&&c>=6&&c<=8) {
     if (r===7&&c===7) return 'center-w';
     if (r===6&&(c===6||c===7)) return 'center-r';
@@ -485,11 +494,9 @@ function getCellClass(r,c) {
   return 'path';
 }
 
-// ── Token Renderer ─────────────────────────────────────
 function renderTokens() {
   document.querySelectorAll('.token').forEach(t=>t.remove());
   if (!GS) return;
-
   const board  = document.getElementById('ludo-board');
   const cellSz = board.offsetWidth / 15;
   const sz     = Math.max(cellSz * 0.66, 12);
@@ -499,11 +506,9 @@ function renderTokens() {
     const color  = player.color;
     const tokens = GS.tokens[color];
     if (!tokens) return;
-
     tokens.forEach((tk, idx) => {
       if (tk.finished) return;
       let r, c;
-
       if (tk.pos === -1) {
         [r,c] = HOME_POS[color][idx];
       } else if (tk.homeStretch) {
@@ -513,14 +518,11 @@ function renderTokens() {
         const pi = ((tk.pos % 52)+52)%52;
         [r,c] = PATH[pi];
       }
-
       const key    = `${r}_${c}`;
       const offset = cellCount[key] || 0;
       cellCount[key] = offset + 1;
-
       const cellEl = document.getElementById(`cell_${r}_${c}`);
       if (!cellEl) return;
-
       const token = document.createElement('div');
       token.className = 'token';
       token.style.cssText = `
@@ -529,22 +531,18 @@ function renderTokens() {
         transform:translate(calc(-50% + ${offset*3}px), calc(-50% + ${offset*3}px));
         z-index:${10+offset};
       `;
-
       const isMovable = pendingMove
         && pendingMove.color === color
         && pendingMove.idxs.includes(idx);
-
       if (isMovable) {
         token.classList.add('movable');
         token.addEventListener('click', ()=>handleTokenClick(color, idx));
       }
-
       cellEl.appendChild(token);
     });
   });
 }
 
-// ── Game State Factory ─────────────────────────────────
 function newGameState(players) {
   const tokens = {};
   players.forEach(p => {
@@ -553,14 +551,12 @@ function newGameState(players) {
   return { players, tokens, turn:0, dice:null, rolled:false, winner:null };
 }
 
-// ── Input Validation ───────────────────────────────────
 function validateName() {
   myName = document.getElementById('player-name').value.trim();
   if (!myName) { setMsg('lobby-msg','Please enter your name!','err'); return false; }
   return true;
 }
 
-// ── Create Room ────────────────────────────────────────
 window.createRoom = async function() {
   if (!validateName()) return;
   isHost  = true;
@@ -576,50 +572,41 @@ window.createRoom = async function() {
   listenRoom();
 };
 
-// ── Join Room ──────────────────────────────────────────
 window.joinRoom = async function() {
   if (!validateName()) return;
   const code = document.getElementById('room-input').value.trim().toUpperCase();
   if (code.length!==6) { setMsg('lobby-msg','Enter a valid 6-digit code!','err'); return; }
-
   roomId  = code;
   roomRef = ref(db,'rooms/'+roomId);
   const snap = await get(roomRef);
-
-  if (!snap.exists())                 { setMsg('lobby-msg','Room not found!','err');           return; }
-  if (snap.val().status!=='waiting')  { setMsg('lobby-msg','Game already started!','err');     return; }
-
+  if (!snap.exists())                { setMsg('lobby-msg','Room not found!','err');       return; }
+  if (snap.val().status!=='waiting') { setMsg('lobby-msg','Game already started!','err'); return; }
   const ps   = Object.values(snap.val().players||{});
-  if (ps.length>=4)                   { setMsg('lobby-msg','Room is full!','err');             return; }
-
+  if (ps.length>=4)                  { setMsg('lobby-msg','Room is full!','err');         return; }
   const used = ps.map(p=>p.color);
   if (used.includes(myColor)) {
     const free = COLORS.find(c=>!used.includes(c));
-    if (!free)                        { setMsg('lobby-msg','No color available!','err');       return; }
+    if (!free) { setMsg('lobby-msg','No color available!','err'); return; }
     myColor = free;
   }
-
   isHost = false;
   await update(ref(db,`rooms/${roomId}/players/${myId}`),
     {id:myId, name:myName, color:myColor, isAI:false});
-
   document.getElementById('show-code').textContent = roomId;
   showScreen('waiting-screen');
   listenRoom();
 };
 
-// ── Play vs AI ─────────────────────────────────────────
 window.playAI = function() {
   if (!validateName()) return;
   isAIGame = true; isHost = true;
   roomId   = 'AI_'+Math.random().toString(36).substr(2,4);
-
-  const aiColors = COLORS.filter(c=>c!==myColor);
+  // Only 1 computer opponent
+  const aiColor  = COLORS.find(c=>c!==myColor);
   const players  = [
-    {id:myId, name:myName, color:myColor, isAI:false},
-    ...aiColors.map((c,i)=>({id:'ai'+i, name:'Computer '+(i+1), color:c, isAI:true}))
+    {id:myId,  name:myName,     color:myColor, isAI:false},
+    {id:'ai0', name:'Computer', color:aiColor, isAI:true}
   ];
-
   GS = newGameState(players);
   showScreen('game-screen');
   document.getElementById('room-tag').textContent = 'AI Mode';
@@ -627,15 +614,14 @@ window.playAI = function() {
   updateScoreRow();
   updateTurnUI();
   renderTokens();
+  scheduleAI();
 };
 
-// ── Firebase Listener ──────────────────────────────────
 function listenRoom() {
   if (unsub) unsub();
   unsub = onValue(roomRef, snap=>{
     if (!snap.exists()) { leaveRoom(); return; }
     const d = snap.val();
-
     if (d.status==='waiting') {
       updateWaitingUI(d);
     } else if (d.status==='playing') {
@@ -645,7 +631,6 @@ function listenRoom() {
         buildBoard();
       }
       GS = d.gameState;
-      // Restore pending move only if it belongs to this player
       pendingMove = (GS._pm && GS._pm.pid===myId) ? GS._pm : null;
       updateScoreRow();
       updateTurnUI();
@@ -655,12 +640,10 @@ function listenRoom() {
   });
 }
 
-// ── Waiting Room UI ────────────────────────────────────
 function updateWaitingUI(d) {
   const ps   = d.players||{};
   const list = document.getElementById('players-list');
   list.innerHTML = '';
-
   COLORS.forEach(color=>{
     const pl  = Object.values(ps).find(p=>p.color===color);
     const row = document.createElement('div');
@@ -678,21 +661,17 @@ function updateWaitingUI(d) {
     }
     list.appendChild(row);
   });
-
-  const cnt    = Object.keys(ps).length;
-  const btn    = document.getElementById('start-btn');
+  const cnt = Object.keys(ps).length;
+  const btn = document.getElementById('start-btn');
   if (myId===d.host) {
     btn.style.display = 'block';
     btn.disabled      = cnt<2;
-    btn.textContent   = cnt>=2
-      ? `🎮 Start Game (${cnt} players)`
-      : `⏳ Waiting for players... (${cnt}/2 min)`;
+    btn.textContent   = cnt>=2 ? `🎮 Start Game (${cnt} players)` : `⏳ Waiting... (${cnt}/2 min)`;
   } else {
     btn.style.display = 'none';
   }
 }
 
-// ── Start Game ─────────────────────────────────────────
 window.startGame = async function() {
   const snap = await get(roomRef);
   const ps   = Object.values(snap.val().players||{});
@@ -700,7 +679,6 @@ window.startGame = async function() {
   await update(roomRef, {status:'playing', gameState:newGameState(ps)});
 };
 
-// ── Leave Room ─────────────────────────────────────────
 window.leaveRoom = async function() {
   if (roomRef && !isAIGame) {
     await remove(ref(db,`rooms/${roomId}/players/${myId}`));
@@ -715,28 +693,22 @@ window.leaveRoom = async function() {
   location.reload();
 };
 
-// ── Dice Roll ──────────────────────────────────────────
 window.rollDice = function() {
   if (!GS||GS.rolled) return;
   const cur = GS.players[GS.turn];
   if (!cur) return;
   const myGo = cur.id===myId || (isAIGame&&!cur.isAI);
   if (!myGo) return;
-
   const dice = Math.floor(Math.random()*6)+1;
   GS.dice=dice; GS.rolled=true;
-
   const btn = document.getElementById('dice-btn');
   btn.disabled=true; btn.classList.add('rolling');
   setTimeout(()=>btn.classList.remove('rolling'), 750);
-
   document.getElementById('dice-val').textContent = DICE_ICO[dice];
   addLog(`${cur.name} rolled a ${dice} ${DICE_ICO[dice]}`);
-
   const movable = getMovable(cur.color, dice);
-
   if (movable.length===0) {
-    addLog('No moves available — skipping turn.');
+    addLog('No moves — skipping turn.');
     setTimeout(()=>nextTurn(dice), 1000);
   } else if (movable.length===1) {
     setTimeout(()=>doMove(cur.color, movable[0], dice), 600);
@@ -746,69 +718,53 @@ window.rollDice = function() {
     else renderTokens();
     addLog('Tap a token to move it.');
   }
-
   if (!isAIGame) syncGS();
 };
 
-// ── Get Movable Tokens ─────────────────────────────────
 function getMovable(color, dice) {
   return GS.tokens[color].reduce((acc,t,i)=>{
     if (t.finished) return acc;
-    if (t.pos===-1  && dice===6)            acc.push(i); // need 6 to leave yard
+    if (t.pos===-1 && dice===6) acc.push(i);
     else if (t.pos!==-1 && t.homeStretch && t.pos+dice<=5) acc.push(i);
-    else if (t.pos!==-1 && !t.homeStretch)  acc.push(i);
+    else if (t.pos!==-1 && !t.homeStretch) acc.push(i);
     return acc;
   }, []);
 }
 
-// ── Handle Token Click ─────────────────────────────────
 function handleTokenClick(color, idx) {
   if (!pendingMove||pendingMove.color!==color||!pendingMove.idxs.includes(idx)) return;
   const dice = pendingMove.dice;
   pendingMove=null;
-  if (!isAIGame) { GS._pm=null; }
+  if (!isAIGame) GS._pm=null;
   doMove(color, idx, dice);
 }
 
-// ── Move Token ─────────────────────────────────────────
 function doMove(color, idx, dice) {
   pendingMove=null;
   if (!isAIGame) GS._pm=null;
-
   const t = GS.tokens[color][idx];
-
   if (t.pos===-1) {
-    // Enter board from yard
     t.pos = ENTRY[color];
-
   } else if (t.homeStretch) {
     t.pos += dice;
     if (t.pos>=5) { t.pos=5; t.finished=true; addLog(`${C_NAME[color]}'s token reached home! 🏠`); }
-
   } else {
-    const lastBefore = LAST_BEFORE_STRETCH[color];
-    const oldPos     = t.pos;
-    let   newPos     = oldPos + dice;
-
-    // Determine if token crosses into home stretch
-    // Normal forward: oldPos <= lastBefore and newPos > lastBefore
-    // Wrapped: oldPos > lastBefore (already past) — no re-entry
+    const lastBefore  = LAST_BEFORE_STRETCH[color];
+    const oldPos      = t.pos;
+    let   newPos      = oldPos + dice;
     const crossesInto = (oldPos <= lastBefore) && (newPos > lastBefore);
-
     if (crossesInto) {
-      const steps = newPos - lastBefore - 1; // 0 = first cell of stretch
+      const steps = newPos - lastBefore - 1;
       if (steps <= 5) {
         t.homeStretch=true; t.pos=steps;
         if (t.pos>=5) { t.pos=5; t.finished=true; addLog(`${C_NAME[color]}'s token reached home! 🏠`); }
       }
-      // If overshoot (steps>5): token stays put (can't overshoot home)
     } else {
       if (newPos>=52) newPos-=52;
       t.pos=newPos;
       checkCapture(color, idx);
     }
   }
-
   const won = GS.tokens[color].every(tk=>tk.finished);
   if (won) {
     GS.winner=color;
@@ -817,18 +773,15 @@ function doMove(color, idx, dice) {
     showWin(color);
     return;
   }
-
   renderTokens(); updateScoreRow();
   setTimeout(()=>nextTurn(dice), 750);
 }
 
-// ── Capture Check ──────────────────────────────────────
 function checkCapture(color, idx) {
   const mine = GS.tokens[color][idx];
   if (mine.homeStretch||mine.finished||mine.pos===-1) return;
   const [mr,mc] = PATH[mine.pos];
   if (SAFE.has(`${mr}-${mc}`)) return;
-
   COLORS.forEach(oc=>{
     if (oc===color||!GS.tokens[oc]) return;
     GS.tokens[oc].forEach(t=>{
@@ -843,7 +796,6 @@ function checkCapture(color, idx) {
   });
 }
 
-// ── Next Turn ──────────────────────────────────────────
 function nextTurn(dice) {
   if (dice!==6) GS.turn=(GS.turn+1)%GS.players.length;
   GS.rolled=false; GS.dice=null;
@@ -853,31 +805,26 @@ function nextTurn(dice) {
   else scheduleAI();
 }
 
-// ── AI Turn ────────────────────────────────────────────
 function scheduleAI() {
   if (!GS||!isAIGame) return;
   const cur = GS.players[GS.turn];
   if (!cur||!cur.isAI) return;
-
   setTimeout(()=>{
     const dice = Math.floor(Math.random()*6)+1;
     GS.dice=dice; GS.rolled=true;
     document.getElementById('dice-val').textContent=DICE_ICO[dice];
     addLog(`${cur.name} rolled a ${dice} ${DICE_ICO[dice]}`);
-
     const movable = getMovable(cur.color, dice);
     if (movable.length===0) {
       addLog(`${cur.name} has no moves.`);
       setTimeout(()=>nextTurn(dice), 800);
       return;
     }
-    // Prefer tokens already on board; otherwise random
     let pick = movable.find(i=>GS.tokens[cur.color][i].pos!==-1) ?? movable[0];
     setTimeout(()=>doMove(cur.color, pick, dice), 700);
   }, 1100);
 }
 
-// ── UI Updates ─────────────────────────────────────────
 function updateTurnUI() {
   if (!GS) return;
   const cur = GS.players[GS.turn];
@@ -906,14 +853,12 @@ function updateScoreRow() {
   });
 }
 
-// ── Firebase Sync ──────────────────────────────────────
 async function syncGS() {
   if (!roomRef||isAIGame) return;
   try { await update(roomRef,{gameState:GS}); }
   catch(e) { console.error('Sync error:',e); }
 }
 
-// ── Win Screen ─────────────────────────────────────────
 function showWin(color) {
   const pl=GS.players.find(p=>p.color===color);
   document.getElementById('win-txt').textContent=`${pl?pl.name:C_NAME[color]} Wins! 🎉`;
