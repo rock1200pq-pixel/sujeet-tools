@@ -1,18 +1,19 @@
 {
   "name": "Rock Tools",
   "short_name": "RockTools",
-  "start_url": "/sujeet-tools/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#06121c",
   "theme_color": "#00c6ff",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "logo.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
