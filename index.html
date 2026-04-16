@@ -331,6 +331,13 @@
       <span>Made with ❤️ for everyone</span>
     </div>
   </footer>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("PWA Ready"))
+    .catch(err => console.log(err));
+}
+</script>
 
 </body>
 </html>
