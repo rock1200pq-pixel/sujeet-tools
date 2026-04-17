@@ -231,7 +231,31 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 }
 /*-------Ai tool icon---*/
 .ai-brain-icon {
+  display:inline-block;
+  width:20px;
+  height:20px;
+  margin-right:8px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border-radius:6px;
+  position:relative;
+  box-shadow:0 0 10px #00c6ff;
   animation: glowPulse 2s infinite;
+}
+
+.ai-brain-icon::before {
+  content:'';
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:#fff;
+  border-radius:50%;
+  top:6px;
+  left:6px;
+  box-shadow:
+    -6px -6px 0 0 #00c6ff,
+    6px -6px 0 0 #00c6ff,
+    -6px 6px 0 0 #00c6ff,
+    6px 6px 0 0 #00c6ff;
 }
 
 @keyframes glowPulse {
