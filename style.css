@@ -229,4 +229,30 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
 }
-/*-------tic tac toe ---*/
+/*-------Ai tool icon---*/
+.ai-brain-icon {
+  display:inline-block;
+  width:22px;
+  height:22px;
+  margin-right:8px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border-radius:6px;
+  position:relative;
+  box-shadow:0 0 10px #00c6ff;
+}
+
+.ai-brain-icon::before {
+  content:'';
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:#fff;
+  border-radius:50%;
+  top:6px;
+  left:6px;
+  box-shadow:
+    -6px -6px 0 0 #00c6ff,
+    6px -6px 0 0 #00c6ff,
+    -6px 6px 0 0 #00c6ff,
+    6px 6px 0 0 #00c6ff;
+}
