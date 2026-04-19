@@ -182,5 +182,44 @@
   </div>
 
   <script src="script.js"></script>
+  <!-- AUTH POPUP -->
+<div id="authModal" class="authModal">
+
+  <div class="authBox">
+
+    <span class="closeBtn" onclick="closeLogin()">✖</span>
+
+    <h2>RT.ai Access</h2>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button onclick="showLogin()">Login</button>
+      <button onclick="showRegister()">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginForm">
+      <input type="email" placeholder="Email">
+      <input type="password" placeholder="Password">
+      <button>Login</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerForm" style="display:none;">
+      <input type="text" placeholder="Full Name">
+      <input type="text" placeholder="Mobile Number">
+      <input type="password" placeholder="Password">
+      <input type="text" placeholder="OTP">
+      <button>Register</button>
+    </div>
+
+    <p style="margin-top:10px;">OR</p>
+
+    <button class="social google">Continue with Google</button>
+    <button class="social fb">Continue with Facebook</button>
+    <button class="social tw">Continue with Twitter</button>
+
+  </div>
+</div>
 </body>
 </html>
