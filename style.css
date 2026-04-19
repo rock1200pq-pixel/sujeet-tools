@@ -326,3 +326,11 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 .google { background:#db4437; }
 .fb { background:#1877f2; }
 .tw { background:#1da1f2; }
+.authBox {
+  animation: popup 0.3s ease;
+}
+
+@keyframes popup {
+  from { transform: scale(0.7); opacity:0; }
+  to { transform: scale(1); opacity:1; }
+}
