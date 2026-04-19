@@ -237,7 +237,8 @@ Send OTP
   </p>
     </div>
 </div>
-  <script>
+<script>
+
 let generatedOTP = "";
 
 function sendOTP(){
@@ -248,10 +249,8 @@ function sendOTP(){
     return;
   }
 
-  // random OTP generate
   generatedOTP = Math.floor(1000 + Math.random() * 9000);
-
-  alert("Your OTP is: " + generatedOTP); // demo purpose
+  alert("Your OTP is: " + generatedOTP);
 }
 
 function verifyOTP(){
@@ -263,7 +262,7 @@ function verifyOTP(){
     alert("Invalid OTP ❌");
   }
 }
-</script>
+
 function openLogin(){
   document.getElementById("authModal").style.display = "flex";
 }
@@ -281,6 +280,5 @@ function showRegister(){
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("registerForm").style.display = "block";
 }
+
 </script>
-</body>
-</html>
