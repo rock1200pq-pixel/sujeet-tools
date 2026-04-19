@@ -416,4 +416,71 @@ function copyPassword() {
     }, 1500);
   });
 }
-//tictac toe
+//Rock Tools. AI
+let generatedOTP = "";
+let isVerified = false;
+
+// SEND OTP
+function sendOTP(){
+    let mobile = document.getElementById("mobile").value;
+
+    if(mobile.length < 10){
+        alert("Enter valid mobile number");
+        return;
+    }
+
+    generatedOTP = Math.floor(1000 + Math.random() * 9000);
+    alert("Your OTP is: " + generatedOTP);
+}
+
+// VERIFY OTP
+function verifyOTP(){
+    let userOTP = document.getElementById("otp").value;
+
+    if(userOTP == generatedOTP){
+        alert("OTP Verified ✅");
+        isVerified = true;
+    } else {
+        alert("Invalid OTP ❌");
+        isVerified = false;
+    }
+}
+
+// REGISTER
+function registerUser(){
+    let name = document.getElementById("name").value;
+    let mobile = document.getElementById("mobile").value;
+    let password = document.getElementById("password").value;
+
+    if(name === "" || mobile === "" || password === ""){
+        alert("Fill all fields");
+        return;
+    }
+
+    if(!isVerified){
+        alert("Verify OTP first");
+        return;
+    }
+
+    alert("Registration Successful 🎉");
+}
+
+// POPUP CONTROL
+function openLogin(){
+    document.getElementById("authModal").style.display = "flex";
+}
+
+function closeLogin(){
+    document.getElementById("authModal").style.display = "none";
+}
+
+// SWITCH FORMS
+function showLogin(){
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("registerForm").style.display = "none";
+}
+
+function showRegister(){
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("registerForm").style.display = "block";
+}
