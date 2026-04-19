@@ -212,12 +212,24 @@
 
     <!-- REGISTER -->
     <div id="registerForm" style="display:none;">
-  <input type="text" placeholder="Full Name">
-  <input type="text" placeholder="Mobile Number">
-  <input type="password" placeholder="Password">
-  <input type="text" placeholder="OTP">
+  <input type="text" id="mobile" placeholder="Mobile Number">
 
-  <button>Register</button>
+<button onclick="sendOTP()" style="
+margin-top:8px;
+padding:8px;
+width:100%;
+background:#00c6ff;
+border:none;
+border-radius:6px;
+color:#000;
+font-weight:bold;
+">
+Send OTP
+</button>
+
+<input type="text" id="otp" placeholder="Enter OTP">
+
+  <button onclick="verifyOTP()">Register</button>
 
   <p style="margin-top:10px; font-size:13px;">
     Already have an account?
@@ -226,6 +238,32 @@
     </div>
 </div>
   <script>
+let generatedOTP = "";
+
+function sendOTP(){
+  let mobile = document.getElementById("mobile").value;
+
+  if(mobile.length < 10){
+    alert("Enter valid mobile number");
+    return;
+  }
+
+  // random OTP generate
+  generatedOTP = Math.floor(1000 + Math.random() * 9000);
+
+  alert("Your OTP is: " + generatedOTP); // demo purpose
+}
+
+function verifyOTP(){
+  let userOTP = document.getElementById("otp").value;
+
+  if(userOTP == generatedOTP){
+    alert("Registration Successful ✅");
+  } else {
+    alert("Invalid OTP ❌");
+  }
+}
+</script>
 function openLogin(){
   document.getElementById("authModal").style.display = "flex";
 }
