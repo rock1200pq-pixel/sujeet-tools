@@ -263,3 +263,66 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   50% { box-shadow:0 0 20px #00c6ff; }
   100% { box-shadow:0 0 5px #00c6ff; }
 }
+/* POPUP BACKGROUND */
+.authModal {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+/* BOX */
+.authBox {
+  background:#0b1c2c;
+  padding:20px;
+  border-radius:12px;
+  width:320px;
+  text-align:center;
+  box-shadow:0 0 20px #00c6ff;
+}
+
+/* INPUT */
+.authBox input {
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  background:#081521;
+  color:#fff;
+}
+
+/* BUTTON */
+.authBox button {
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:#fff;
+  cursor:pointer;
+}
+
+/* CLOSE */
+.closeBtn {
+  float:right;
+  cursor:pointer;
+}
+
+/* TABS */
+.tabs button {
+  width:48%;
+  margin:5px 1%;
+}
+
+/* SOCIAL */
+.google { background:#db4437; }
+.fb { background:#1877f2; }
+.tw { background:#1da1f2; }
