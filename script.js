@@ -468,8 +468,12 @@ function sendOTP() {
 // VERIFY OTP
 function verifyOTP() {
   let otp = document.getElementById("otp").value;
+  if (otp === "") {
+  alert("Enter OTP");
+  return;
+}
 
-  confirmationResult.confirm(otp)
+  window.confirmationResult.confirm(otp)
     .then((result) => {
       alert("OTP Verified ✅");
       window.isVerified = true;
