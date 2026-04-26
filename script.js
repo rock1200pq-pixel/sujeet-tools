@@ -442,11 +442,9 @@ let generatedOTP = "";
 let isVerified = false;
 
 // SEND OTP
-window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-  'size': 'invisible',
-  'callback': (response) => {}
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+  size: 'invisible'
 });
-
 function sendOTP() {
   let mobile = document.getElementById("mobile").value;
 
@@ -457,7 +455,7 @@ function sendOTP() {
 
   const phoneNumber = "+91" + mobile;
 
-  signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+  firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
     .then((confirmationResult) => {
       window.confirmationResult = confirmationResult;
       alert("OTP Sent ✅");
@@ -503,13 +501,12 @@ async function registerUser() {
 
     const user = auth.currentUser;
 
-    await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        mobile: mobile,
-        uid: user.uid,
-        createdAt: new Date()
-    });
-
+    await db.collection("users").doc(user.uid).set({
+  name: name,
+  mobile: mobile,
+  uid: user.uid,
+  createdAt: new Date()
+});
     alert("Registration Successful 🎉");
 }  
 // POPUP CONTROL
