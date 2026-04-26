@@ -22,6 +22,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
 // ── Utility: File label update ──
 function updateLabel(input, labelId) {
   var label = document.getElementById(labelId);
@@ -497,6 +500,7 @@ function registerUser() {
   alert("Registration Successful 🎉");
 
   // yaha baad me firestore me data save karenge
+  import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 }
 // POPUP CONTROL
 function openLogin(){
