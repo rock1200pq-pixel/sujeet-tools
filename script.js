@@ -2,7 +2,27 @@
 //  ROCK TOOLS — script.js
 //  Bugs Checked ✅ | OCR via OCR.space direct file upload ✅
 // ============================================================
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBuSJkLM-KpzaoN-aELze0pqe-SXdGEIcw",
+  authDomain: "rock-tools.firebaseapp.com",
+  projectId: "rock-tools",
+  storageBucket: "rock-tools.firebasestorage.app",
+  messagingSenderId: "564908792043",
+  appId: "1:564908792043:web:79e8d29b7d68744d6b46ae",
+  measurementId: "G-S8DXXER973"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 // ── Utility: File label update ──
 function updateLabel(input, labelId) {
   var label = document.getElementById(labelId);
