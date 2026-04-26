@@ -22,7 +22,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const analytics = getAnalytics(app);
 // ── Utility: File label update ──
 function updateLabel(input, labelId) {
   var label = document.getElementById(labelId);
