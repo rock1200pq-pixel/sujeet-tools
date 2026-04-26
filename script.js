@@ -511,10 +511,7 @@ async function registerUser() {
     });
 
     alert("Registration Successful 🎉");
-}
-
-  
-}
+}  
 // POPUP CONTROL
 window.openLogin = function(){
     document.getElementById("authModal").style.display = "flex";
