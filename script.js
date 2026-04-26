@@ -484,24 +484,20 @@ function verifyOTP() {
 }
 
 // REGISTER
-function registerUser(){
-    let name = document.getElementById("name").value;
-    let mobile = document.getElementById("mobile").value;
-    let password = document.getElementById("password").value;
+function registerUser() {
+  let name = document.getElementById("name").value;
+  let mobile = document.getElementById("mobile").value;
+  let password = document.getElementById("password").value;
 
-    if(name === "" || mobile === "" || password === ""){
-        alert("Fill all fields");
-        return;
-    }
+  if (!window.isVerified) {
+    alert("Verify OTP first");
+    return;
+  }
 
-    if(!isVerified){
-        alert("Verify OTP first");
-        return;
-    }
+  alert("Registration Successful 🎉");
 
-    alert("Registration Successful 🎉");
+  // yaha baad me firestore me data save karenge
 }
-
 // POPUP CONTROL
 function openLogin(){
     document.getElementById("authModal").style.display = "flex";
