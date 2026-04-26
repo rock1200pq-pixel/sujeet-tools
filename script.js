@@ -488,20 +488,30 @@ function verifyOTP() {
 }
 
 // REGISTER
-function registerUser() {
-  let name = document.getElementById("name").value;
-  let mobile = document.getElementById("mobile").value;
-  let password = document.getElementById("password").value;
+async function registerUser() {
 
-  if (!window.isVerified) {
-    alert("Verify OTP first");
-    return;
-  }
+    let name = document.getElementById("name").value;
+    let mobile = document.getElementById("mobile").value;
+    let password = document.getElementById("password").value;
 
-  alert("Registration Successful 🎉");
+    if (!window.isVerified) {
+        alert("Verify OTP first");
+        return;
+    }
+
+    const user = auth.currentUser;
+
+    await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        mobile: mobile,
+        uid: user.uid,
+        createdAt: new Date()
+    });
+
+    alert("Registration Successful 🎉");
+}
 
   // yaha baad me firestore me data save karenge
-  import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 }
 // POPUP CONTROL
 function openLogin(){
