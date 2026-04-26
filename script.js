@@ -498,6 +498,10 @@ async function registerUser() {
         alert("Verify OTP first");
         return;
     }
+  if (!auth.currentUser) {
+    alert("User not logged in");
+    return;
+}
 
     const user = auth.currentUser;
 
