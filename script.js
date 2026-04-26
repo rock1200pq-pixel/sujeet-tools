@@ -515,24 +515,23 @@ async function registerUser() {
     alert("Registration Successful 🎉");
 }
 
-  // yaha baad me firestore me data save karenge
+  
 }
 // POPUP CONTROL
-function openLogin(){
+window.openLogin = function(){
     document.getElementById("authModal").style.display = "flex";
 }
 
-function closeLogin(){
+window.closeLogin = function(){
     document.getElementById("authModal").style.display = "none";
 }
-
 // SWITCH FORMS
-function showLogin(){
+window.showLogin = function(){
     document.getElementById("loginForm").style.display = "block";
     document.getElementById("registerForm").style.display = "none";
 }
 
-function showRegister(){
+window.showRegister = function(){
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("registerForm").style.display = "block";
 }
