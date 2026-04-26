@@ -440,29 +440,43 @@ let generatedOTP = "";
 let isVerified = false;
 
 // SEND OTP
-function sendOTP(){
-    let mobile = document.getElementById("mobile").value;
+window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+  'size': 'invisible',
+  'callback': (response) => {}
+});
 
-    if(mobile.length < 10){
-        alert("Enter valid mobile number");
-        return;
-    }
+function sendOTP() {
+  let mobile = document.getElementById("mobile").value;
 
-    generatedOTP = Math.floor(1000 + Math.random() * 9000);
-    alert("Your OTP is: " + generatedOTP);
+  if (mobile.length < 10) {
+    alert("Enter valid mobile number");
+    return;
+  }
+
+  const phoneNumber = "+91" + mobile;
+
+  signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+    .then((confirmationResult) => {
+      window.confirmationResult = confirmationResult;
+      alert("OTP Sent ✅");
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
 }
 
 // VERIFY OTP
-function verifyOTP(){
-    let userOTP = document.getElementById("otp").value;
+function verifyOTP() {
+  let otp = document.getElementById("otp").value;
 
-    if(userOTP == generatedOTP){
-        alert("OTP Verified ✅");
-        isVerified = true;
-    } else {
-        alert("Invalid OTP ❌");
-        isVerified = false;
-    }
+  confirmationResult.confirm(otp)
+    .then((result) => {
+      alert("OTP Verified ✅");
+      window.isVerified = true;
+    })
+    .catch((error) => {
+      alert("Invalid OTP ❌");
+    });
 }
 
 // REGISTER
