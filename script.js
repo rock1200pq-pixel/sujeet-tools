@@ -439,9 +439,6 @@ function copyPassword() {
 }
 //Rock Tools. AI
 
-// SEND OTP
-
-
 // REGISTER
 async function registerUser() {
   let name = document.getElementById("name").value;
