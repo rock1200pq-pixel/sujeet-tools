@@ -458,6 +458,8 @@ const user = userCredential.user;
 });
 
   alert("Registration Successful 🎉");
+closeLogin();
+showLogin();
 }
 // POPUP CONTROL
 window.openLogin = function(){
