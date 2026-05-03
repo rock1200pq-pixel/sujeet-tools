@@ -444,23 +444,22 @@ function copyPassword() {
 
 // REGISTER
 async function registerUser() {
+  let name = document.getElementById("name").value;
+  let mobile = document.getElementById("mobile").value;
 
-    let name = document.getElementById("name").value;
-    let mobile = document.getElementById("mobile").value;
-    }
-  
-    const user = {
-  uid: Date.now().toString()
-};
+  const user = {
+    uid: Date.now().toString()
+  };
 
-    await db.collection("users").doc(user.uid).set({
-  name: name,
-  mobile: mobile,
-  uid: user.uid,
-  createdAt: new Date()
-});
-    alert("Registration Successful 🎉");
-}  
+  await db.collection("users").doc(user.uid).set({
+    name: name,
+    mobile: mobile,
+    uid: user.uid,
+    createdAt: new Date()
+  });
+
+  alert("Registration Successful 🎉");
+}
 // POPUP CONTROL
 window.openLogin = function(){
     document.getElementById("authModal").style.display = "flex";
