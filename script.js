@@ -480,8 +480,8 @@ window.showRegister = function(){
 
 // Login functiifunction
 async function loginUser() {
-  let mobile = document.getElementById("loginMobile").value;
-  let password = document.getElementById("loginPassword").value;
+  let mobile = document.getElementById("loginMobile").value.trim();
+let password = document.getElementById("loginPassword").value.trim();
 
   if (!mobile || !password) {
     alert("Enter mobile & password");
