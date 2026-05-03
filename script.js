@@ -482,7 +482,10 @@ window.showRegister = function(){
 async function loginUser() {
   let mobile = document.getElementById("loginMobile").value.trim();
 let password = document.getElementById("loginPassword").value.trim();
-
+if (!mobile || !password) {
+  alert("Enter mobile & password");
+  return;
+}
   if (mobile.length !== 10) {
   alert("Enter valid 10 digit mobile");
   return;
