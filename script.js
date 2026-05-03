@@ -446,15 +446,13 @@ async function registerUser() {
   let name = document.getElementById("name").value;
   let mobile = document.getElementById("mobile").value;
   let password = document.getElementById("password").value;
-
-  const user = {
-    uid: Date.now().toString()
-  };
+  let email = mobile + "@app.com"; // fake email create
+  const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+const user = userCredential.user;
 
   await db.collection("users").doc(user.uid).set({
   name: name,
   mobile: mobile,
-  password: password, // 🔥 MUST ADD
   uid: user.uid,
   createdAt: new Date()
 });
