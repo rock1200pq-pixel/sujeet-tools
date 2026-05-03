@@ -477,19 +477,7 @@ window.showRegister = function(){
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("registerForm").style.display = "block";
 }
-document.addEventListener("DOMContentLoaded", function () {
 
-  window.openLogin = function () {
-    const modal = document.getElementById("authModal");
-    if (modal) modal.style.display = "flex";
-  };
-
-  window.closeLogin = function () {
-    const modal = document.getElementById("authModal");
-    if (modal) modal.style.display = "none";
-  };
-
-});
 // Login functiifunction
 async function loginUser() {
   let mobile = document.getElementById("loginMobile").value;
