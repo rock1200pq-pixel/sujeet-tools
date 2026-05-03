@@ -443,9 +443,9 @@ function copyPassword() {
 
 // REGISTER
 async function registerUser() {
-  let name = document.getElementById("name").value;
-  let mobile = document.getElementById("mobile").value;
-  let password = document.getElementById("password").value;
+  let name = document.getElementById("name").value.trim();
+let mobile = document.getElementById("mobile").value.trim();
+let password = document.getElementById("password").value.trim();
   let email = mobile + "@app.com"; // fake email create
   const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 const user = userCredential.user;
