@@ -438,68 +438,21 @@ function copyPassword() {
   });
 }
 //Rock Tools. AI
-let generatedOTP = "";
-let isVerified = false;
 
 // SEND OTP
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-  size: 'invisible'
-});
-function sendOTP() {
-  let mobile = document.getElementById("mobile").value;
 
-  if (mobile.length < 10) {
-    alert("Enter valid mobile number");
-    return;
-  }
-
-  const phoneNumber = "+91" + mobile;
-
-  firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
-    .then((confirmationResult) => {
-      window.confirmationResult = confirmationResult;
-      alert("OTP Sent ✅");
-    })
-    .catch((error) => {
-      alert("Error: " + error.message);
-    });
-}
-
-// VERIFY OTP
-function verifyOTP() {
-  let otp = document.getElementById("otp").value;
-  if (otp === "") {
-  alert("Enter OTP");
-  return;
-}
-
-  window.confirmationResult.confirm(otp)
-    .then((result) => {
-      alert("OTP Verified ✅");
-      window.isVerified = true;
-    })
-    .catch((error) => {
-      alert("Invalid OTP ❌");
-    });
-}
 
 // REGISTER
 async function registerUser() {
 
     let name = document.getElementById("name").value;
     let mobile = document.getElementById("mobile").value;
-    let password = document.getElementById("password").value;
-
-    if (!window.isVerified) {
-        alert("Verify OTP first");
-        return;
+    let password = document.getElementById("password").value
     }
-  if (!auth.currentUser) {
-    alert("User not logged in");
-    return;
-}
-
-    const user = auth.currentUser;
+  
+    const user = {
+  uid: Date.now().toString()
+};
 
     await db.collection("users").doc(user.uid).set({
   name: name,
