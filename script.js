@@ -451,12 +451,13 @@ async function registerUser() {
     uid: Date.now().toString()
   };
 
-  // await db.collection("users").doc(user.uid).set({
-//   name: name,
-//   mobile: mobile,
-//   uid: user.uid,
-//   createdAt: new Date()
-// });
+  await db.collection("users").doc(user.uid).set({
+  name: name,
+  mobile: mobile,
+  password: password, // 🔥 MUST ADD
+  uid: user.uid,
+  createdAt: new Date()
+});
 
   alert("Registration Successful 🎉");
 }
