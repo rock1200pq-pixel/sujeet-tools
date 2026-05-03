@@ -415,7 +415,9 @@ function generatePassword() {
   if (useSym) chars += '@#$!%^&*()-_=+';
   if (!chars) { setResult('passwordResult', '⚠️ Kam se kam ek option select karo!', true); return; }
   var arr = new Uint32Array(len);
+  if (window.crypto && window.crypto.getRandomValues) {
   window.crypto.getRandomValues(arr);
+}
   var password = '';
   for (var i = 0; i < len; i++) {
     password += chars[arr[i] % chars.length];
@@ -476,3 +478,16 @@ window.showRegister = function(){
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("registerForm").style.display = "block";
 }
+document.addEventListener("DOMContentLoaded", function () {
+
+  window.openLogin = function () {
+    const modal = document.getElementById("authModal");
+    if (modal) modal.style.display = "flex";
+  };
+
+  window.closeLogin = function () {
+    const modal = document.getElementById("authModal");
+    if (modal) modal.style.display = "none";
+  };
+
+});
