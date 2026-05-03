@@ -447,7 +447,6 @@ async function registerUser() {
 
     let name = document.getElementById("name").value;
     let mobile = document.getElementById("mobile").value;
-    let password = document.getElementById("password").value
     }
   
     const user = {
