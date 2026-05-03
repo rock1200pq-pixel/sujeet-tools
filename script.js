@@ -500,31 +500,13 @@ async function loginUser() {
     return;
   }
 
+  let email = mobile + "@app.com";
+
   try {
-    // Firestore se check
-    const snapshot = await db.collection("users")
-      .where("mobile", "==", mobile)
-      .get();
-
-    if (snapshot.empty) {
-      alert("User not found");
-      return;
-    }
-
-    let userData = snapshot.docs[0].data();
-
-    // password match check
-    if (userData.password !== password) {
-      alert("Wrong password");
-      return;
-    }
-
+    await firebase.auth().signInWithEmailAndPassword(email, password);
     alert("Login successful 🎉");
-
     closeLogin();
-
   } catch (err) {
-    console.error(err);
-    alert("Error logging in");
+    alert("Wrong mobile or password");
   }
 }
