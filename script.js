@@ -443,17 +443,18 @@ function copyPassword() {
 async function registerUser() {
   let name = document.getElementById("name").value;
   let mobile = document.getElementById("mobile").value;
+  let password = document.getElementById("password").value;
 
   const user = {
     uid: Date.now().toString()
   };
 
-  await db.collection("users").doc(user.uid).set({
-    name: name,
-    mobile: mobile,
-    uid: user.uid,
-    createdAt: new Date()
-  });
+  // await db.collection("users").doc(user.uid).set({
+//   name: name,
+//   mobile: mobile,
+//   uid: user.uid,
+//   createdAt: new Date()
+// });
 
   alert("Registration Successful 🎉");
 }
