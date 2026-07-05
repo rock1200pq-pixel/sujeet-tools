@@ -443,61 +443,43 @@ function copyPassword() {
 
 // REGISTER
 async function registerUser() {
-  try {
-    let name = document.getElementById("name").value.trim();
-    let mobile = document.getElementById("mobile").value.trim();
-    let password = document.getElementById("password").value.trim();
+  let name = document.getElementById("name").value.trim();
+let mobile = document.getElementById("mobile").value.trim();
+let password = document.getElementById("password").value.trim();
+  let email = mobile + "@app.com"; // fake email create
+  const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+const user = userCredential.user;
 
-    // Validation
-    if (!name || !mobile || !password) {
-      alert("Please fill all fields");
-      return;
-    }
+  await db.collection("users").doc(user.uid).set({
+  name: name,
+  mobile: mobile,
+  uid: user.uid,
+  createdAt: new Date()
+});
 
-    if (!/^\d{10}$/.test(mobile)) {
-      alert("Enter valid 10 digit mobile number");
-      return;
-    }
-
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters");
-      return;
-    }
-
-    let email = mobile + "@app.com";
-
-    // Firebase Auth Register
-    const userCredential =
-      await firebase.auth().createUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-    const user = userCredential.user;
-
-    // Firestore Save
-    await db.collection("users").doc(user.uid).set({
-      name: name,
-      mobile: mobile,
-      uid: user.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert("Thanks for Registering 🎉");
-
-    closeLogin();
-    showLogin();
-
-  } catch (err) {
-    console.error(err);
-
-    if (err.code === "auth/email-already-in-use") {
-      alert("Mobile number already registered");
-    } else {
-      alert(err.message);
-    }
-  }
+  alert("Registration Successful 🎉");
+closeLogin();
+showLogin();
 }
+// POPUP CONTROL
+window.openLogin = function(){
+    document.getElementById("authModal").style.display = "flex";
+}
+
+window.closeLogin = function(){
+    document.getElementById("authModal").style.display = "none";
+}
+// SWITCH FORMS
+window.showLogin = function(){
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("registerForm").style.display = "none";
+}
+
+window.showRegister = function(){
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("registerForm").style.display = "block";
+}
+
 // Login functiifunction
 async function loginUser() {
   let mobile = document.getElementById("loginMobile").value.trim();
