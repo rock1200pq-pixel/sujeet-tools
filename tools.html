@@ -175,6 +175,788 @@
         title="Click to copy"
         onclick="copyPassword()"></p>
     </div>
+
+    <!-- 12. INVOICE & RECEIPT GENERATOR -->
+<div class="toolCard rt-invoice-card">
+  <h3>🧾 Invoice & Receipt Generator</h3>
+  <p>Create professional invoices and save them as PDF.</p>
+
+  <button type="button" id="rtInvoiceOpenBtn">
+    Create Invoice
+  </button>
+</div>
+
+<!-- INVOICE MODAL -->
+<div id="rtInvoiceModal" class="rt-invoice-modal" aria-hidden="true">
+  <div class="rt-invoice-dialog">
+
+    <div class="rt-invoice-toolbar">
+      <div>
+        <strong>Invoice Generator</strong>
+        <small>Live preview</small>
+      </div>
+
+      <button type="button" id="rtInvoiceCloseBtn" class="rt-icon-btn">
+        ✕
+      </button>
+    </div>
+
+    <div class="rt-invoice-layout">
+
+      <!-- EDITOR -->
+      <section class="rt-invoice-editor">
+
+        <div class="rt-section">
+          <h4>Business Details</h4>
+
+          <div class="rt-form-grid">
+            <input id="rtBizName" type="text"
+              placeholder="Business name">
+
+            <input id="rtBizPhone" type="tel"
+              placeholder="Phone number">
+
+            <input id="rtBizEmail" type="email"
+              placeholder="Email">
+
+            <input id="rtBizGstin" type="text"
+              placeholder="GSTIN (optional)">
+
+            <textarea id="rtBizAddress"
+              placeholder="Business address"></textarea>
+          </div>
+        </div>
+
+        <div class="rt-section">
+          <h4>Invoice Details</h4>
+
+          <div class="rt-form-grid">
+            <input id="rtInvoiceNumber" type="text"
+              value="INV-001"
+              placeholder="Invoice number">
+
+            <input id="rtInvoiceDate" type="date">
+
+            <input id="rtDueDate" type="date">
+
+            <select id="rtPaymentStatus">
+              <option value="Unpaid">Unpaid</option>
+              <option value="Paid">Paid</option>
+              <option value="Partial">Partially Paid</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rt-section">
+          <h4>Bill To</h4>
+
+          <div class="rt-form-grid">
+            <input id="rtCustomerName" type="text"
+              placeholder="Customer name">
+
+            <input id="rtCustomerPhone" type="tel"
+              placeholder="Customer phone">
+
+            <input id="rtCustomerEmail" type="email"
+              placeholder="Customer email">
+
+            <input id="rtCustomerGstin" type="text"
+              placeholder="Customer GSTIN (optional)">
+
+            <textarea id="rtCustomerAddress"
+              placeholder="Customer address"></textarea>
+          </div>
+        </div>
+
+        <div class="rt-section">
+          <div class="rt-items-heading">
+            <h4>Items / Services</h4>
+
+            <button type="button"
+              id="rtAddItemBtn"
+              class="rt-small-btn">
+              + Add Item
+            </button>
+          </div>
+
+          <div id="rtItemsEditor"></div>
+        </div>
+
+        <div class="rt-section">
+          <h4>Tax & Discount</h4>
+
+          <div class="rt-form-grid">
+            <input id="rtDiscount" type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              placeholder="Discount">
+
+            <select id="rtTaxType">
+              <option value="none">No GST</option>
+              <option value="cgst_sgst">CGST + SGST</option>
+              <option value="igst">IGST</option>
+            </select>
+
+            <input id="rtGstRate" type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              value="18"
+              placeholder="GST %">
+          </div>
+        </div>
+
+        <div class="rt-section">
+          <h4>Payment Details</h4>
+
+          <div class="rt-form-grid">
+            <input id="rtBankName" type="text"
+              placeholder="Bank name">
+
+            <input id="rtAccountNumber" type="text"
+              placeholder="Account number">
+
+            <input id="rtIfsc" type="text"
+              placeholder="IFSC">
+
+            <input id="rtUpi" type="text"
+              placeholder="UPI ID">
+          </div>
+        </div>
+
+        <div class="rt-section">
+          <h4>Notes</h4>
+
+          <textarea id="rtNotes"
+            placeholder="Thank you for your business..."></textarea>
+        </div>
+
+      </section>
+
+      <!-- PREVIEW -->
+      <section class="rt-invoice-preview-area">
+
+        <div id="rtInvoicePrintArea" class="rt-invoice-paper">
+
+          <div class="rt-invoice-top">
+
+            <div>
+              <h1 id="rtPreviewBizName">Your Business</h1>
+              <p id="rtPreviewBizAddress">
+                Business Address
+              </p>
+
+              <p id="rtPreviewBizContact"></p>
+              <p id="rtPreviewBizGstin"></p>
+            </div>
+
+            <div class="rt-invoice-title">
+              <div>INVOICE</div>
+              <span id="rtPreviewStatus">UNPAID</span>
+            </div>
+
+          </div>
+
+          <div class="rt-invoice-meta">
+
+            <div>
+              <span>Invoice No.</span>
+              <strong id="rtPreviewInvoiceNumber">
+                INV-001
+              </strong>
+            </div>
+
+            <div>
+              <span>Date</span>
+              <strong id="rtPreviewInvoiceDate">
+                -
+              </strong>
+            </div>
+
+            <div>
+              <span>Due Date</span>
+              <strong id="rtPreviewDueDate">
+                -
+              </strong>
+            </div>
+
+          </div>
+
+          <div class="rt-bill-row">
+
+            <div>
+              <label>BILL TO</label>
+              <strong id="rtPreviewCustomerName">
+                Customer Name
+              </strong>
+
+              <p id="rtPreviewCustomerAddress">
+                Customer Address
+              </p>
+
+              <p id="rtPreviewCustomerContact"></p>
+              <p id="rtPreviewCustomerGstin"></p>
+            </div>
+
+          </div>
+
+          <table class="rt-invoice-table">
+
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+
+            <tbody id="rtPreviewItems"></tbody>
+
+          </table>
+
+          <div class="rt-totals">
+
+            <div>
+              <span>Subtotal</span>
+              <strong id="rtPreviewSubtotal">₹0.00</strong>
+            </div>
+
+            <div>
+              <span>Discount</span>
+              <strong id="rtPreviewDiscount">₹0.00</strong>
+            </div>
+
+            <div>
+              <span>Taxable Amount</span>
+              <strong id="rtPreviewTaxable">₹0.00</strong>
+            </div>
+
+            <div id="rtPreviewCgstRow">
+              <span>CGST</span>
+              <strong id="rtPreviewCgst">₹0.00</strong>
+            </div>
+
+            <div id="rtPreviewSgstRow">
+              <span>SGST</span>
+              <strong id="rtPreviewSgst">₹0.00</strong>
+            </div>
+
+            <div id="rtPreviewIgstRow">
+              <span>IGST</span>
+              <strong id="rtPreviewIgst">₹0.00</strong>
+            </div>
+
+            <div class="rt-total-line">
+              <span>Total</span>
+              <strong id="rtPreviewTotal">₹0.00</strong>
+            </div>
+
+          </div>
+
+          <div class="rt-payment-box" id="rtPreviewPaymentBox">
+            <strong>Payment Details</strong>
+            <p id="rtPreviewPayment"></p>
+          </div>
+
+          <div class="rt-notes">
+            <strong>Notes</strong>
+            <p id="rtPreviewNotes">
+              Thank you for your business.
+            </p>
+          </div>
+
+          <div class="rt-thank-you">
+            <strong>THANK YOU</strong>
+            <span>for your business</span>
+          </div>
+
+        </div>
+
+        <div class="rt-preview-actions">
+
+          <button type="button"
+            id="rtPrintInvoiceBtn">
+            🖨 Print / Save PDF
+          </button>
+
+          <button type="button"
+            id="rtResetInvoiceBtn"
+            class="rt-secondary-btn">
+            Reset
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<style>
+/* =========================================================
+   ROCK TOOLS — INVOICE GENERATOR
+   Isolated styles: rt-invoice-*
+   ========================================================= */
+
+.rt-invoice-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0,0,0,.72);
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.rt-invoice-modal.rt-open {
+  display: block;
+}
+
+.rt-invoice-dialog {
+  width: min(1450px, 100%);
+  margin: 0 auto;
+  background: #f5f6f8;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0,0,0,.35);
+}
+
+.rt-invoice-toolbar {
+  min-height: 64px;
+  background: #111318;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+}
+
+.rt-invoice-toolbar strong {
+  display: block;
+  font-size: 18px;
+}
+
+.rt-invoice-toolbar small {
+  opacity: .6;
+}
+
+.rt-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255,255,255,.1);
+  color: white;
+  font-size: 18px;
+}
+
+.rt-invoice-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 470px) minmax(0, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.rt-invoice-editor {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  height: max-content;
+}
+
+.rt-section {
+  padding: 0 0 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.rt-section:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.rt-section h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.rt-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.rt-form-grid input,
+.rt-form-grid textarea,
+.rt-form-grid select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dfe2e6;
+  background: #fafafa;
+  border-radius: 9px;
+  padding: 11px 12px;
+  font: inherit;
+  color: #17181a;
+  outline: none;
+}
+
+.rt-form-grid input:focus,
+.rt-form-grid textarea:focus,
+.rt-form-grid select:focus {
+  border-color: #222;
+  background: white;
+}
+
+.rt-form-grid textarea {
+  min-height: 76px;
+  resize: vertical;
+  grid-column: 1 / -1;
+}
+
+.rt-items-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.rt-small-btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #17181a;
+  color: white;
+}
+
+.rt-item-editor {
+  display: grid;
+  grid-template-columns: 1.6fr .6fr .8fr auto;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.rt-item-editor input {
+  min-width: 0;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  padding: 9px;
+  box-sizing: border-box;
+}
+
+.rt-remove-item {
+  border: 0;
+  background: #f1f1f1;
+  color: #b00020;
+  border-radius: 7px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.rt-invoice-preview-area {
+  min-width: 0;
+}
+
+.rt-invoice-paper {
+  width: min(794px, 100%);
+  min-height: 1123px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 52px;
+  background: white;
+  color: #17181a;
+  box-shadow: 0 12px 35px rgba(0,0,0,.12);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.rt-invoice-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.rt-invoice-top h1 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
+
+.rt-invoice-top p {
+  margin: 3px 0;
+  color: #686b70;
+  font-size: 12px;
+}
+
+.rt-invoice-title {
+  text-align: right;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.rt-invoice-title span {
+  display: inline-block;
+  margin-top: 9px;
+  border: 1px solid #c9c9c9;
+  border-radius: 20px;
+  padding: 6px 13px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.rt-invoice-meta {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+  border-top: 2px solid #17181a;
+  border-bottom: 1px solid #ddd;
+  margin-top: 35px;
+  padding: 16px 0;
+}
+
+.rt-invoice-meta span {
+  display: block;
+  color: #777;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.rt-invoice-meta strong {
+  font-size: 13px;
+}
+
+.rt-bill-row {
+  margin: 30px 0;
+}
+
+.rt-bill-row label {
+  display: block;
+  color: #888;
+  letter-spacing: 1.5px;
+  font-size: 10px;
+  margin-bottom: 8px;
+}
+
+.rt-bill-row strong {
+  display: block;
+  font-size: 15px;
+}
+
+.rt-bill-row p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.rt-invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.rt-invoice-table th {
+  background: #17181a;
+  color: white;
+  text-align: left;
+  padding: 11px 10px;
+  font-size: 11px;
+}
+
+.rt-invoice-table th:nth-child(2),
+.rt-invoice-table th:nth-child(3),
+.rt-invoice-table th:nth-child(4),
+.rt-invoice-table td:nth-child(2),
+.rt-invoice-table td:nth-child(3),
+.rt-invoice-table td:nth-child(4) {
+  text-align: right;
+}
+
+.rt-invoice-table td {
+  padding: 13px 10px;
+  border-bottom: 1px solid #e2e2e2;
+  font-size: 11px;
+  word-wrap: break-word;
+}
+
+.rt-totals {
+  width: min(330px,100%);
+  margin-left: auto;
+  margin-top: 25px;
+}
+
+.rt-totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.rt-totals strong {
+  color: #17181a;
+}
+
+.rt-total-line {
+  border-top: 2px solid #17181a;
+  margin-top: 8px;
+  padding-top: 13px !important;
+  font-size: 18px !important;
+  color: #17181a !important;
+}
+
+.rt-payment-box {
+  margin-top: 35px;
+  padding-top: 18px;
+  border-top: 1px solid #ddd;
+  font-size: 11px;
+}
+
+.rt-payment-box p {
+  white-space: pre-line;
+  color: #666;
+  line-height: 1.6;
+}
+
+.rt-notes {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #ddd;
+  font-size: 11px;
+}
+
+.rt-notes p {
+  color: #777;
+  line-height: 1.5;
+}
+
+.rt-thank-you {
+  margin-top: 38px;
+}
+
+.rt-thank-you strong {
+  display: block;
+  font-size: 15px;
+}
+
+.rt-thank-you span {
+  color: #777;
+  font-size: 11px;
+}
+
+.rt-preview-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 0;
+}
+
+.rt-preview-actions button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 18px;
+  cursor: pointer;
+  background: #17181a;
+  color: white;
+  font-weight: 600;
+}
+
+.rt-preview-actions .rt-secondary-btn {
+  background: white;
+  color: #17181a;
+  border: 1px solid #ddd;
+}
+
+@media (max-width: 900px) {
+  .rt-invoice-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-invoice-paper {
+    width: 100%;
+    min-height: auto;
+    padding: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .rt-invoice-modal {
+    padding: 0;
+  }
+
+  .rt-invoice-dialog {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .rt-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-form-grid textarea {
+    grid-column: auto;
+  }
+
+  .rt-item-editor {
+    grid-template-columns: 1fr 70px 90px 40px;
+  }
+
+  .rt-invoice-paper {
+    padding: 20px;
+  }
+
+  .rt-invoice-top {
+    flex-direction: column;
+  }
+
+  .rt-invoice-title {
+    text-align: left;
+    font-size: 27px;
+  }
+
+  .rt-invoice-meta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .rt-invoice-table th,
+  .rt-invoice-table td {
+    padding: 8px 5px;
+    font-size: 9px;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #rtInvoicePrintArea,
+  #rtInvoicePrintArea * {
+    visibility: visible !important;
+  }
+
+  #rtInvoicePrintArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    padding: 15mm !important;
+    box-shadow: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
+</style>
     <!-- 11. Rock Tools. AI -->
     <div class="toolCard">
   <h3><span class="ai-brain-icon"></span> Rock Tools.AI</h3>
