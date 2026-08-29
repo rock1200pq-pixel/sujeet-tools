@@ -439,6 +439,9 @@ function copyPassword() {
     }, 1500);
   });
 }
+window.generatePassword = generatePassword;
+window.copyPassword = copyPassword;
+})();
 /* =========================================================
    ROCK TOOLS — INVOICE & RECEIPT GENERATOR
    Two Popup System
