@@ -398,46 +398,211 @@ function resizeImageFn() {
   img.onerror = function() { setResult('resizeResult', '❌ Image load nahi hui', true); };
 }
 
-
-// ════════════════════════════════════════════
+// ============================================================
 // 11. PASSWORD GENERATOR
-// ════════════════════════════════════════════
-function generatePassword() {
-  var len = parseInt(document.getElementById('passLength').value);
-  var useUpper = document.getElementById('useUpper').checked;
-  var useLower = document.getElementById('useLower').checked;
-  var useNum = document.getElementById('useNum').checked;
-  var useSym = document.getElementById('useSym').checked;
-  var chars = '';
-  if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
-  if (useNum) chars += '0123456789';
-  if (useSym) chars += '@#$!%^&*()-_=+';
-  if (!chars) { setResult('passwordResult', '⚠️ Kam se kam ek option select karo!', true); return; }
-  var arr = new Uint32Array(len);
-  if (window.crypto && window.crypto.getRandomValues) {
-  window.crypto.getRandomValues(arr);
-}
-  var password = '';
-  for (var i = 0; i < len; i++) {
-    password += chars[arr[i] % chars.length];
-  }
-  var el = document.getElementById('passwordResult');
-  el.innerText = '🔑 ' + password;
-  el.style.color = '#4ade80';
-}
+// ============================================================
 
-function copyPassword() {
-  var el = document.getElementById('passwordResult');
-  var text = el.innerText.replace('🔑 ', '').replace('✅ Copied: ', '');
-  if (!text) return;
-  navigator.clipboard.writeText(text).then(function() {
-    setResult('passwordResult', '✅ Copied: ' + text);
-    setTimeout(function() {
-      el.innerText = '🔑 ' + text;
-      el.style.color = '#4ade80';
-    }, 1500);
-  });
+window.generatePassword = function () {
+
+  var lengthEl = document.getElementById("passLength");
+  var upperEl = document.getElementById("useUpper");
+  var lowerEl = document.getElementById("useLower");
+  var numEl = document.getElementById("useNum");
+  var symEl = document.getElementById("useSym");
+  var resultEl = document.getElementById("passwordResult");
+
+  // Safety check
+  if (!resultEl) {
+    console.error("Password Generator: passwordResult not found.");
+    return;
+  }
+
+  var len = lengthEl
+    ? parseInt(lengthEl.value, 10)
+    : 14;
+
+  if (!Number.isFinite(len) || len < 8) {
+    len = 14;
+  }
+
+  var useUpper = upperEl ? upperEl.checked : true;
+  var useLower = lowerEl ? lowerEl.checked : true;
+  var useNum = numEl ? numEl.checked : true;
+  var useSym = symEl ? symEl.checked : true;
+
+  var chars = "";
+
+  if (useUpper) {
+    chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+
+  if (useLower) {
+    chars += "abcdefghijklmnopqrstuvwxyz";
+  }
+
+  if (useNum) {
+    chars += "0123456789";
+  }
+
+  if (useSym) {
+    chars += "@#$!%^&*()-_=+";
+  }
+
+  if (!chars) {
+    resultEl.innerText =
+      "⚠️ Kam se kam ek option select karo!";
+    resultEl.style.color = "#ff6b6b";
+    return;
+  }
+
+  var password = "";
+
+  if (
+    window.crypto &&
+    window.crypto.getRandomValues
+  ) {
+
+    var randomValues =
+      new Uint32Array(len);
+
+    window.crypto.getRandomValues(
+      randomValues
+    );
+
+    for (var i = 0; i < len; i++) {
+      password +=
+        chars[randomValues[i] % chars.length];
+    }
+
+  } else {
+
+    for (var j = 0; j < len; j++) {
+      password +=
+        chars[Math.floor(Math.random() * chars.length)];
+    }
+  }
+
+  resultEl.innerText = "🔑 " + password;
+  resultEl.style.color = "#4ade80";
+};
+
+
+// ============================================================
+// COPY PASSWORD
+// ============================================================
+
+window.copyPassword = function () {
+
+  var resultEl =
+    document.getElementById("passwordResult");
+
+  if (!resultEl) {
+    console.error(
+      "Password Generator: passwordResult not found."
+    );
+    return;
+  }
+
+  var text = resultEl.innerText
+    .replace("🔑 ", "")
+    .replace("✅ Copied: ", "")
+    .trim();
+
+  if (!text) {
+    return;
+  }
+
+  if (
+    navigator.clipboard &&
+    navigator.clipboard.writeText
+  ) {
+
+    navigator.clipboard
+      .writeText(text)
+      .then(function () {
+
+        resultEl.innerText =
+          "✅ Copied: " + text;
+
+        resultEl.style.color =
+          "#4ade80";
+
+        setTimeout(function () {
+
+          resultEl.innerText =
+            "🔑 " + text;
+
+          resultEl.style.color =
+            "#4ade80";
+
+        }, 1500);
+
+      })
+      .catch(function () {
+
+        fallbackCopy(text);
+
+      });
+
+  } else {
+
+    fallbackCopy(text);
+
+  }
+};
+
+
+// ============================================================
+// FALLBACK COPY
+// ============================================================
+
+function fallbackCopy(text) {
+
+  var textarea =
+    document.createElement("textarea");
+
+  textarea.value = text;
+
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+
+  document.body.appendChild(textarea);
+
+  textarea.select();
+
+  try {
+
+    document.execCommand("copy");
+
+    var resultEl =
+      document.getElementById("passwordResult");
+
+    if (resultEl) {
+
+      resultEl.innerText =
+        "✅ Copied: " + text;
+
+      resultEl.style.color =
+        "#4ade80";
+
+      setTimeout(function () {
+
+        resultEl.innerText =
+          "🔑 " + text;
+
+      }, 1500);
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Copy failed:",
+      error
+    );
+
+  }
+
+  document.body.removeChild(textarea);
 }
 
 /* =========================================================
