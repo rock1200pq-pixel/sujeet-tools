@@ -338,63 +338,6 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
    ROCK TOOLS — INVOICE TOOL CARD
    Same size/style as other tool cards
    ========================================================= */
-
-.rt-invoice-card {
-  text-align: center;
-  overflow: hidden;
-}
-
-/* Invoice icon */
-.rt-invoice-icon {
-  font-size: 30px;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-/* Same heading size as other tool cards */
-.rt-invoice-card h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-/* Compact description */
-.rt-invoice-card p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--muted);
-}
-
-/* Same button size as other tools */
-.rt-invoice-card button {
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 11px 20px;
-  cursor: pointer;
-
-  background: linear-gradient(
-    135deg,
-    var(--accent),
-    var(--accent2)
-  );
-
-  color: #fff;
-  font-family: 'Exo 2', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-}
-
-.rt-invoice-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,198,255,0.4);
-}
 /* =========================================================
    ROCK TOOLS — INVOICE GENERATOR
    ========================================================= */
