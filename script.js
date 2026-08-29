@@ -440,148 +440,1469 @@ function copyPassword() {
   });
 }
 /* =========================================================
-   ROCK TOOLS
-   PROFESSIONAL INVOICE GENERATOR
-   STEP 2
+   ROCK TOOLS — INVOICE & RECEIPT GENERATOR
+   Two Popup System
+   1. Invoice Form
+   2. Invoice Preview
    ========================================================= */
 
 (function () {
 
   "use strict";
 
-
-  var openBtn =
-    document.getElementById("rtInvoiceOpenBtn");
-
-  var closeBtn =
-    document.getElementById("rtInvoiceCloseBtn");
-
-  var invoiceForm =
-    document.getElementById("rtInvoiceForm");
+  var invoiceItems = [];
 
 
-  if (!openBtn || !invoiceForm) {
-    return;
+  /* =========================================================
+     HELPER
+     ========================================================= */
+
+  function $(id) {
+    return document.getElementById(id);
   }
 
 
-  /* =======================================================
-     DATE
-     ======================================================= */
+  function safe(value) {
+    return value == null ? "" : String(value);
+  }
+
+
+  function money(value) {
+
+    var n = Number(value);
+
+    if (!Number.isFinite(n)) {
+      n = 0;
+    }
+
+    return "₹" + n.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+  }
+
 
   function todayISO() {
 
     var d = new Date();
 
-    var year =
-      d.getFullYear();
+    var year = d.getFullYear();
 
-    var month =
-      String(d.getMonth() + 1)
-        .padStart(2, "0");
+    var month = String(
+      d.getMonth() + 1
+    ).padStart(2, "0");
 
-    var day =
-      String(d.getDate())
-        .padStart(2, "0");
+    var day = String(
+      d.getDate()
+    ).padStart(2, "0");
 
     return year + "-" + month + "-" + day;
+
   }
 
 
-  function addDaysISO(date, days) {
+  function addDaysISO(dateString, days) {
 
-    var d =
-      new Date(date + "T00:00:00");
+    var d = new Date(
+      dateString + "T00:00:00"
+    );
+
+    if (Number.isNaN(d.getTime())) {
+      return "";
+    }
 
     d.setDate(
       d.getDate() + days
     );
 
-    var year =
-      d.getFullYear();
+    var year = d.getFullYear();
 
-    var month =
-      String(d.getMonth() + 1)
-        .padStart(2, "0");
+    var month = String(
+      d.getMonth() + 1
+    ).padStart(2, "0");
 
-    var day =
-      String(d.getDate())
-        .padStart(2, "0");
+    var day = String(
+      d.getDate()
+    ).padStart(2, "0");
 
     return year + "-" + month + "-" + day;
+
   }
 
 
-  /* =======================================================
-     OPEN
-     ======================================================= */
+  function formatDate(value) {
 
-  openBtn.addEventListener(
-    "click",
-    function () {
-
-      invoiceForm.classList.add(
-        "rt-invoice-form-open"
-      );
-
-      var invoiceDate =
-        document.getElementById(
-          "rtInvoiceDate"
-        );
-
-      var dueDate =
-        document.getElementById(
-          "rtDueDate"
-        );
-
-      if (
-        invoiceDate &&
-        !invoiceDate.value
-      ) {
-        invoiceDate.value =
-          todayISO();
-      }
-
-      if (
-        dueDate &&
-        !dueDate.value
-      ) {
-        dueDate.value =
-          addDaysISO(
-            todayISO(),
-            7
-          );
-      }
-
-      invoiceForm.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
+    if (!value) {
+      return "-";
     }
-  );
+
+    var parts = value.split("-");
+
+    if (parts.length !== 3) {
+      return value;
+    }
+
+    return (
+      parts[2] +
+      "-" +
+      parts[1] +
+      "-" +
+      parts[0]
+    );
+
+  }
 
 
-  /* =======================================================
-     CLOSE
-     ======================================================= */
+  function getNumber(id) {
 
-  if (closeBtn) {
+    var element = $(id);
 
-    closeBtn.addEventListener(
-      "click",
-      function () {
+    if (!element) {
+      return 0;
+    }
 
-        invoiceForm.classList.remove(
-          "rt-invoice-form-open"
+    var value = parseFloat(
+      element.value
+    );
+
+    if (
+      !Number.isFinite(value) ||
+      value < 0
+    ) {
+      return 0;
+    }
+
+    return value;
+
+  }
+
+
+  /* =========================================================
+     OPEN FORM MODAL
+     ========================================================= */
+
+  function openInvoiceForm() {
+
+    var modal = $("rtInvoiceFormModal");
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.add("rt-open");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+    document.body.style.overflow = "hidden";
+
+  }
+
+
+  /* =========================================================
+     CLOSE FORM MODAL
+     ========================================================= */
+
+  function closeInvoiceForm() {
+
+    var modal = $("rtInvoiceFormModal");
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.remove("rt-open");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    document.body.style.overflow = "";
+
+  }
+
+
+  /* =========================================================
+     OPEN PREVIEW
+     ========================================================= */
+
+  function openInvoicePreview() {
+
+    var modal = $("rtInvoicePreviewModal");
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.add("rt-open");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+    document.body.style.overflow = "hidden";
+
+    updateInvoicePreview();
+
+  }
+
+
+  /* =========================================================
+     CLOSE PREVIEW
+     ========================================================= */
+
+  function closeInvoicePreview() {
+
+    var modal = $("rtInvoicePreviewModal");
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.remove("rt-open");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    document.body.style.overflow = "";
+
+  }
+
+
+  /* =========================================================
+     ITEMS EDITOR
+     ========================================================= */
+
+  function renderItemEditor() {
+
+    var container = $("rtItemsEditor");
+
+    if (!container) {
+      return;
+    }
+
+    container.innerHTML = "";
+
+
+    invoiceItems.forEach(
+      function (item, index) {
+
+        var row =
+          document.createElement("div");
+
+        row.className =
+          "rt-item-editor";
+
+
+        /* DESCRIPTION */
+
+        var description =
+          document.createElement("input");
+
+        description.type = "text";
+
+        description.placeholder =
+          "Item / Service";
+
+        description.value =
+          safe(item.description);
+
+
+        /* QTY */
+
+        var qty =
+          document.createElement("input");
+
+        qty.type = "number";
+
+        qty.min = "0";
+
+        qty.step = "0.01";
+
+        qty.placeholder = "Qty";
+
+        qty.value = item.qty;
+
+
+        /* RATE */
+
+        var rate =
+          document.createElement("input");
+
+        rate.type = "number";
+
+        rate.min = "0";
+
+        rate.step = "0.01";
+
+        rate.placeholder = "Rate";
+
+        rate.value = item.rate;
+
+
+        /* REMOVE */
+
+        var remove =
+          document.createElement("button");
+
+        remove.type = "button";
+
+        remove.className =
+          "rt-remove-item";
+
+        remove.textContent = "×";
+
+        remove.title =
+          "Remove item";
+
+
+        /* DESCRIPTION CHANGE */
+
+        description.addEventListener(
+          "input",
+          function () {
+
+            invoiceItems[index]
+              .description =
+              description.value;
+
+          }
         );
+
+
+        /* QTY CHANGE */
+
+        qty.addEventListener(
+          "input",
+          function () {
+
+            invoiceItems[index].qty =
+              Math.max(
+                0,
+                parseFloat(qty.value) || 0
+              );
+
+          }
+        );
+
+
+        /* RATE CHANGE */
+
+        rate.addEventListener(
+          "input",
+          function () {
+
+            invoiceItems[index].rate =
+              Math.max(
+                0,
+                parseFloat(rate.value) || 0
+              );
+
+          }
+        );
+
+
+        /* REMOVE ITEM */
+
+        remove.addEventListener(
+          "click",
+          function () {
+
+            if (
+              invoiceItems.length === 1
+            ) {
+
+              invoiceItems[0] = {
+                description: "",
+                qty: 1,
+                rate: 0
+              };
+
+            } else {
+
+              invoiceItems.splice(
+                index,
+                1
+              );
+
+            }
+
+            renderItemEditor();
+
+          }
+        );
+
+
+        row.appendChild(
+          description
+        );
+
+        row.appendChild(
+          qty
+        );
+
+        row.appendChild(
+          rate
+        );
+
+        row.appendChild(
+          remove
+        );
+
+
+        container.appendChild(row);
 
       }
     );
 
   }
-})();
 
+
+  /* =========================================================
+     ADD ITEM
+     ========================================================= */
+
+  function addItem() {
+
+    invoiceItems.push({
+
+      description: "",
+
+      qty: 1,
+
+      rate: 0
+
+    });
+
+    renderItemEditor();
+
+  }
+
+
+  /* =========================================================
+     CALCULATE INVOICE
+     ========================================================= */
+
+  function calculateInvoice() {
+
+    var subtotal = 0;
+
+
+    invoiceItems.forEach(
+      function (item) {
+
+        var qty =
+          Number(item.qty) || 0;
+
+        var rate =
+          Number(item.rate) || 0;
+
+        subtotal +=
+          qty * rate;
+
+      }
+    );
+
+
+    var discount =
+      Math.min(
+        getNumber("rtDiscount"),
+        subtotal
+      );
+
+
+    var taxable =
+      Math.max(
+        0,
+        subtotal - discount
+      );
+
+
+    var taxType =
+      $("rtTaxType")
+        ? $("rtTaxType").value
+        : "none";
+
+
+    var gstRate =
+      getNumber("rtGstRate");
+
+
+    var cgst = 0;
+
+    var sgst = 0;
+
+    var igst = 0;
+
+
+    if (
+      taxType === "cgst_sgst"
+    ) {
+
+      cgst =
+        taxable *
+        (gstRate / 2) /
+        100;
+
+      sgst =
+        taxable *
+        (gstRate / 2) /
+        100;
+
+    }
+
+
+    if (
+      taxType === "igst"
+    ) {
+
+      igst =
+        taxable *
+        gstRate /
+        100;
+
+    }
+
+
+    var total =
+      taxable +
+      cgst +
+      sgst +
+      igst;
+
+
+    return {
+
+      subtotal: subtotal,
+
+      discount: discount,
+
+      taxable: taxable,
+
+      cgst: cgst,
+
+      sgst: sgst,
+
+      igst: igst,
+
+      total: total
+
+    };
+
+  }
+
+
+  /* =========================================================
+     PREVIEW ITEMS
+     ========================================================= */
+
+  function renderPreviewItems() {
+
+    var tbody =
+      $("rtPreviewItems");
+
+    if (!tbody) {
+      return;
+    }
+
+    tbody.innerHTML = "";
+
+    var hasItem = false;
+
+
+    invoiceItems.forEach(
+      function (item) {
+
+        var description =
+          safe(
+            item.description
+          ).trim();
+
+
+        var qty =
+          Number(item.qty) || 0;
+
+
+        var rate =
+          Number(item.rate) || 0;
+
+
+        var amount =
+          qty * rate;
+
+
+        if (
+          !description &&
+          qty === 0 &&
+          rate === 0
+        ) {
+
+          return;
+
+        }
+
+
+        hasItem = true;
+
+
+        var tr =
+          document.createElement("tr");
+
+
+        var tdDescription =
+          document.createElement("td");
+
+
+        var tdQty =
+          document.createElement("td");
+
+
+        var tdRate =
+          document.createElement("td");
+
+
+        var tdAmount =
+          document.createElement("td");
+
+
+        tdDescription.textContent =
+          description ||
+          "Item / Service";
+
+
+        tdQty.textContent =
+          String(qty);
+
+
+        tdRate.textContent =
+          money(rate);
+
+
+        tdAmount.textContent =
+          money(amount);
+
+
+        tr.appendChild(
+          tdDescription
+        );
+
+        tr.appendChild(
+          tdQty
+        );
+
+        tr.appendChild(
+          tdRate
+        );
+
+        tr.appendChild(
+          tdAmount
+        );
+
+
+        tbody.appendChild(tr);
+
+      }
+    );
+
+
+    if (!hasItem) {
+
+      var tr =
+        document.createElement("tr");
+
+
+      var td =
+        document.createElement("td");
+
+
+      td.colSpan = 4;
+
+      td.style.textAlign =
+        "center";
+
+      td.style.color =
+        "#888";
+
+      td.textContent =
+        "No items added";
+
+
+      tr.appendChild(td);
+
+      tbody.appendChild(tr);
+
+    }
+
+  }
+
+
+  /* =========================================================
+     UPDATE INVOICE PREVIEW
+     ========================================================= */
+
+  function updateInvoicePreview() {
+
+    var printArea =
+      $("rtInvoicePrintArea");
+
+    if (!printArea) {
+      return;
+    }
+
+
+    var calc =
+      calculateInvoice();
+
+
+    /* BUSINESS */
+
+    $("rtPreviewBizName")
+      .textContent =
+      $("rtBizName").value.trim() ||
+      "Your Business";
+
+
+    $("rtPreviewBizAddress")
+      .textContent =
+      $("rtBizAddress").value.trim() ||
+      "Business Address";
+
+
+    var businessContact = [];
+
+
+    if (
+      $("rtBizPhone").value.trim()
+    ) {
+
+      businessContact.push(
+        $("rtBizPhone").value.trim()
+      );
+
+    }
+
+
+    if (
+      $("rtBizEmail").value.trim()
+    ) {
+
+      businessContact.push(
+        $("rtBizEmail").value.trim()
+      );
+
+    }
+
+
+    $("rtPreviewBizContact")
+      .textContent =
+      businessContact.join(" • ");
+
+
+    $("rtPreviewBizGstin")
+      .textContent =
+      $("rtBizGstin").value.trim()
+        ? "GSTIN: " +
+          $("rtBizGstin").value.trim()
+        : "";
+
+
+    /* INVOICE */
+
+    $("rtPreviewInvoiceNumber")
+      .textContent =
+      $("rtInvoiceNumber").value.trim() ||
+      "INV-001";
+
+
+    $("rtPreviewInvoiceDate")
+      .textContent =
+      formatDate(
+        $("rtInvoiceDate").value
+      );
+
+
+    $("rtPreviewDueDate")
+      .textContent =
+      formatDate(
+        $("rtDueDate").value
+      );
+
+
+    $("rtPreviewStatus")
+      .textContent =
+      (
+        $("rtPaymentStatus").value ||
+        "Unpaid"
+      ).toUpperCase();
+
+
+    /* CUSTOMER */
+
+    $("rtPreviewCustomerName")
+      .textContent =
+      $("rtCustomerName").value.trim() ||
+      "Customer Name";
+
+
+    $("rtPreviewCustomerAddress")
+      .textContent =
+      $("rtCustomerAddress").value.trim() ||
+      "Customer Address";
+
+
+    var customerContact = [];
+
+
+    if (
+      $("rtCustomerPhone").value.trim()
+    ) {
+
+      customerContact.push(
+        $("rtCustomerPhone").value.trim()
+      );
+
+    }
+
+
+    if (
+      $("rtCustomerEmail").value.trim()
+    ) {
+
+      customerContact.push(
+        $("rtCustomerEmail").value.trim()
+      );
+
+    }
+
+
+    $("rtPreviewCustomerContact")
+      .textContent =
+      customerContact.join(" • ");
+
+
+    $("rtPreviewCustomerGstin")
+      .textContent =
+      $("rtCustomerGstin").value.trim()
+        ? "GSTIN: " +
+          $("rtCustomerGstin").value.trim()
+        : "";
+
+
+    /* ITEMS */
+
+    renderPreviewItems();
+
+
+    /* TOTALS */
+
+    $("rtPreviewSubtotal")
+      .textContent =
+      money(calc.subtotal);
+
+
+    $("rtPreviewDiscount")
+      .textContent =
+      money(calc.discount);
+
+
+    $("rtPreviewTaxable")
+      .textContent =
+      money(calc.taxable);
+
+
+    $("rtPreviewCgst")
+      .textContent =
+      money(calc.cgst);
+
+
+    $("rtPreviewSgst")
+      .textContent =
+      money(calc.sgst);
+
+
+    $("rtPreviewIgst")
+      .textContent =
+      money(calc.igst);
+
+
+    $("rtPreviewTotal")
+      .textContent =
+      money(calc.total);
+
+
+    /* TAX ROWS */
+
+    var taxType =
+      $("rtTaxType").value;
+
+
+    $("rtPreviewCgstRow")
+      .style.display =
+      taxType === "cgst_sgst"
+        ? "flex"
+        : "none";
+
+
+    $("rtPreviewSgstRow")
+      .style.display =
+      taxType === "cgst_sgst"
+        ? "flex"
+        : "none";
+
+
+    $("rtPreviewIgstRow")
+      .style.display =
+      taxType === "igst"
+        ? "flex"
+        : "none";
+
+
+    /* PAYMENT */
+
+    var paymentLines = [];
+
+
+    if (
+      $("rtBankName").value.trim()
+    ) {
+
+      paymentLines.push(
+        "Bank: " +
+        $("rtBankName").value.trim()
+      );
+
+    }
+
+
+    if (
+      $("rtAccountNumber").value.trim()
+    ) {
+
+      paymentLines.push(
+        "A/C: " +
+        $("rtAccountNumber").value.trim()
+      );
+
+    }
+
+
+    if (
+      $("rtIfsc").value.trim()
+    ) {
+
+      paymentLines.push(
+        "IFSC: " +
+        $("rtIfsc").value.trim()
+      );
+
+    }
+
+
+    if (
+      $("rtUpi").value.trim()
+    ) {
+
+      paymentLines.push(
+        "UPI: " +
+        $("rtUpi").value.trim()
+      );
+
+    }
+
+
+    $("rtPreviewPayment")
+      .textContent =
+      paymentLines.join("\n");
+
+
+    $("rtPreviewPaymentBox")
+      .style.display =
+      paymentLines.length
+        ? "block"
+        : "none";
+
+
+    /* NOTES */
+
+    $("rtPreviewNotes")
+      .textContent =
+      $("rtNotes").value.trim() ||
+      "Thank you for your business.";
+
+  }
+
+
+  /* =========================================================
+     GENERATE INVOICE
+     ========================================================= */
+
+  function generateInvoice() {
+
+    updateInvoicePreview();
+
+    closeInvoiceForm();
+
+    openInvoicePreview();
+
+  }
+
+
+  /* =========================================================
+     EDIT INVOICE
+     ========================================================= */
+
+  function editInvoice() {
+
+    closeInvoicePreview();
+
+    openInvoiceForm();
+
+  }
+
+
+  /* =========================================================
+     PRINT / SAVE PDF
+     ========================================================= */
+
+  function printInvoice() {
+
+    updateInvoicePreview();
+
+
+    var oldTitle =
+      document.title;
+
+
+    var invoiceNo =
+      $("rtInvoiceNumber")
+        .value
+        .trim() ||
+      "invoice";
+
+
+    document.title =
+      invoiceNo;
+
+
+    window.print();
+
+
+    setTimeout(
+      function () {
+
+        document.title =
+          oldTitle;
+
+      },
+      1000
+    );
+
+  }
+
+
+  /* =========================================================
+     RESET FORM
+     ========================================================= */
+
+  function resetInvoice() {
+
+    var confirmed =
+      window.confirm(
+        "Invoice data reset karna hai?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    [
+      "rtBizName",
+      "rtBizPhone",
+      "rtBizEmail",
+      "rtBizGstin",
+      "rtBizAddress",
+
+      "rtCustomerName",
+      "rtCustomerPhone",
+      "rtCustomerEmail",
+      "rtCustomerGstin",
+      "rtCustomerAddress",
+
+      "rtBankName",
+      "rtAccountNumber",
+      "rtIfsc",
+      "rtUpi",
+
+      "rtNotes"
+
+    ].forEach(
+      function (id) {
+
+        var el = $(id);
+
+        if (el) {
+          el.value = "";
+        }
+
+      }
+    );
+
+
+    $("rtInvoiceNumber")
+      .value = "INV-001";
+
+
+    $("rtInvoiceDate")
+      .value = todayISO();
+
+
+    $("rtDueDate")
+      .value =
+      addDaysISO(
+        todayISO(),
+        7
+      );
+
+
+    $("rtPaymentStatus")
+      .value = "Unpaid";
+
+
+    $("rtDiscount")
+      .value = "0";
+
+
+    $("rtTaxType")
+      .value = "none";
+
+
+    $("rtGstRate")
+      .value = "18";
+
+
+    invoiceItems = [
+
+      {
+        description: "",
+        qty: 1,
+        rate: 0
+      }
+
+    ];
+
+
+    renderItemEditor();
+
+    updateInvoicePreview();
+
+  }
+
+
+  /* =========================================================
+     INITIALIZE
+     ========================================================= */
+
+  function initInvoice() {
+
+    if (!$("rtInvoiceOpenBtn")) {
+      return;
+    }
+
+
+    /* DEFAULT DATES */
+
+    if ($("rtInvoiceDate")) {
+
+      $("rtInvoiceDate")
+        .value =
+        todayISO();
+
+    }
+
+
+    if ($("rtDueDate")) {
+
+      $("rtDueDate")
+        .value =
+        addDaysISO(
+          todayISO(),
+          7
+        );
+
+    }
+
+
+    /* DEFAULT ITEM */
+
+    invoiceItems = [
+
+      {
+        description: "",
+        qty: 1,
+        rate: 0
+      }
+
+    ];
+
+
+    renderItemEditor();
+
+
+    /* =====================================================
+       CREATE INVOICE BUTTON
+       ===================================================== */
+
+    $("rtInvoiceOpenBtn")
+      .addEventListener(
+        "click",
+        openInvoiceForm
+      );
+
+
+    /* =====================================================
+       FORM CLOSE
+       ===================================================== */
+
+    $("rtInvoiceFormCloseBtn")
+      .addEventListener(
+        "click",
+        closeInvoiceForm
+      );
+
+
+    /* =====================================================
+       ADD ITEM
+       ===================================================== */
+
+    $("rtAddItemBtn")
+      .addEventListener(
+        "click",
+        addItem
+      );
+
+
+    /* =====================================================
+       GENERATE
+       ===================================================== */
+
+    $("rtGenerateInvoiceBtn")
+      .addEventListener(
+        "click",
+        generateInvoice
+      );
+
+
+    /* =====================================================
+       PREVIEW CLOSE
+       ===================================================== */
+
+    $("rtInvoicePreviewCloseBtn")
+      .addEventListener(
+        "click",
+        closeInvoicePreview
+      );
+
+
+    /* =====================================================
+       EDIT
+       ===================================================== */
+
+    $("rtEditInvoiceBtn")
+      .addEventListener(
+        "click",
+        editInvoice
+      );
+
+
+    /* =====================================================
+       PRINT
+       ===================================================== */
+
+    $("rtPrintInvoiceBtn")
+      .addEventListener(
+        "click",
+        printInvoice
+      );
+
+
+    /* =====================================================
+       FORM FIELDS
+       ===================================================== */
+
+    var fields = [
+
+      "rtBizName",
+      "rtBizPhone",
+      "rtBizEmail",
+      "rtBizGstin",
+      "rtBizAddress",
+
+      "rtInvoiceNumber",
+      "rtInvoiceDate",
+      "rtDueDate",
+      "rtPaymentStatus",
+
+      "rtCustomerName",
+      "rtCustomerPhone",
+      "rtCustomerEmail",
+      "rtCustomerGstin",
+      "rtCustomerAddress",
+
+      "rtDiscount",
+      "rtTaxType",
+      "rtGstRate",
+
+      "rtBankName",
+      "rtAccountNumber",
+      "rtIfsc",
+      "rtUpi",
+
+      "rtNotes"
+
+    ];
+
+
+    fields.forEach(
+      function (id) {
+
+        var el = $(id);
+
+        if (!el) {
+          return;
+        }
+
+        el.addEventListener(
+          "input",
+          updateInvoicePreview
+        );
+
+        el.addEventListener(
+          "change",
+          updateInvoicePreview
+        );
+
+      }
+    );
+
+
+    /* =====================================================
+       CLICK OUTSIDE FORM
+       ===================================================== */
+
+    $("rtInvoiceFormModal")
+      .addEventListener(
+        "click",
+        function (event) {
+
+          if (
+            event.target ===
+            $("rtInvoiceFormModal")
+          ) {
+
+            closeInvoiceForm();
+
+          }
+
+        }
+      );
+
+
+    /* =====================================================
+       CLICK OUTSIDE PREVIEW
+       ===================================================== */
+
+    $("rtInvoicePreviewModal")
+      .addEventListener(
+        "click",
+        function (event) {
+
+          if (
+            event.target ===
+            $("rtInvoicePreviewModal")
+          ) {
+
+            closeInvoicePreview();
+
+          }
+
+        }
+      );
+
+
+    /* =====================================================
+       ESC KEY
+       ===================================================== */
+
+    document.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key !== "Escape"
+        ) {
+          return;
+        }
+
+
+        if (
+          $("rtInvoiceFormModal")
+            .classList
+            .contains("rt-open")
+        ) {
+
+          closeInvoiceForm();
+
+          return;
+
+        }
+
+
+        if (
+          $("rtInvoicePreviewModal")
+            .classList
+            .contains("rt-open")
+        ) {
+
+          closeInvoicePreview();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  if (
+    document.readyState === "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initInvoice
+    );
+
+  } else {
+
+    initInvoice();
+
+  }
+
+
+})();
 //Rock Tools. AI
 
 // REGISTER
