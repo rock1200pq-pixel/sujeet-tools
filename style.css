@@ -335,25 +335,23 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   to { transform: scale(1); opacity:1; }
 }
 /* =========================================================
-   ROCK TOOLS — INVOICE GENERATOR
-   CLEAN FINAL CSS
+   ROCK TOOLS — INVOICE TOOL CARD
+   Same size/style as other tool cards
    ========================================================= */
-
-/* =========================
-   TOOL CARD
-   ========================= */
 
 .rt-invoice-card {
   text-align: center;
   overflow: hidden;
 }
 
+/* Invoice icon */
 .rt-invoice-icon {
   font-size: 30px;
   line-height: 1;
   margin-bottom: 4px;
 }
 
+/* Same heading size as other tool cards */
 .rt-invoice-card h3 {
   margin: 0;
   font-size: 16px;
@@ -361,6 +359,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   line-height: 1.3;
 }
 
+/* Compact description */
 .rt-invoice-card p {
   margin: 0;
   font-size: 12px;
@@ -368,6 +367,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   color: var(--muted);
 }
 
+/* Same button size as other tools */
 .rt-invoice-card button {
   width: 100%;
   border: none;
@@ -387,91 +387,47 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   font-weight: 700;
 
   transition:
-    transform .2s,
-    box-shadow .2s;
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .rt-invoice-card button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,198,255,.4);
+  box-shadow: 0 6px 20px rgba(0,198,255,0.4);
 }
-
-
-/* =========================
-   INVOICE POPUP
-   ========================= */
+/* =========================================================
+   ROCK TOOLS — INVOICE GENERATOR
+   ========================================================= */
 
 .rt-invoice-modal {
   display: none;
-
   position: fixed;
   inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  z-index: 999999;
-
-  background: rgba(0,0,0,.78);
-
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.78);
   padding: 20px;
-
-  box-sizing: border-box;
-
   overflow-y: auto;
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .rt-invoice-modal.rt-open {
-  display: flex;
-
-  align-items: flex-start;
-  justify-content: center;
+  display: block;
 }
 
-
-/* =========================
-   MAIN POPUP BOX
-   ========================= */
-
-.rt-invoice-dialog {
-  position: relative;
-
-  width: min(1100px, 100%);
-
-  margin: 0 auto;
-
+.rt-invoice-dialog,
+.rt-invoice-preview-dialog {
+  width: min(900px, 100%);
+  margin: 20px auto;
   background: #08131d;
-
-  border: 1px solid rgba(0,190,255,.25);
-
+  border: 1px solid rgba(0, 190, 255, 0.25);
   border-radius: 16px;
-
-  box-shadow:
-    0 25px 80px rgba(0,0,0,.55);
-
   overflow: hidden;
-
-  box-sizing: border-box;
-
-  max-height: calc(100vh - 40px);
-
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
 }
-
-
-/* =========================
-   TOP HEADER
-   ========================= */
 
 .rt-invoice-toolbar {
-  flex: 0 0 auto;
-
   min-height: 64px;
-
   padding: 12px 18px;
-
   box-sizing: border-box;
 
   display: flex;
@@ -479,15 +435,8 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   justify-content: space-between;
 
   background: #071019;
-
-  border-bottom:
-    1px solid rgba(0,190,255,.2);
-
+  border-bottom: 1px solid rgba(0, 190, 255, 0.2);
   color: #fff;
-
-  position: relative;
-
-  z-index: 20;
 }
 
 .rt-invoice-toolbar strong {
@@ -497,105 +446,39 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-invoice-toolbar small {
   display: block;
-
   margin-top: 3px;
-
   color: #7f9aac;
-
   font-size: 11px;
 }
 
-
-/* =========================
-   CLOSE BUTTON
-   ========================= */
-
 .rt-icon-btn {
-  flex: 0 0 40px;
+  width: 38px;
+  height: 38px;
 
-  width: 40px;
-  height: 40px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(255,255,255,.18);
-
-  border-radius: 9px;
-
-  background: rgba(255,255,255,.07);
-
+  background: rgba(255,255,255,.06);
   color: #fff;
 
   font-size: 18px;
-
   cursor: pointer;
-
-  position: relative;
-
-  z-index: 30;
-}
-
-.rt-icon-btn:hover {
-  background: rgba(0,198,255,.15);
-
-  border-color: rgba(0,198,255,.5);
 }
 
 
-/* =========================
-   CONTENT AREA
-   ========================= */
+/* =========================================================
+   FORM
+   ========================================================= */
 
-.rt-invoice-layout {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(0, 1fr);
-
-  gap: 20px;
-
-  padding: 20px;
-
-  box-sizing: border-box;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  min-height: 0;
-}
-
-
-/* =========================
-   EDITOR
-   ========================= */
-
-.rt-invoice-editor {
-  min-width: 0;
-
-  background: #08131d;
-
+.rt-invoice-form-container {
+  padding: 24px;
   color: #eaf6ff;
-
-  padding: 4px;
-
-  box-sizing: border-box;
 }
-
-
-/* =========================
-   SECTIONS
-   ========================= */
 
 .rt-section {
   margin-bottom: 22px;
-
   padding-bottom: 20px;
-
-  border-bottom:
-    1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
 .rt-section:last-child {
@@ -604,24 +487,13 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-section h4 {
   margin: 0 0 13px;
-
   font-size: 15px;
-
   color: #eaf6ff;
 }
 
-
-/* =========================
-   FORM GRID
-   ========================= */
-
 .rt-form-grid {
   display: grid;
-
-  grid-template-columns:
-    minmax(0,1fr)
-    minmax(0,1fr);
-
+  grid-template-columns: 1fr 1fr;
   gap: 11px;
 }
 
@@ -629,24 +501,17 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 .rt-form-grid textarea,
 .rt-form-grid select {
   width: 100%;
-
-  min-width: 0;
-
   box-sizing: border-box;
 
   padding: 11px 12px;
 
-  border:
-    1px solid rgba(0,190,255,.22);
-
+  border: 1px solid rgba(0,190,255,.22);
   border-radius: 8px;
 
   background: #0b1823;
-
   color: #fff;
 
   font-family: inherit;
-
   font-size: 13px;
 
   outline: none;
@@ -661,114 +526,83 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 .rt-form-grid textarea:focus,
 .rt-form-grid select:focus {
   border-color: #00bfff;
-
-  box-shadow:
-    0 0 0 2px rgba(0,191,255,.08);
+  box-shadow: 0 0 0 2px rgba(0,191,255,.08);
 }
 
 .rt-form-grid textarea {
   min-height: 80px;
-
   resize: vertical;
-
   grid-column: 1 / -1;
 }
 
 
-/* =========================
+/* =========================================================
    ITEMS
-   ========================= */
+   ========================================================= */
 
 .rt-items-heading {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   gap: 10px;
 }
 
 .rt-small-btn {
   border: 0;
-
   border-radius: 7px;
-
   padding: 9px 13px;
 
-  background:
-    linear-gradient(
-      90deg,
-      #00bfff,
-      #087cff
-    );
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
 
   color: #fff;
-
   font-weight: 600;
-
   cursor: pointer;
-
-  white-space: nowrap;
 }
 
 .rt-item-editor {
   display: grid;
-
-  grid-template-columns:
-    minmax(0,1fr)
-    75px
-    100px
-    42px;
-
+  grid-template-columns: 1fr 90px 120px 42px;
   gap: 8px;
-
   margin-bottom: 9px;
 }
 
 .rt-item-editor input {
   width: 100%;
-
   min-width: 0;
-
   box-sizing: border-box;
 
   padding: 10px;
 
-  border:
-    1px solid rgba(0,190,255,.2);
-
+  border: 1px solid rgba(0,190,255,.2);
   border-radius: 7px;
 
   background: #0b1823;
-
   color: #fff;
 }
 
 .rt-remove-item {
   border: 0;
-
   border-radius: 7px;
 
   background: rgba(255,70,70,.1);
-
   color: #ff7777;
 
   cursor: pointer;
-
   font-size: 18px;
 }
 
 
-/* =========================
+/* =========================================================
    GENERATE BUTTON
-   ========================= */
+   ========================================================= */
 
 .rt-generate-area {
   display: flex;
-
   justify-content: flex-end;
-
   padding-top: 5px;
 }
 
@@ -776,37 +610,27 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   min-width: 190px;
 
   border: 0;
-
   border-radius: 9px;
 
   padding: 13px 20px;
 
-  background:
-    linear-gradient(
-      90deg,
-      #00bfff,
-      #087cff
-    );
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
 
   color: #fff;
-
   font-weight: 700;
-
   font-size: 14px;
 
   cursor: pointer;
 }
 
 
-/* =========================
-   PREVIEW AREA
-   ========================= */
-
-.rt-invoice-preview-area {
-  min-width: 0;
-
-  overflow: hidden;
-}
+/* =========================================================
+   INVOICE PREVIEW
+   ========================================================= */
 
 .rt-invoice-preview-dialog {
   width: min(1050px, 100%);
@@ -814,126 +638,85 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-invoice-preview-wrapper {
   padding: 25px;
-
   background: #0b141d;
-
   overflow-x: auto;
 }
 
-
-/* =========================
-   INVOICE PAPER
-   ========================= */
-
 .rt-invoice-paper {
   width: 794px;
-
   min-height: 1123px;
 
   margin: 0 auto;
-
   padding: 52px;
 
   box-sizing: border-box;
 
   background: #fff;
-
   color: #17181a;
 
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 
-  box-shadow:
-    0 15px 50px rgba(0,0,0,.35);
+  box-shadow: 0 15px 50px rgba(0,0,0,.35);
 }
 
 
-/* =========================
+/* =========================================================
    INVOICE CONTENT
-   ========================= */
+   ========================================================= */
 
 .rt-invoice-top {
   display: flex;
-
   justify-content: space-between;
-
   gap: 30px;
 }
 
 .rt-invoice-top h1 {
   margin: 0 0 8px;
-
   font-size: 25px;
 }
 
 .rt-invoice-top p {
   margin: 3px 0;
-
   color: #686b70;
-
   font-size: 12px;
 }
 
 .rt-invoice-title {
   text-align: right;
-
   font-size: 32px;
-
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
 .rt-invoice-title span {
   display: inline-block;
-
   margin-top: 9px;
 
-  border:
-    1px solid #c9c9c9;
-
+  border: 1px solid #c9c9c9;
   border-radius: 20px;
 
   padding: 6px 13px;
 
   font-size: 10px;
-
   letter-spacing: 1px;
 }
 
-
-/* =========================
-   META
-   ========================= */
-
 .rt-invoice-meta {
   display: grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
+  grid-template-columns: repeat(3,1fr);
   gap: 18px;
 
   margin-top: 35px;
-
   padding: 16px 0;
 
-  border-top:
-    2px solid #17181a;
-
-  border-bottom:
-    1px solid #ddd;
+  border-top: 2px solid #17181a;
+  border-bottom: 1px solid #ddd;
 }
 
 .rt-invoice-meta span {
   display: block;
-
   margin-bottom: 5px;
-
   color: #777;
-
   font-size: 11px;
 }
 
@@ -941,51 +724,33 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   font-size: 13px;
 }
 
-
-/* =========================
-   BILL TO
-   ========================= */
-
 .rt-bill-row {
   margin: 30px 0;
 }
 
 .rt-bill-row label {
   display: block;
-
   margin-bottom: 8px;
 
   color: #888;
-
   font-size: 10px;
-
   letter-spacing: 1.5px;
 }
 
 .rt-bill-row strong {
   display: block;
-
   font-size: 15px;
 }
 
 .rt-bill-row p {
   margin: 5px 0;
-
   color: #666;
-
   font-size: 12px;
 }
 
-
-/* =========================
-   TABLE
-   ========================= */
-
 .rt-invoice-table {
   width: 100%;
-
   border-collapse: collapse;
-
   table-layout: fixed;
 }
 
@@ -993,12 +758,19 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   padding: 11px 10px;
 
   background: #17181a;
-
   color: #fff;
 
   text-align: left;
+  font-size: 11px;
+}
+
+.rt-invoice-table td {
+  padding: 13px 10px;
+
+  border-bottom: 1px solid #e2e2e2;
 
   font-size: 11px;
+  word-wrap: break-word;
 }
 
 .rt-invoice-table th:nth-child(n+2),
@@ -1006,43 +778,21 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   text-align: right;
 }
 
-.rt-invoice-table td {
-  padding: 13px 10px;
-
-  border-bottom:
-    1px solid #e2e2e2;
-
-  font-size: 11px;
-
-  word-wrap: break-word;
-}
-
-
-/* =========================
-   TOTALS
-   ========================= */
-
 .rt-totals {
   width: 330px;
-
   max-width: 100%;
 
   margin-left: auto;
-
   margin-top: 25px;
 }
 
 .rt-totals > div {
   display: flex;
-
   justify-content: space-between;
-
-  gap: 15px;
 
   padding: 6px 0;
 
   font-size: 12px;
-
   color: #666;
 }
 
@@ -1052,67 +802,42 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-total-line {
   margin-top: 8px;
-
   padding-top: 13px !important;
 
-  border-top:
-    2px solid #17181a;
+  border-top: 2px solid #17181a;
 
   font-size: 18px !important;
-
   color: #17181a !important;
 }
 
-
-/* =========================
-   PAYMENT
-   ========================= */
-
 .rt-payment-box {
   margin-top: 35px;
-
   padding-top: 18px;
 
-  border-top:
-    1px solid #ddd;
+  border-top: 1px solid #ddd;
 
   font-size: 11px;
 }
 
 .rt-payment-box p {
   white-space: pre-line;
-
   color: #666;
-
   line-height: 1.6;
 }
 
-
-/* =========================
-   NOTES
-   ========================= */
-
 .rt-notes {
   margin-top: 28px;
-
   padding-top: 18px;
 
-  border-top:
-    1px solid #ddd;
+  border-top: 1px solid #ddd;
 
   font-size: 11px;
 }
 
 .rt-notes p {
   color: #777;
-
   line-height: 1.5;
 }
-
-
-/* =========================
-   THANK YOU
-   ========================= */
 
 .rt-thank-you {
   margin-top: 38px;
@@ -1120,26 +845,22 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-thank-you strong {
   display: block;
-
   font-size: 15px;
 }
 
 .rt-thank-you span {
   color: #777;
-
   font-size: 11px;
 }
 
 
-/* =========================
+/* =========================================================
    PREVIEW BUTTONS
-   ========================= */
+   ========================================================= */
 
 .rt-preview-actions {
   display: flex;
-
   justify-content: center;
-
   gap: 10px;
 
   padding: 16px;
@@ -1149,78 +870,24 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 .rt-preview-actions button {
   border: 0;
-
   border-radius: 8px;
 
   padding: 11px 17px;
 
-  background:
-    linear-gradient(
-      90deg,
-      #00bfff,
-      #087cff
-    );
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
 
   color: #fff;
-
   font-weight: 600;
-
   cursor: pointer;
 }
 
 .rt-preview-actions .rt-secondary-btn {
   background: transparent;
-
-  border:
-    1px solid rgba(255,255,255,.2);
-}
-
-
-/* =========================================================
-   DESKTOP
-   ========================================================= */
-
-@media (min-width: 901px) {
-
-  .rt-invoice-modal {
-    align-items: flex-start;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .rt-invoice-dialog {
-    width: min(1100px, calc(100vw - 40px));
-
-    max-height:
-      calc(100vh - 40px);
-  }
-
-  .rt-invoice-toolbar {
-    flex-shrink: 0;
-  }
-
-  .rt-invoice-layout {
-    overflow-y: auto;
-  }
-
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  .rt-invoice-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .rt-invoice-dialog {
-    width: 100%;
-  }
-
+  border: 1px solid rgba(255,255,255,.2);
 }
 
 
@@ -1234,21 +901,16 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
     padding: 0;
   }
 
-  .rt-invoice-dialog {
+  .rt-invoice-dialog,
+  .rt-invoice-preview-dialog {
     width: 100%;
-
     min-height: 100vh;
 
-    max-height: none;
-
     margin: 0;
-
     border-radius: 0;
   }
 
-  .rt-invoice-layout {
-    grid-template-columns: 1fr;
-
+  .rt-invoice-form-container {
     padding: 16px;
   }
 
@@ -1261,18 +923,16 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   }
 
   .rt-item-editor {
-    grid-template-columns:
-      minmax(0,1fr)
-      65px
-      85px
-      38px;
+    grid-template-columns: 1fr 65px 90px 38px;
+  }
+
+  .rt-invoice-preview-wrapper {
+    padding: 10px;
   }
 
   .rt-invoice-paper {
     width: 100%;
-
     min-height: auto;
-
     padding: 25px;
   }
 
@@ -1282,54 +942,11 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
   .rt-invoice-title {
     text-align: left;
-
     font-size: 27px;
   }
 
   .rt-invoice-meta {
     grid-template-columns: 1fr;
-
-    gap: 10px;
-  }
-
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-  .rt-invoice-toolbar {
-    padding: 10px 14px;
-  }
-
-  .rt-invoice-toolbar strong {
-    font-size: 16px;
-  }
-
-  .rt-invoice-layout {
-    padding: 12px;
-  }
-
-  .rt-invoice-paper {
-    padding: 18px;
-  }
-
-  .rt-invoice-table th,
-  .rt-invoice-table td {
-    padding: 8px 5px;
-
-    font-size: 9px;
-  }
-
-  .rt-preview-actions {
-    flex-direction: column;
-  }
-
-  .rt-preview-actions button {
-    width: 100%;
   }
 
 }
@@ -1357,11 +974,9 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
     top: 0;
 
     width: 210mm !important;
-
     min-height: 297mm !important;
 
     margin: 0 !important;
-
     padding: 15mm !important;
 
     box-shadow: none !important;
@@ -1369,8 +984,290 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
   @page {
     size: A4;
-
     margin: 0;
   }
 
+}
+/* =========================================================
+   INVOICE POPUP — DESKTOP FIX
+   ========================================================= */
+
+.rt-invoice-modal {
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  padding: 20px !important;
+  box-sizing: border-box;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+.rt-invoice-modal.rt-open {
+  display: flex !important;
+}
+
+.rt-invoice-dialog {
+  position: relative !important;
+
+  width: min(1450px, 100%) !important;
+  max-width: 1450px !important;
+
+  margin: 0 auto !important;
+
+  background: #f5f6f8;
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow: 0 25px 80px rgba(0,0,0,.35);
+
+  box-sizing: border-box;
+
+  /* IMPORTANT */
+  max-height: calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   TOP BAR — CLOSE BUTTON ALWAYS VISIBLE
+   ========================================================= */
+
+.rt-invoice-toolbar {
+  flex: 0 0 auto;
+
+  min-height: 64px;
+
+  background: #111318;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 18px;
+
+  box-sizing: border-box;
+
+  position: relative;
+  z-index: 10;
+}
+
+.rt-invoice-toolbar strong {
+  display: block;
+  font-size: 18px;
+}
+
+.rt-invoice-toolbar small {
+  display: block;
+  opacity: .6;
+}
+
+.rt-icon-btn {
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  border: 0;
+
+  cursor: pointer;
+
+  background: rgba(255,255,255,.1);
+  color: white;
+
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+.rt-invoice-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(320px, 470px)
+    minmax(0, 1fr);
+
+  gap: 20px;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  min-height: 0;
+}
+
+.rt-invoice-editor {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+
+  height: max-content;
+  box-sizing: border-box;
+}
+
+.rt-invoice-preview-area {
+  min-width: 0;
+}/* =========================================================
+   INVOICE POPUP — DESKTOP FIX
+   ========================================================= */
+
+.rt-invoice-modal {
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  padding: 20px !important;
+  box-sizing: border-box;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+.rt-invoice-modal.rt-open {
+  display: flex !important;
+}
+
+.rt-invoice-dialog {
+  position: relative !important;
+
+  width: min(1450px, 100%) !important;
+  max-width: 1450px !important;
+
+  margin: 0 auto !important;
+
+  background: #f5f6f8;
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow: 0 25px 80px rgba(0,0,0,.35);
+
+  box-sizing: border-box;
+
+  /* IMPORTANT */
+  max-height: calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   TOP BAR — CLOSE BUTTON ALWAYS VISIBLE
+   ========================================================= */
+
+.rt-invoice-toolbar {
+  flex: 0 0 auto;
+
+  min-height: 64px;
+
+  background: #111318;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 18px;
+
+  box-sizing: border-box;
+
+  position: relative;
+  z-index: 10;
+}
+
+.rt-invoice-toolbar strong {
+  display: block;
+  font-size: 18px;
+}
+
+.rt-invoice-toolbar small {
+  display: block;
+  opacity: .6;
+}
+
+.rt-icon-btn {
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  border: 0;
+
+  cursor: pointer;
+
+  background: rgba(255,255,255,.1);
+  color: white;
+
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+.rt-invoice-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(320px, 470px)
+    minmax(0, 1fr);
+
+  gap: 20px;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  min-height: 0;
+}
+
+.rt-invoice-editor {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+
+  height: max-content;
+  box-sizing: border-box;
+}
+
+.rt-invoice-preview-area {
+  min-width: 0;
 }
