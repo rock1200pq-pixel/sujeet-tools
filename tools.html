@@ -194,7 +194,760 @@
   </button>
 
 </div>
+<!-- =========================================================
+     PROFESSIONAL INVOICE GENERATOR
+     ========================================================= -->
 
+<div id="rtInvoiceForm" class="rt-invoice-form">
+
+  <!-- HEADER -->
+  <div class="rt-invoice-form-header">
+
+    <div>
+      <span class="rt-invoice-eyebrow">
+        ROCK TOOLS
+      </span>
+
+      <h3>Create Professional Invoice</h3>
+
+      <p>
+        Enter invoice information below.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      id="rtInvoiceCloseBtn"
+      class="rt-invoice-close"
+      aria-label="Close invoice generator">
+      ✕
+    </button>
+
+  </div>
+
+
+  <!-- =======================================================
+       1. BUSINESS DETAILS
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">01</span>
+        <div>
+          <h4>Business Details</h4>
+          <p>Your company information</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-business-top">
+
+      <!-- LOGO -->
+      <div class="rt-logo-upload">
+
+        <label for="rtBusinessLogo">
+          <div class="rt-logo-box">
+            <span>＋</span>
+            <small>Company Logo</small>
+          </div>
+        </label>
+
+        <input
+          type="file"
+          id="rtBusinessLogo"
+          accept="image/png,image/jpeg,image/webp">
+
+      </div>
+
+
+      <div class="rt-invoice-grid rt-business-grid">
+
+        <div class="rt-field rt-field-wide">
+
+          <label>
+            Business / Company Name
+            <span>*</span>
+          </label>
+
+          <input
+            id="rtBizName"
+            type="text"
+            placeholder="e.g. Rock Technologies Pvt. Ltd.">
+
+        </div>
+
+
+        <div class="rt-field">
+
+          <label>Phone Number</label>
+
+          <input
+            id="rtBizPhone"
+            type="tel"
+            placeholder="+91 98765 43210">
+
+        </div>
+
+
+        <div class="rt-field">
+
+          <label>Email Address</label>
+
+          <input
+            id="rtBizEmail"
+            type="email"
+            placeholder="billing@company.com">
+
+        </div>
+
+
+        <div class="rt-field">
+
+          <label>GSTIN</label>
+
+          <input
+            id="rtBizGstin"
+            type="text"
+            placeholder="22AAAAA0000A1Z5">
+
+        </div>
+
+
+        <div class="rt-field">
+
+          <label>PAN</label>
+
+          <input
+            id="rtBizPan"
+            type="text"
+            placeholder="AAAAA0000A">
+
+        </div>
+
+
+        <div class="rt-field rt-field-wide">
+
+          <label>Business Address</label>
+
+          <textarea
+            id="rtBizAddress"
+            placeholder="Full registered business address"></textarea>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       2. INVOICE INFORMATION
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">02</span>
+
+        <div>
+          <h4>Invoice Information</h4>
+          <p>Invoice identification and dates</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-invoice-grid">
+
+      <div class="rt-field">
+
+        <label>
+          Invoice Number
+          <span>*</span>
+        </label>
+
+        <input
+          id="rtInvoiceNumber"
+          type="text"
+          value="INV-001"
+          placeholder="INV-001">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Invoice Date <span>*</span></label>
+
+        <input
+          id="rtInvoiceDate"
+          type="date">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Due Date</label>
+
+        <input
+          id="rtDueDate"
+          type="date">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Payment Status</label>
+
+        <select id="rtPaymentStatus">
+
+          <option value="Unpaid">
+            Unpaid
+          </option>
+
+          <option value="Paid">
+            Paid
+          </option>
+
+          <option value="Partial">
+            Partially Paid
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>PO / Reference Number</label>
+
+        <input
+          id="rtPoNumber"
+          type="text"
+          placeholder="PO-0001">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Currency</label>
+
+        <select id="rtCurrency">
+
+          <option value="INR">
+            ₹ Indian Rupee (INR)
+          </option>
+
+          <option value="USD">
+            $ US Dollar (USD)
+          </option>
+
+          <option value="EUR">
+            € Euro (EUR)
+          </option>
+
+          <option value="GBP">
+            £ British Pound (GBP)
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Place of Supply</label>
+
+        <input
+          id="rtPlaceOfSupply"
+          type="text"
+          placeholder="Uttar Pradesh">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Reverse Charge</label>
+
+        <select id="rtReverseCharge">
+
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       3. BILL TO
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">03</span>
+
+        <div>
+          <h4>Bill To</h4>
+          <p>Customer information</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-invoice-grid">
+
+      <div class="rt-field rt-field-wide">
+
+        <label>
+          Customer / Company Name
+          <span>*</span>
+        </label>
+
+        <input
+          id="rtCustomerName"
+          type="text"
+          placeholder="Customer or company name">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Phone Number</label>
+
+        <input
+          id="rtCustomerPhone"
+          type="tel"
+          placeholder="+91 98765 43210">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Email Address</label>
+
+        <input
+          id="rtCustomerEmail"
+          type="email"
+          placeholder="customer@email.com">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>GSTIN</label>
+
+        <input
+          id="rtCustomerGstin"
+          type="text"
+          placeholder="Customer GSTIN">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>PAN</label>
+
+        <input
+          id="rtCustomerPan"
+          type="text"
+          placeholder="Customer PAN">
+
+      </div>
+
+
+      <div class="rt-field rt-field-wide">
+
+        <label>Billing Address</label>
+
+        <textarea
+          id="rtCustomerAddress"
+          placeholder="Customer billing address"></textarea>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       4. ITEMS
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title rt-items-title">
+
+      <div>
+        <span class="rt-section-number">04</span>
+
+        <div>
+          <h4>Items & Services</h4>
+          <p>Add products or services</p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        id="rtAddItemBtn"
+        class="rt-add-item-btn">
+        + Add Item
+      </button>
+
+    </div>
+
+
+    <div class="rt-items-table-wrap">
+
+      <table class="rt-editor-items-table">
+
+        <thead>
+
+          <tr>
+            <th>Description</th>
+            <th>HSN/SAC</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Discount</th>
+            <th>Tax %</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+
+        </thead>
+
+        <tbody id="rtItemsEditor">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       5. TAX & DISCOUNT
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">05</span>
+
+        <div>
+          <h4>Tax & Discount</h4>
+          <p>Configure invoice taxes</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-invoice-grid">
+
+      <div class="rt-field">
+
+        <label>Overall Discount</label>
+
+        <input
+          id="rtDiscount"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+          placeholder="0.00">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Tax Type</label>
+
+        <select id="rtTaxType">
+
+          <option value="none">
+            No GST
+          </option>
+
+          <option value="cgst_sgst">
+            CGST + SGST
+          </option>
+
+          <option value="igst">
+            IGST
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>GST Rate (%)</label>
+
+        <input
+          id="rtGstRate"
+          type="number"
+          min="0"
+          max="100"
+          step="0.01"
+          value="18"
+          placeholder="18">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Round Off</label>
+
+        <select id="rtRoundOff">
+
+          <option value="none">
+            No Round Off
+          </option>
+
+          <option value="nearest">
+            Nearest Rupee
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       6. PAYMENT DETAILS
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">06</span>
+
+        <div>
+          <h4>Payment Details</h4>
+          <p>Bank and digital payment information</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-invoice-grid">
+
+      <div class="rt-field">
+
+        <label>Bank Name</label>
+
+        <input
+          id="rtBankName"
+          type="text"
+          placeholder="Bank name">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Account Holder Name</label>
+
+        <input
+          id="rtAccountHolder"
+          type="text"
+          placeholder="Account holder name">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Account Number</label>
+
+        <input
+          id="rtAccountNumber"
+          type="text"
+          placeholder="Account number">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>IFSC Code</label>
+
+        <input
+          id="rtIfsc"
+          type="text"
+          placeholder="SBIN0000000">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>UPI ID</label>
+
+        <input
+          id="rtUpi"
+          type="text"
+          placeholder="name@upi">
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Payment Method</label>
+
+        <select id="rtPaymentMethod">
+
+          <option value="">
+            Select payment method
+          </option>
+
+          <option value="Bank Transfer">
+            Bank Transfer
+          </option>
+
+          <option value="UPI">
+            UPI
+          </option>
+
+          <option value="Cash">
+            Cash
+          </option>
+
+          <option value="Card">
+            Card
+          </option>
+
+          <option value="Cheque">
+            Cheque
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       7. NOTES & TERMS
+       ======================================================= -->
+
+  <div class="rt-invoice-section">
+
+    <div class="rt-section-title">
+
+      <div>
+        <span class="rt-section-number">07</span>
+
+        <div>
+          <h4>Notes & Terms</h4>
+          <p>Additional invoice information</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="rt-invoice-grid">
+
+      <div class="rt-field">
+
+        <label>Notes</label>
+
+        <textarea
+          id="rtNotes"
+          placeholder="Thank you for your business."></textarea>
+
+      </div>
+
+
+      <div class="rt-field">
+
+        <label>Terms & Conditions</label>
+
+        <textarea
+          id="rtTerms"
+          placeholder="Payment due within the agreed period."></textarea>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       ACTIONS
+       ======================================================= -->
+
+  <div class="rt-invoice-actions">
+
+    <button
+      type="button"
+      id="rtResetInvoiceBtn"
+      class="rt-invoice-reset-btn">
+      Reset
+    </button>
+
+    <button
+      type="button"
+      id="rtGenerateInvoiceBtn"
+      class="rt-generate-btn">
+      Generate Invoice
+    </button>
+
+  </div>
+
+</div>
       <!-- 11. Rock Tools. AI -->
     <div class="toolCard">
   <h3><span class="ai-brain-icon"></span> Rock Tools.AI</h3>
