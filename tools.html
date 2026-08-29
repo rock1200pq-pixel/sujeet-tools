@@ -177,26 +177,29 @@
     </div>
 
     <!-- =========================================================
-     ROCK TOOLS — INVOICE & RECEIPT GENERATOR
-     NO LIVE PREVIEW
+     INVOICE & RECEIPT GENERATOR
      ========================================================= -->
 
 <div class="toolCard rt-invoice-card">
+
   <h3>🧾 Invoice & Receipt Generator</h3>
+
   <p>Create professional invoices and save them as PDF.</p>
 
   <button type="button" id="rtInvoiceOpenBtn">
     Create Invoice
   </button>
+
 </div>
 
 
-<!-- INVOICE MODAL -->
-<div
-  id="rtInvoiceModal"
-  class="rt-invoice-modal"
-  aria-hidden="true"
->
+<!-- =========================================================
+     INVOICE MODAL
+     ========================================================= -->
+
+<div id="rtInvoiceModal"
+     class="rt-invoice-modal"
+     aria-hidden="true">
 
   <div class="rt-invoice-dialog">
 
@@ -205,15 +208,12 @@
 
       <div>
         <strong>Invoice Generator</strong>
-        <small>Create your invoice</small>
+        <small>Create Invoice / Receipt</small>
       </div>
 
-      <button
-        type="button"
-        id="rtInvoiceCloseBtn"
-        class="rt-icon-btn"
-        aria-label="Close"
-      >
+      <button type="button"
+              id="rtInvoiceCloseBtn"
+              class="rt-icon-btn">
         ✕
       </button>
 
@@ -221,43 +221,34 @@
 
 
     <!-- FORM -->
-    <div class="rt-invoice-form">
+    <div class="rt-invoice-content">
 
-      <!-- BUSINESS -->
+
+      <!-- BUSINESS DETAILS -->
       <section class="rt-section">
 
         <h4>Business Details</h4>
 
         <div class="rt-form-grid">
 
-          <input
-            id="rtBizName"
-            type="text"
-            placeholder="Business name"
-          >
+          <input id="rtBizName"
+                 type="text"
+                 placeholder="Business name">
 
-          <input
-            id="rtBizPhone"
-            type="tel"
-            placeholder="Phone number"
-          >
+          <input id="rtBizPhone"
+                 type="tel"
+                 placeholder="Phone number">
 
-          <input
-            id="rtBizEmail"
-            type="email"
-            placeholder="Email"
-          >
+          <input id="rtBizEmail"
+                 type="email"
+                 placeholder="Email">
 
-          <input
-            id="rtBizGstin"
-            type="text"
-            placeholder="GSTIN (optional)"
-          >
+          <input id="rtBizGstin"
+                 type="text"
+                 placeholder="GSTIN (optional)">
 
-          <textarea
-            id="rtBizAddress"
-            placeholder="Business address"
-          ></textarea>
+          <textarea id="rtBizAddress"
+                    placeholder="Business address"></textarea>
 
         </div>
 
@@ -271,22 +262,16 @@
 
         <div class="rt-form-grid">
 
-          <input
-            id="rtInvoiceNumber"
-            type="text"
-            value="INV-001"
-            placeholder="Invoice number"
-          >
+          <input id="rtInvoiceNumber"
+                 type="text"
+                 value="INV-001"
+                 placeholder="Invoice number">
 
-          <input
-            id="rtInvoiceDate"
-            type="date"
-          >
+          <input id="rtInvoiceDate"
+                 type="date">
 
-          <input
-            id="rtDueDate"
-            type="date"
-          >
+          <input id="rtDueDate"
+                 type="date">
 
           <select id="rtPaymentStatus">
 
@@ -309,41 +294,31 @@
       </section>
 
 
-      <!-- CUSTOMER -->
+      <!-- BILL TO -->
       <section class="rt-section">
 
         <h4>Bill To</h4>
 
         <div class="rt-form-grid">
 
-          <input
-            id="rtCustomerName"
-            type="text"
-            placeholder="Customer name"
-          >
+          <input id="rtCustomerName"
+                 type="text"
+                 placeholder="Customer name">
 
-          <input
-            id="rtCustomerPhone"
-            type="tel"
-            placeholder="Customer phone"
-          >
+          <input id="rtCustomerPhone"
+                 type="tel"
+                 placeholder="Customer phone">
 
-          <input
-            id="rtCustomerEmail"
-            type="email"
-            placeholder="Customer email"
-          >
+          <input id="rtCustomerEmail"
+                 type="email"
+                 placeholder="Customer email">
 
-          <input
-            id="rtCustomerGstin"
-            type="text"
-            placeholder="Customer GSTIN (optional)"
-          >
+          <input id="rtCustomerGstin"
+                 type="text"
+                 placeholder="Customer GSTIN (optional)">
 
-          <textarea
-            id="rtCustomerAddress"
-            placeholder="Customer address"
-          ></textarea>
+          <textarea id="rtCustomerAddress"
+                    placeholder="Customer address"></textarea>
 
         </div>
 
@@ -357,11 +332,9 @@
 
           <h4>Items / Services</h4>
 
-          <button
-            type="button"
-            id="rtAddItemBtn"
-            class="rt-small-btn"
-          >
+          <button type="button"
+                  id="rtAddItemBtn"
+                  class="rt-small-btn">
             + Add Item
           </button>
 
@@ -372,21 +345,19 @@
       </section>
 
 
-      <!-- TAX -->
+      <!-- TAX & DISCOUNT -->
       <section class="rt-section">
 
         <h4>Tax & Discount</h4>
 
         <div class="rt-form-grid">
 
-          <input
-            id="rtDiscount"
-            type="number"
-            min="0"
-            step="0.01"
-            value="0"
-            placeholder="Discount"
-          >
+          <input id="rtDiscount"
+                 type="number"
+                 min="0"
+                 step="0.01"
+                 value="0"
+                 placeholder="Discount">
 
           <select id="rtTaxType">
 
@@ -404,51 +375,41 @@
 
           </select>
 
-          <input
-            id="rtGstRate"
-            type="number"
-            min="0"
-            max="100"
-            step="0.01"
-            value="18"
-            placeholder="GST %"
-          >
+          <input id="rtGstRate"
+                 type="number"
+                 min="0"
+                 max="100"
+                 step="0.01"
+                 value="18"
+                 placeholder="GST %">
 
         </div>
 
       </section>
 
 
-      <!-- PAYMENT -->
+      <!-- PAYMENT DETAILS -->
       <section class="rt-section">
 
         <h4>Payment Details</h4>
 
         <div class="rt-form-grid">
 
-          <input
-            id="rtBankName"
-            type="text"
-            placeholder="Bank name"
-          >
+          <input id="rtBankName"
+                 type="text"
+                 placeholder="Bank name">
 
-          <input
-            id="rtAccountNumber"
-            type="text"
-            placeholder="Account number"
-          >
+          <input id="rtAccountNumber"
+                 type="text"
+                 placeholder="Account number">
 
-          <input
-            id="rtIfsc"
-            type="text"
-            placeholder="IFSC"
-          >
+          <input id="rtIfsc"
+                 type="text"
+                 placeholder="IFSC">
 
-          <input
-            id="rtUpi"
-            type="text"
-            placeholder="UPI ID"
-          >
+          <input id="rtUpi"
+                 type="text"
+                 placeholder="UPI ID">
 
         </div>
 
@@ -460,10 +421,35 @@
 
         <h4>Notes</h4>
 
-        <textarea
-          id="rtNotes"
-          placeholder="Thank you for your business..."
-        ></textarea>
+        <textarea id="rtNotes"
+                  class="rt-full-textarea"
+                  placeholder="Thank you for your business..."></textarea>
+
+      </section>
+
+
+      <!-- TOTAL -->
+      <section class="rt-total-box">
+
+        <div>
+          <span>Subtotal</span>
+          <strong id="rtFormSubtotal">₹0.00</strong>
+        </div>
+
+        <div>
+          <span>Discount</span>
+          <strong id="rtFormDiscount">₹0.00</strong>
+        </div>
+
+        <div>
+          <span>Tax</span>
+          <strong id="rtFormTax">₹0.00</strong>
+        </div>
+
+        <div class="rt-grand-total">
+          <span>Total</span>
+          <strong id="rtFormTotal">₹0.00</strong>
+        </div>
 
       </section>
 
@@ -471,19 +457,15 @@
       <!-- ACTIONS -->
       <div class="rt-invoice-actions">
 
-        <button
-          type="button"
-          id="rtPrintInvoiceBtn"
-          class="rt-primary-btn"
-        >
+        <button type="button"
+                id="rtPrintInvoiceBtn"
+                class="rt-primary-btn">
           🖨 Print / Save PDF
         </button>
 
-        <button
-          type="button"
-          id="rtResetInvoiceBtn"
-          class="rt-secondary-btn"
-        >
+        <button type="button"
+                id="rtResetInvoiceBtn"
+                class="rt-secondary-btn">
           Reset
         </button>
 
@@ -494,7 +476,9 @@
   </div>
 
 </div>
-     <-- 11. Rock Tools. AI -->
+
+
+      - 11. Rock Tools. AI -->
     <div class="toolCard">
   <h3><span class="ai-brain-icon"></span> Rock Tools.AI</h3>
   <p>Multi AI coding tool powered by OpenAI & Gemini</p>
