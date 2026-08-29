@@ -439,6 +439,149 @@ function copyPassword() {
     }, 1500);
   });
 }
+/* =========================================================
+   ROCK TOOLS
+   PROFESSIONAL INVOICE GENERATOR
+   STEP 2
+   ========================================================= */
+
+(function () {
+
+  "use strict";
+
+
+  var openBtn =
+    document.getElementById("rtInvoiceOpenBtn");
+
+  var closeBtn =
+    document.getElementById("rtInvoiceCloseBtn");
+
+  var invoiceForm =
+    document.getElementById("rtInvoiceForm");
+
+
+  if (!openBtn || !invoiceForm) {
+    return;
+  }
+
+
+  /* =======================================================
+     DATE
+     ======================================================= */
+
+  function todayISO() {
+
+    var d = new Date();
+
+    var year =
+      d.getFullYear();
+
+    var month =
+      String(d.getMonth() + 1)
+        .padStart(2, "0");
+
+    var day =
+      String(d.getDate())
+        .padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+  }
+
+
+  function addDaysISO(date, days) {
+
+    var d =
+      new Date(date + "T00:00:00");
+
+    d.setDate(
+      d.getDate() + days
+    );
+
+    var year =
+      d.getFullYear();
+
+    var month =
+      String(d.getMonth() + 1)
+        .padStart(2, "0");
+
+    var day =
+      String(d.getDate())
+        .padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+  }
+
+
+  /* =======================================================
+     OPEN
+     ======================================================= */
+
+  openBtn.addEventListener(
+    "click",
+    function () {
+
+      invoiceForm.classList.add(
+        "rt-invoice-form-open"
+      );
+
+      var invoiceDate =
+        document.getElementById(
+          "rtInvoiceDate"
+        );
+
+      var dueDate =
+        document.getElementById(
+          "rtDueDate"
+        );
+
+      if (
+        invoiceDate &&
+        !invoiceDate.value
+      ) {
+        invoiceDate.value =
+          todayISO();
+      }
+
+      if (
+        dueDate &&
+        !dueDate.value
+      ) {
+        dueDate.value =
+          addDaysISO(
+            todayISO(),
+            7
+          );
+      }
+
+      invoiceForm.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+  );
+
+
+  /* =======================================================
+     CLOSE
+     ======================================================= */
+
+  if (closeBtn) {
+
+    closeBtn.addEventListener(
+      "click",
+      function () {
+
+        invoiceForm.classList.remove(
+          "rt-invoice-form-open"
+        );
+
+      }
+    );
+
+  }
+})();
+
 //Rock Tools. AI
 
 // REGISTER
