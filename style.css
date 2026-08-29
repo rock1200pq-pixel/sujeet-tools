@@ -357,7 +357,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 .rt-invoice-dialog,
 .rt-invoice-preview-dialog {
   width: min(900px, 100%);
-  margin: 30px auto;
+  margin: 20px auto;
   background: #08131d;
   border: 1px solid rgba(0, 190, 255, 0.25);
   border-radius: 16px;
