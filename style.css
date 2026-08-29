@@ -392,3 +392,477 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 .rt-invoice-card button:active {
   transform: translateY(0);
 }
+/* =========================================================
+   ROCK TOOLS
+   PROFESSIONAL INVOICE EDITOR
+   No Live Preview
+   ========================================================= */
+
+.rt-invoice-form {
+  display: none;
+
+  margin-top: 20px;
+  padding: 0;
+
+  background: #08111b;
+
+  border: 1px solid rgba(0, 191, 255, .22);
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  text-align: left;
+}
+
+.rt-invoice-form.rt-invoice-form-open {
+  display: block;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.rt-invoice-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #091521,
+      #0b1c2b
+    );
+
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.rt-invoice-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  opacity: .55;
+}
+
+.rt-invoice-form-header h3 {
+  margin: 0;
+
+  font-size: 24px;
+}
+
+.rt-invoice-form-header p {
+  margin: 5px 0 0;
+
+  font-size: 13px;
+
+  opacity: .6;
+}
+
+.rt-invoice-close {
+  width: 40px;
+  height: 40px;
+
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.06);
+
+  color: #fff;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.rt-invoice-section {
+  padding: 24px;
+
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.rt-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.rt-section-title > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rt-section-number {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  border-radius: 9px;
+
+  background: rgba(0,191,255,.1);
+
+  color: #08bff0;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.rt-section-title h4 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+.rt-section-title p {
+  margin: 3px 0 0;
+
+  font-size: 11px;
+
+  opacity: .5;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.rt-invoice-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+.rt-field {
+  min-width: 0;
+}
+
+.rt-field-wide {
+  grid-column: 1 / -1;
+}
+
+.rt-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  opacity: .75;
+}
+
+.rt-field label span {
+  color: #08bff0;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.rt-invoice-form input,
+.rt-invoice-form textarea,
+.rt-invoice-form select {
+
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #263542;
+  border-radius: 9px;
+
+  background: #0d1924;
+  color: #eef7ff;
+
+  padding: 12px 13px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.rt-invoice-form input::placeholder,
+.rt-invoice-form textarea::placeholder {
+  color: #71808d;
+}
+
+.rt-invoice-form input:focus,
+.rt-invoice-form textarea:focus,
+.rt-invoice-form select:focus {
+
+  border-color: #08bff0;
+
+  background: #101f2c;
+}
+
+.rt-invoice-form textarea {
+  min-height: 92px;
+
+  resize: vertical;
+}
+
+
+/* =========================================================
+   BUSINESS / LOGO
+   ========================================================= */
+
+.rt-business-top {
+  display: grid;
+
+  grid-template-columns: 130px minmax(0, 1fr);
+
+  gap: 20px;
+}
+
+.rt-logo-upload input {
+  display: none;
+}
+
+.rt-logo-upload label {
+  cursor: pointer;
+}
+
+.rt-logo-box {
+
+  height: 130px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: 1px dashed #405362;
+  border-radius: 12px;
+
+  background: #0d1924;
+
+  text-align: center;
+}
+
+.rt-logo-box span {
+  font-size: 25px;
+
+  color: #08bff0;
+}
+
+.rt-logo-box small {
+  font-size: 10px;
+
+  opacity: .55;
+}
+
+
+/* =========================================================
+   ITEMS
+   ========================================================= */
+
+.rt-items-title {
+  align-items: flex-start;
+}
+
+.rt-add-item-btn {
+
+  border: 0;
+  border-radius: 8px;
+
+  padding: 10px 14px;
+
+  background: #08bff0;
+  color: #001018;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.rt-items-table-wrap {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid #263542;
+  border-radius: 10px;
+}
+
+.rt-editor-items-table {
+
+  width: 100%;
+
+  min-width: 900px;
+
+  border-collapse: collapse;
+}
+
+.rt-editor-items-table th {
+
+  padding: 11px 9px;
+
+  background: #101d29;
+
+  color: #aebdca;
+
+  font-size: 10px;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.rt-editor-items-table td {
+
+  padding: 7px;
+
+  border-top: 1px solid #1e2d39;
+}
+
+.rt-editor-items-table input,
+.rt-editor-items-table select {
+
+  padding: 9px 8px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.rt-item-remove {
+
+  width: 32px;
+  height: 32px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: rgba(255,70,70,.1);
+
+  color: #ff7777;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.rt-invoice-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 20px 24px;
+
+  background: #071019;
+}
+
+.rt-invoice-reset-btn,
+.rt-generate-btn {
+
+  border-radius: 9px;
+
+  padding: 12px 20px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.rt-invoice-reset-btn {
+
+  border: 1px solid #344451;
+
+  background: transparent;
+
+  color: #c8d3db;
+}
+
+.rt-generate-btn {
+
+  border: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #08bff0,
+      #087cff
+    );
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .rt-business-top {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-logo-box {
+    width: 130px;
+  }
+
+  .rt-invoice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-field-wide {
+    grid-column: auto;
+  }
+
+  .rt-invoice-section {
+    padding: 18px;
+  }
+
+  .rt-invoice-form-header {
+    padding: 18px;
+  }
+
+  .rt-invoice-actions {
+    padding: 16px 18px;
+
+    flex-direction: column-reverse;
+  }
+
+  .rt-invoice-actions button {
+    width: 100%;
+  }
+
+}
