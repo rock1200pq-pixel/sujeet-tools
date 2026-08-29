@@ -334,10 +334,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   from { transform: scale(0.7); opacity:0; }
   to { transform: scale(1); opacity:1; }
 }
-/* =========================================================
-   ROCK TOOLS — INVOICE TOOL CARD
-   Same size/style as other tool cards
-   ========================================================= */
+
 /* =========================================================
    ROCK TOOLS — INVOICE GENERATOR
    ========================================================= */
