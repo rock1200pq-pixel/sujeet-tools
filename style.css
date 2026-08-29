@@ -411,8 +411,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   padding: 0;
 
   cursor: pointer;
-   position: relative;
-  top: 5px;
+ 
 }
 
 
