@@ -396,293 +396,143 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   box-shadow: 0 6px 20px rgba(0,198,255,0.4);
 }
 /* =========================================================
-   ROCK TOOLS
-   PROFESSIONAL INVOICE EDITOR
-   No Live Preview
+   ROCK TOOLS — INVOICE GENERATOR
    ========================================================= */
 
-.rt-invoice-form {
+.rt-invoice-modal {
   display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.78);
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
 
-  margin-top: 20px;
-  padding: 0;
+.rt-invoice-modal.rt-open {
+  display: block;
+}
 
-  background: #08111b;
-
-  border: 1px solid rgba(0, 191, 255, .22);
-  border-radius: 18px;
-
+.rt-invoice-dialog,
+.rt-invoice-preview-dialog {
+  width: min(900px, 100%);
+  margin: 20px auto;
+  background: #08131d;
+  border: 1px solid rgba(0, 190, 255, 0.25);
+  border-radius: 16px;
   overflow: hidden;
-
-  text-align: left;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
 }
 
-.rt-invoice-form.rt-invoice-form-open {
-  display: block;
-}
+.rt-invoice-toolbar {
+  min-height: 64px;
+  padding: 12px 18px;
+  box-sizing: border-box;
 
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.rt-invoice-form-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
 
-  padding: 24px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #091521,
-      #0b1c2b
-    );
-
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: #071019;
+  border-bottom: 1px solid rgba(0, 190, 255, 0.2);
+  color: #fff;
 }
 
-.rt-invoice-eyebrow {
+.rt-invoice-toolbar strong {
   display: block;
+  font-size: 18px;
+}
 
-  margin-bottom: 5px;
-
+.rt-invoice-toolbar small {
+  display: block;
+  margin-top: 3px;
+  color: #7f9aac;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-
-  opacity: .55;
 }
 
-.rt-invoice-form-header h3 {
-  margin: 0;
-
-  font-size: 24px;
-}
-
-.rt-invoice-form-header p {
-  margin: 5px 0 0;
-
-  font-size: 13px;
-
-  opacity: .6;
-}
-
-.rt-invoice-close {
-  width: 40px;
-  height: 40px;
+.rt-icon-btn {
+  width: 38px;
+  height: 38px;
 
   border: 1px solid rgba(255,255,255,.15);
-  border-radius: 10px;
+  border-radius: 8px;
 
   background: rgba(255,255,255,.06);
-
   color: #fff;
 
   font-size: 18px;
-
   cursor: pointer;
 }
 
 
 /* =========================================================
-   SECTION
+   FORM
    ========================================================= */
 
-.rt-invoice-section {
+.rt-invoice-form-container {
   padding: 24px;
+  color: #eaf6ff;
+}
 
+.rt-section {
+  margin-bottom: 22px;
+  padding-bottom: 20px;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-.rt-section-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 18px;
+.rt-section:last-child {
+  border-bottom: 0;
 }
 
-.rt-section-title > div {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.rt-section h4 {
+  margin: 0 0 13px;
+  font-size: 15px;
+  color: #eaf6ff;
 }
 
-.rt-section-number {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  width: 34px;
-  height: 34px;
-
-  flex: 0 0 34px;
-
-  border-radius: 9px;
-
-  background: rgba(0,191,255,.1);
-
-  color: #08bff0;
-
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.rt-section-title h4 {
-  margin: 0;
-
-  font-size: 17px;
-}
-
-.rt-section-title p {
-  margin: 3px 0 0;
-
-  font-size: 11px;
-
-  opacity: .5;
-}
-
-
-/* =========================================================
-   GRID
-   ========================================================= */
-
-.rt-invoice-grid {
+.rt-form-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  gap: 15px;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
 }
 
-.rt-field {
-  min-width: 0;
-}
-
-.rt-field-wide {
-  grid-column: 1 / -1;
-}
-
-.rt-field label {
-  display: block;
-
-  margin-bottom: 7px;
-
-  font-size: 12px;
-  font-weight: 600;
-
-  opacity: .75;
-}
-
-.rt-field label span {
-  color: #08bff0;
-}
-
-
-/* =========================================================
-   INPUTS
-   ========================================================= */
-
-.rt-invoice-form input,
-.rt-invoice-form textarea,
-.rt-invoice-form select {
-
+.rt-form-grid input,
+.rt-form-grid textarea,
+.rt-form-grid select {
   width: 100%;
   box-sizing: border-box;
 
-  border: 1px solid #263542;
-  border-radius: 9px;
+  padding: 11px 12px;
 
-  background: #0d1924;
-  color: #eef7ff;
+  border: 1px solid rgba(0,190,255,.22);
+  border-radius: 8px;
 
-  padding: 12px 13px;
+  background: #0b1823;
+  color: #fff;
 
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
 
   outline: none;
-
-  transition:
-    border-color .2s ease,
-    background .2s ease;
 }
 
-.rt-invoice-form input::placeholder,
-.rt-invoice-form textarea::placeholder {
-  color: #71808d;
+.rt-form-grid input::placeholder,
+.rt-form-grid textarea::placeholder {
+  color: #718696;
 }
 
-.rt-invoice-form input:focus,
-.rt-invoice-form textarea:focus,
-.rt-invoice-form select:focus {
-
-  border-color: #08bff0;
-
-  background: #101f2c;
+.rt-form-grid input:focus,
+.rt-form-grid textarea:focus,
+.rt-form-grid select:focus {
+  border-color: #00bfff;
+  box-shadow: 0 0 0 2px rgba(0,191,255,.08);
 }
 
-.rt-invoice-form textarea {
-  min-height: 92px;
-
+.rt-form-grid textarea {
+  min-height: 80px;
   resize: vertical;
-}
-
-
-/* =========================================================
-   BUSINESS / LOGO
-   ========================================================= */
-
-.rt-business-top {
-  display: grid;
-
-  grid-template-columns: 130px minmax(0, 1fr);
-
-  gap: 20px;
-}
-
-.rt-logo-upload input {
-  display: none;
-}
-
-.rt-logo-upload label {
-  cursor: pointer;
-}
-
-.rt-logo-box {
-
-  height: 130px;
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
-  border: 1px dashed #405362;
-  border-radius: 12px;
-
-  background: #0d1924;
-
-  text-align: center;
-}
-
-.rt-logo-box span {
-  font-size: 25px;
-
-  color: #08bff0;
-}
-
-.rt-logo-box small {
-  font-size: 10px;
-
-  opacity: .55;
+  grid-column: 1 / -1;
 }
 
 
@@ -690,141 +540,354 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
    ITEMS
    ========================================================= */
 
-.rt-items-title {
-  align-items: flex-start;
+.rt-items-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.rt-add-item-btn {
-
+.rt-small-btn {
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
+  padding: 9px 13px;
 
-  padding: 10px 14px;
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
 
-  background: #08bff0;
-  color: #001018;
-
-  font-weight: 800;
-
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.rt-items-table-wrap {
+.rt-item-editor {
+  display: grid;
+  grid-template-columns: 1fr 90px 120px 42px;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.rt-item-editor input {
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 
-  overflow-x: auto;
+  padding: 10px;
 
-  border: 1px solid #263542;
-  border-radius: 10px;
-}
-
-.rt-editor-items-table {
-
-  width: 100%;
-
-  min-width: 900px;
-
-  border-collapse: collapse;
-}
-
-.rt-editor-items-table th {
-
-  padding: 11px 9px;
-
-  background: #101d29;
-
-  color: #aebdca;
-
-  font-size: 10px;
-
-  text-align: left;
-
-  white-space: nowrap;
-}
-
-.rt-editor-items-table td {
-
-  padding: 7px;
-
-  border-top: 1px solid #1e2d39;
-}
-
-.rt-editor-items-table input,
-.rt-editor-items-table select {
-
-  padding: 9px 8px;
-
+  border: 1px solid rgba(0,190,255,.2);
   border-radius: 7px;
 
-  font-size: 12px;
+  background: #0b1823;
+  color: #fff;
 }
 
-.rt-item-remove {
-
-  width: 32px;
-  height: 32px;
-
+.rt-remove-item {
   border: 0;
   border-radius: 7px;
 
   background: rgba(255,70,70,.1);
-
   color: #ff7777;
+
+  cursor: pointer;
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   GENERATE BUTTON
+   ========================================================= */
+
+.rt-generate-area {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 5px;
+}
+
+.rt-generate-invoice-btn {
+  min-width: 190px;
+
+  border: 0;
+  border-radius: 9px;
+
+  padding: 13px 20px;
+
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
+
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
 
   cursor: pointer;
 }
 
 
 /* =========================================================
-   ACTIONS
+   INVOICE PREVIEW
    ========================================================= */
 
-.rt-invoice-actions {
+.rt-invoice-preview-dialog {
+  width: min(1050px, 100%);
+}
 
+.rt-invoice-preview-wrapper {
+  padding: 25px;
+  background: #0b141d;
+  overflow-x: auto;
+}
+
+.rt-invoice-paper {
+  width: 794px;
+  min-height: 1123px;
+
+  margin: 0 auto;
+  padding: 52px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+  color: #17181a;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  box-shadow: 0 15px 50px rgba(0,0,0,.35);
+}
+
+
+/* =========================================================
+   INVOICE CONTENT
+   ========================================================= */
+
+.rt-invoice-top {
   display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
 
-  justify-content: flex-end;
+.rt-invoice-top h1 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
 
+.rt-invoice-top p {
+  margin: 3px 0;
+  color: #686b70;
+  font-size: 12px;
+}
+
+.rt-invoice-title {
+  text-align: right;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.rt-invoice-title span {
+  display: inline-block;
+  margin-top: 9px;
+
+  border: 1px solid #c9c9c9;
+  border-radius: 20px;
+
+  padding: 6px 13px;
+
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.rt-invoice-meta {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+
+  margin-top: 35px;
+  padding: 16px 0;
+
+  border-top: 2px solid #17181a;
+  border-bottom: 1px solid #ddd;
+}
+
+.rt-invoice-meta span {
+  display: block;
+  margin-bottom: 5px;
+  color: #777;
+  font-size: 11px;
+}
+
+.rt-invoice-meta strong {
+  font-size: 13px;
+}
+
+.rt-bill-row {
+  margin: 30px 0;
+}
+
+.rt-bill-row label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #888;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+
+.rt-bill-row strong {
+  display: block;
+  font-size: 15px;
+}
+
+.rt-bill-row p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.rt-invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.rt-invoice-table th {
+  padding: 11px 10px;
+
+  background: #17181a;
+  color: #fff;
+
+  text-align: left;
+  font-size: 11px;
+}
+
+.rt-invoice-table td {
+  padding: 13px 10px;
+
+  border-bottom: 1px solid #e2e2e2;
+
+  font-size: 11px;
+  word-wrap: break-word;
+}
+
+.rt-invoice-table th:nth-child(n+2),
+.rt-invoice-table td:nth-child(n+2) {
+  text-align: right;
+}
+
+.rt-totals {
+  width: 330px;
+  max-width: 100%;
+
+  margin-left: auto;
+  margin-top: 25px;
+}
+
+.rt-totals > div {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 6px 0;
+
+  font-size: 12px;
+  color: #666;
+}
+
+.rt-totals strong {
+  color: #17181a;
+}
+
+.rt-total-line {
+  margin-top: 8px;
+  padding-top: 13px !important;
+
+  border-top: 2px solid #17181a;
+
+  font-size: 18px !important;
+  color: #17181a !important;
+}
+
+.rt-payment-box {
+  margin-top: 35px;
+  padding-top: 18px;
+
+  border-top: 1px solid #ddd;
+
+  font-size: 11px;
+}
+
+.rt-payment-box p {
+  white-space: pre-line;
+  color: #666;
+  line-height: 1.6;
+}
+
+.rt-notes {
+  margin-top: 28px;
+  padding-top: 18px;
+
+  border-top: 1px solid #ddd;
+
+  font-size: 11px;
+}
+
+.rt-notes p {
+  color: #777;
+  line-height: 1.5;
+}
+
+.rt-thank-you {
+  margin-top: 38px;
+}
+
+.rt-thank-you strong {
+  display: block;
+  font-size: 15px;
+}
+
+.rt-thank-you span {
+  color: #777;
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   PREVIEW BUTTONS
+   ========================================================= */
+
+.rt-preview-actions {
+  display: flex;
+  justify-content: center;
   gap: 10px;
 
-  padding: 20px 24px;
+  padding: 16px;
 
   background: #071019;
 }
 
-.rt-invoice-reset-btn,
-.rt-generate-btn {
+.rt-preview-actions button {
+  border: 0;
+  border-radius: 8px;
 
-  border-radius: 9px;
+  padding: 11px 17px;
 
-  padding: 12px 20px;
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #087cff
+  );
 
-  font-weight: 700;
-
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.rt-invoice-reset-btn {
-
-  border: 1px solid #344451;
-
+.rt-preview-actions .rt-secondary-btn {
   background: transparent;
-
-  color: #c8d3db;
-}
-
-.rt-generate-btn {
-
-  border: 0;
-
-  background:
-    linear-gradient(
-      135deg,
-      #08bff0,
-      #087cff
-    );
-
-  color: #fff;
+  border: 1px solid rgba(255,255,255,.2);
 }
 
 
@@ -834,38 +897,94 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 
 @media (max-width: 700px) {
 
-  .rt-business-top {
+  .rt-invoice-modal {
+    padding: 0;
+  }
+
+  .rt-invoice-dialog,
+  .rt-invoice-preview-dialog {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .rt-invoice-form-container {
+    padding: 16px;
+  }
+
+  .rt-form-grid {
     grid-template-columns: 1fr;
   }
 
-  .rt-logo-box {
-    width: 130px;
-  }
-
-  .rt-invoice-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .rt-field-wide {
+  .rt-form-grid textarea {
     grid-column: auto;
   }
 
-  .rt-invoice-section {
-    padding: 18px;
+  .rt-item-editor {
+    grid-template-columns: 1fr 65px 90px 38px;
   }
 
-  .rt-invoice-form-header {
-    padding: 18px;
+  .rt-invoice-preview-wrapper {
+    padding: 10px;
   }
 
-  .rt-invoice-actions {
-    padding: 16px 18px;
-
-    flex-direction: column-reverse;
-  }
-
-  .rt-invoice-actions button {
+  .rt-invoice-paper {
     width: 100%;
+    min-height: auto;
+    padding: 25px;
+  }
+
+  .rt-invoice-top {
+    flex-direction: column;
+  }
+
+  .rt-invoice-title {
+    text-align: left;
+    font-size: 27px;
+  }
+
+  .rt-invoice-meta {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   PRINT / SAVE PDF
+   ========================================================= */
+
+@media print {
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #rtInvoicePrintArea,
+  #rtInvoicePrintArea * {
+    visibility: visible !important;
+  }
+
+  #rtInvoicePrintArea {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 210mm !important;
+    min-height: 297mm !important;
+
+    margin: 0 !important;
+    padding: 15mm !important;
+
+    box-shadow: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
   }
 
 }
