@@ -359,7 +359,7 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   width: min(900px, 100%);
   margin: 20px auto;
   background: #08131d;
-  border: 2px solid rgba(0, 190, 255, 0.25);
+  border: 1px solid rgba(0, 190, 255, 0.25);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
