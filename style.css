@@ -941,25 +941,19 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   nav {
-    justify-content: flex-start;
-    padding: 0 16px;
+    padding: 0 12px;
+    gap: 8px;
+    overflow: hidden;
   }
 
   nav .logo {
-    margin-right: 20px;
-  }
-
-  nav ul {
-    gap: 10px;
-  }
-
-  nav ul li a {
-    font-size: 11px;
-    letter-spacing: 1px;
+    gap: 7px;
+    margin-right: 8px;
+    flex-shrink: 0;
   }
 
   .logo img {
-    height: 32px;
+    height: 30px;
   }
 
   .logo-text {
@@ -967,16 +961,15 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
     letter-spacing: 0.5px;
   }
 
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
+  nav ul {
+    gap: 9px;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 0;
   }
 
-  .toolsGrid {
-    padding: 20px 16px;
-  }
-
-  .title {
-    font-size: 28px;
+  nav ul li a {
+    font-size: 10px;
+    letter-spacing: 0.5px;
   }
 }
