@@ -937,3 +937,9 @@ footer { position:relative; z-index:1; border-top:1px solid var(--border); backg
   }
 
 }
+/* MOBILE: logo aur navigation ke beech extra gap */
+@media (max-width: 600px) {
+  nav .logo {
+    margin-right: 14px;
+  }
+}
