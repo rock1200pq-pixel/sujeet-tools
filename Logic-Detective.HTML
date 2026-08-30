@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Logic Grid Detective | Rock Tools</title>
+  <meta name="description" content="Solve mysterious cases using logic and deduction.">
+
+  <link rel="stylesheet" href="logic-detective.css">
+</head>
+
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Rock Tools Logo">
+      <span>ROCK TOOLS</span>
+    </a>
+
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <li><a href="games.html" class="active">Games</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="game-page">
+
+    <div class="game-header">
+
+      <a href="games.html" class="back-btn">← All Games</a>
+
+      <div class="game-title">
+        <span class="game-icon">🕵️</span>
+        <div>
+          <h1>Logic Grid Detective</h1>
+          <p>Use clues. Think logically. Crack the case.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div>
+          <span>LEVEL</span>
+          <strong id="levelNumber">1 / 100</strong>
+        </div>
+
+        <div>
+          <span>TIME</span>
+          <strong id="timer">00:00</strong>
+        </div>
+
+        <div>
+          <span>MISTAKES</span>
+          <strong id="mistakes">0</strong>
+        </div>
+
+        <div>
+          <span>SCORE</span>
+          <strong id="score">1000</strong>
+        </div>
+      </div>
+
+    </div>
+
+
+    <section class="case-card">
+
+      <div class="case-heading">
+        <span>CASE FILE</span>
+        <span id="difficulty">BEGINNER</span>
+      </div>
+
+      <h2 id="caseTitle">The Missing Camera</h2>
+
+      <p id="caseDescription">
+        Three detectives visited three different cities and each carried
+        a different item. Use the clues to determine who went where and
+        what they carried.
+      </p>
+
+    </section>
+
+
+    <section class="clues-card">
+
+      <div class="section-title">
+        <span>🔎</span>
+        <h2>Clues</h2>
+      </div>
+
+      <div id="clues" class="clues-list"></div>
+
+    </section>
+
+
+    <section class="grid-card">
+
+      <div class="section-title">
+        <span>🧠</span>
+        <h2>Deduction Grid</h2>
+      </div>
+
+      <p class="grid-help">
+        Select one city and one item for each detective.
+      </p>
+
+
+      <h3>Detective → City</h3>
+      <div id="cityGrid" class="logic-grid"></div>
+
+
+      <h3>Detective → Item</h3>
+      <div id="itemGrid" class="logic-grid"></div>
+
+
+      <div id="message" class="message"></div>
+
+
+      <div class="game-actions">
+
+        <button id="hintBtn" class="secondary-btn">
+          💡 Hint
+        </button>
+
+        <button id="checkBtn" class="primary-btn">
+          ✓ Check Answer
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section id="successPanel" class="success-panel hidden">
+
+      <div class="success-icon">🎉</div>
+
+      <h2>CASE SOLVED!</h2>
+
+      <p id="successText">
+        Excellent detective work.
+      </p>
+
+      <div class="result-stats">
+
+        <div>
+          <span>TIME</span>
+          <strong id="finalTime">00:00</strong>
+        </div>
+
+        <div>
+          <span>MISTAKES</span>
+          <strong id="finalMistakes">0</strong>
+        </div>
+
+        <div>
+          <span>SCORE</span>
+          <strong id="finalScore">1000</strong>
+        </div>
+
+      </div>
+
+      <button id="nextBtn" class="primary-btn">
+        Next Case →
+      </button>
+
+    </section>
+
+  </main>
+
+  <script src="logic-detective.js"></script>
+
+</body>
+</html>
