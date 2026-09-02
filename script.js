@@ -20,10 +20,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+let auth = null;
+let db = null;
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+if (typeof firebase !== "undefined") {
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+}
 // ── Utility: File label update ──
 function updateLabel(input, labelId) {
   var label = document.getElementById(labelId);
