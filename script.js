@@ -2137,610 +2137,1038 @@ if (!mobile || !password) {
     alert("Wrong mobile or password");
   }
 }
-"use strict";
 
-/* =========================================
-   LOGIC GRID DETECTIVE
+/* =========================================================
+   LOGIC GRID DETECTIVE — UNIQUE SOLUTION ENGINE
    100 OFFLINE LEVELS
-   ========================================= */
+   ========================================================= */
 
-const PEOPLE = [
-  "Alex", "Emma", "Oliver", "Sophia", "Lucas",
-  "Chloe", "Daniel", "Mia", "Ethan", "Lily"
-];
+(() => {
+  "use strict";
 
-const CITIES = [
-  "London", "Paris", "Tokyo", "Sydney", "Toronto",
-  "Berlin", "Madrid", "Rome", "Oslo", "Vienna"
-];
+  /* ---------- DATA ---------- */
 
-const ITEMS = [
-  "Camera", "Laptop", "Watch", "Phone", "Notebook",
-  "Key", "Tablet", "Headphones", "Passport", "Flash Drive"
-];
+  const LD_PEOPLE = [
+    "Alex", "Emma", "Oliver", "Sophia", "Lucas",
+    "Chloe", "Daniel", "Mia", "Ethan", "Lily"
+  ];
 
-const CASES = [
-  "The Missing Camera",
-  "The Secret Notebook",
-  "The Lost Passport",
-  "The Mystery Device",
-  "The Hidden Key",
-  "The Vanishing Laptop",
-  "The Silent Watch",
-  "The Missing Phone"
-];
+  const LD_CITIES = [
+    "London", "Paris", "Tokyo", "Sydney", "Toronto",
+    "Berlin", "Madrid", "Rome", "Oslo", "Vienna"
+  ];
 
-const DIFFICULTIES = [
-  "BEGINNER",
-  "BEGINNER",
-  "BEGINNER",
-  "INTERMEDIATE",
-  "INTERMEDIATE",
-  "ADVANCED",
-  "ADVANCED",
-  "EXPERT"
-];
+  const LD_ITEMS = [
+    "Camera", "Laptop", "Watch", "Phone", "Notebook",
+    "Key", "Tablet", "Headphones", "Passport", "Flash Drive"
+  ];
 
-let currentLevel = 1;
-let timerSeconds = 0;
-let timerInterval = null;
-let mistakes = 0;
-let score = 1000;
+  const LD_CASES = [
+    "The Missing Camera",
+    "The Secret Notebook",
+    "The Lost Passport",
+    "The Mystery Device",
+    "The Hidden Key",
+    "The Vanishing Laptop",
+    "The Silent Watch",
+    "The Missing Phone"
+  ];
 
-let currentPuzzle = null;
-let cityChoices = {};
-let itemChoices = {};
+  /* ---------- STATE ---------- */
 
-const levelNumber = document.getElementById("levelNumber");
-const timerEl = document.getElementById("timer");
-const mistakesEl = document.getElementById("mistakes");
-const scoreEl = document.getElementById("score");
+  let ldCurrentLevel = 1;
+  let ldTimerSeconds = 0;
+  let ldTimerInterval = null;
+  let ldMistakes = 0;
+  let ldScore = 1000;
+  let ldPuzzle = null;
 
-const caseTitle = document.getElementById("caseTitle");
-const caseDescription = document.getElementById("caseDescription");
-const difficultyEl = document.getElementById("difficulty");
+  let ldCityChoices = {};
+  let ldItemChoices = {};
 
-const cluesEl = document.getElementById("clues");
-const cityGrid = document.getElementById("cityGrid");
-const itemGrid = document.getElementById("itemGrid");
+  /* ---------- DOM ---------- */
 
-const messageEl = document.getElementById("message");
+  const ldLevelNumber = document.getElementById("levelNumber");
+  const ldTimerEl = document.getElementById("timer");
+  const ldMistakesEl = document.getElementById("mistakes");
+  const ldScoreEl = document.getElementById("score");
 
-const successPanel = document.getElementById("successPanel");
-const finalTime = document.getElementById("finalTime");
-const finalMistakes = document.getElementById("finalMistakes");
-const finalScore = document.getElementById("finalScore");
+  const ldCaseTitle = document.getElementById("caseTitle");
+  const ldCaseDescription = document.getElementById("caseDescription");
+  const ldDifficultyEl = document.getElementById("difficulty");
 
-function seededRandom(seed) {
-  let value = seed % 2147483647;
+  const ldCluesEl = document.getElementById("clues");
+  const ldCityGrid = document.getElementById("cityGrid");
+  const ldItemGrid = document.getElementById("itemGrid");
 
-  if (value <= 0) value += 2147483646;
+  const ldMessageEl = document.getElementById("message");
 
-  return function () {
-    value = value * 16807 % 2147483647;
-    return (value - 1) / 2147483646;
-  };
-}
+  const ldSuccessPanel = document.getElementById("successPanel");
+  const ldFinalTime = document.getElementById("finalTime");
+  const ldFinalMistakes = document.getElementById("finalMistakes");
+  const ldFinalScore = document.getElementById("finalScore");
 
-function shuffle(array, random) {
-  const copy = [...array];
+  const ldCheckBtn = document.getElementById("checkBtn");
+  const ldHintBtn = document.getElementById("hintBtn");
+  const ldNextBtn = document.getElementById("nextBtn");
 
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+  /* ---------- SAFETY CHECK ---------- */
+
+  if (
+    !ldLevelNumber ||
+    !ldTimerEl ||
+    !ldMistakesEl ||
+    !ldScoreEl ||
+    !ldCaseTitle ||
+    !ldCaseDescription ||
+    !ldDifficultyEl ||
+    !ldCluesEl ||
+    !ldCityGrid ||
+    !ldItemGrid ||
+    !ldMessageEl ||
+    !ldSuccessPanel ||
+    !ldFinalTime ||
+    !ldFinalMistakes ||
+    !ldFinalScore ||
+    !ldCheckBtn ||
+    !ldHintBtn ||
+    !ldNextBtn
+  ) {
+    console.warn("Logic Detective: required HTML elements not found.");
+    return;
   }
 
-  return copy;
-}
+  /* =========================================================
+     RANDOM
+     ========================================================= */
 
-function createPuzzle(level) {
+  function ldSeededRandom(seed) {
+    let value = seed % 2147483647;
 
-  const random = seededRandom(level * 7919);
-  const size = 3;
+    if (value <= 0) {
+      value += 2147483646;
+    }
 
-  const people = shuffle(PEOPLE, random).slice(0, size);
-  const cities = shuffle(CITIES, random).slice(0, size);
-  const items = shuffle(ITEMS, random).slice(0, size);
-
-  const cityOrder = shuffle(
-    [...Array(size).keys()],
-    random
-  );
-
-  const itemOrder = shuffle(
-    [...Array(size).keys()],
-    random
-  );
-
-  const solution = {};
-
-  people.forEach((person, index) => {
-    solution[person] = {
-      city: cities[cityOrder[index]],
-      item: items[itemOrder[index]]
+    return function () {
+      value = value * 16807 % 2147483647;
+      return (value - 1) / 2147483646;
     };
-  });
-
-  const clues = [];
-
-  const p1 = people[0];
-  const p2 = people[1];
-  const p3 = people[2];
-
-  const s1 = solution[p1];
-  const s2 = solution[p2];
-  const s3 = solution[p3];
-
-  clues.push(
-    `${p1} was not in ${cities.find(c => c !== s1.city)}.`
-  );
-
-  clues.push(
-    `${p2} was carrying the ${s2.item}.`
-  );
-
-  clues.push(
-    `The detective carrying the ${s3.item} was in ${s3.city}.`
-  );
-
-  clues.push(
-    `${p3} did not visit ${cities.find(c => c !== s3.city)}.`
-  );
-
-  clues.push(
-    `The ${s1.item} was taken to ${s1.city}.`
-  );
-
-  if (level >= 10) {
-    clues.push(
-      `${p2} did not visit ${cities.find(c => c !== s2.city)}.`
-    );
   }
 
-  if (level >= 25) {
-    clues.push(
-      `The detective in ${s1.city} was not carrying ${s2.item}.`
-    );
+  function ldShuffle(array, random) {
+    const result = [...array];
+
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+
+      [result[i], result[j]] = [
+        result[j],
+        result[i]
+      ];
+    }
+
+    return result;
   }
 
-  if (level >= 50) {
-    clues.push(
-      `${p3} was not carrying ${items.find(i => i !== s3.item)}.`
-    );
+  /* =========================================================
+     LEVEL SIZE
+     ========================================================= */
+
+  function ldGetSize(level) {
+    if (level <= 25) return 3;
+    if (level <= 55) return 4;
+    return 5;
   }
 
-  if (level >= 75) {
-    clues.push(
-      `The detective in ${s2.city} was carrying the ${s2.item}.`
-    );
+  function ldGetDifficulty(level) {
+    if (level <= 10) return "BEGINNER";
+    if (level <= 30) return "INTERMEDIATE";
+    if (level <= 60) return "ADVANCED";
+    return "EXPERT";
   }
 
-  return {
+  /* =========================================================
+     PERMUTATIONS
+     ========================================================= */
+
+  function ldPermutations(array) {
+    if (array.length <= 1) {
+      return [array.slice()];
+    }
+
+    const result = [];
+
+    array.forEach((value, index) => {
+      const remaining = [
+        ...array.slice(0, index),
+        ...array.slice(index + 1)
+      ];
+
+      const smaller = ldPermutations(remaining);
+
+      smaller.forEach(item => {
+        result.push([value, ...item]);
+      });
+    });
+
+    return result;
+  }
+
+  /* =========================================================
+     SOLUTION
+     ========================================================= */
+
+  function ldCreateSolution(people, cities, items, random) {
+    const cityOrder = ldShuffle(cities, random);
+    const itemOrder = ldShuffle(items, random);
+
+    const solution = {};
+
+    people.forEach((person, index) => {
+      solution[person] = {
+        city: cityOrder[index],
+        item: itemOrder[index]
+      };
+    });
+
+    return solution;
+  }
+
+  /* =========================================================
+     CLUE FACTORY
+     ========================================================= */
+
+  function ldBuildCluePool(people, cities, items, solution) {
+    const clues = [];
+
+    /* Person -> City */
+    people.forEach(person => {
+      const city = solution[person].city;
+
+      clues.push({
+        text: `${person} was in ${city}.`,
+        test(candidate) {
+          return candidate[person].city === city;
+        }
+      });
+
+      cities
+        .filter(c => c !== city)
+        .forEach(otherCity => {
+          clues.push({
+            text: `${person} was not in ${otherCity}.`,
+            test(candidate) {
+              return candidate[person].city !== otherCity;
+            }
+          });
+        });
+    });
+
+    /* Person -> Item */
+    people.forEach(person => {
+      const item = solution[person].item;
+
+      clues.push({
+        text: `${person} was carrying the ${item}.`,
+        test(candidate) {
+          return candidate[person].item === item;
+        }
+      });
+
+      items
+        .filter(i => i !== item)
+        .forEach(otherItem => {
+          clues.push({
+            text: `${person} was not carrying the ${otherItem}.`,
+            test(candidate) {
+              return candidate[person].item !== otherItem;
+            }
+          });
+        });
+    });
+
+    /* City -> Item */
+    people.forEach(person => {
+      const city = solution[person].city;
+      const item = solution[person].item;
+
+      clues.push({
+        text: `The detective in ${city} was carrying the ${item}.`,
+        test(candidate) {
+          const found = people.find(
+            p => candidate[p].city === city
+          );
+
+          return found
+            ? candidate[found].item === item
+            : false;
+        }
+      });
+
+      items
+        .filter(i => i !== item)
+        .forEach(otherItem => {
+          clues.push({
+            text: `The detective in ${city} was not carrying the ${otherItem}.`,
+            test(candidate) {
+              const found = people.find(
+                p => candidate[p].city === city
+              );
+
+              return found
+                ? candidate[found].item !== otherItem
+                : false;
+            }
+          });
+        });
+    });
+
+    return clues;
+  }
+
+  /* =========================================================
+     COUNT ALL POSSIBLE SOLUTIONS
+     ========================================================= */
+
+  function ldCountSolutions(
     people,
-    cities,
-    items,
-    solution,
+    cityPermutations,
+    itemPermutations,
     clues,
-    title: CASES[(level - 1) % CASES.length],
-    difficulty:
-      DIFFICULTIES[
-        Math.min(
-          Math.floor((level - 1) / 12),
-          DIFFICULTIES.length - 1
-        )
-      ]
-  };
-}
+    limit = 2
+  ) {
+    const solutions = [];
 
-function loadLevel(level) {
+    for (const cityOrder of cityPermutations) {
 
-  stopTimer();
+      for (const itemOrder of itemPermutations) {
 
-  currentLevel = level;
-  timerSeconds = 0;
-  mistakes = 0;
-  score = 1000;
+        const candidate = {};
 
-  cityChoices = {};
-  itemChoices = {};
+        people.forEach((person, index) => {
+          candidate[person] = {
+            city: cityOrder[index],
+            item: itemOrder[index]
+          };
+        });
 
-  currentPuzzle = createPuzzle(level);
+        let valid = true;
 
-  levelNumber.textContent = `${level} / 100`;
-  timerEl.textContent = "00:00";
-  mistakesEl.textContent = "0";
-  scoreEl.textContent = "1000";
+        for (const clue of clues) {
+          if (!clue.test(candidate)) {
+            valid = false;
+            break;
+          }
+        }
 
-  caseTitle.textContent = currentPuzzle.title;
-  difficultyEl.textContent = currentPuzzle.difficulty;
+        if (valid) {
+          solutions.push(candidate);
 
-  caseDescription.textContent =
-    "Study every clue carefully. Determine which city and item belong to each detective.";
+          if (solutions.length >= limit) {
+            return solutions;
+          }
+        }
+      }
+    }
 
-  renderClues();
+    return solutions;
+  }
 
-  renderGrid(
-    cityGrid,
-    currentPuzzle.people,
-    currentPuzzle.cities,
-    cityChoices
-  );
+  /* =========================================================
+     GENERATE UNIQUE PUZZLE
+     ========================================================= */
 
-  renderGrid(
-    itemGrid,
-    currentPuzzle.people,
-    currentPuzzle.items,
-    itemChoices
-  );
+  function ldGeneratePuzzle(level) {
 
-  messageEl.textContent = "";
-  messageEl.className = "message";
+    const random = ldSeededRandom(
+      level * 104729
+    );
 
-  successPanel.classList.add("hidden");
+    const size = ldGetSize(level);
 
-  startTimer();
-}
+    const people = ldShuffle(
+      LD_PEOPLE,
+      random
+    ).slice(0, size);
 
-function renderClues() {
+    const cities = ldShuffle(
+      LD_CITIES,
+      random
+    ).slice(0, size);
 
-  cluesEl.innerHTML = "";
+    const items = ldShuffle(
+      LD_ITEMS,
+      random
+    ).slice(0, size);
 
-  currentPuzzle.clues.forEach((clue, index) => {
+    const solution = ldCreateSolution(
+      people,
+      cities,
+      items,
+      random
+    );
 
-    const div = document.createElement("div");
+    const cityPermutations =
+      ldPermutations(cities);
 
-    div.className = "clue";
+    const itemPermutations =
+      ldPermutations(items);
 
-    div.innerHTML =
-      `<span class="clue-number">${index + 1}.</span>${clue}`;
+    const cluePool = ldBuildCluePool(
+      people,
+      cities,
+      items,
+      solution
+    );
 
-    cluesEl.appendChild(div);
-  });
-}
+    const shuffledClues =
+      ldShuffle(cluePool, random);
 
-function renderGrid(
-  container,
-  people,
-  options,
-  choices
-) {
+    let selectedClues = [];
 
-  container.innerHTML = "";
+    let remaining = ldCountSolutions(
+      people,
+      cityPermutations,
+      itemPermutations,
+      selectedClues
+    );
 
-  const blank = document.createElement("div");
+    /*
+      Keep adding the clue that eliminates
+      the largest number of wrong possibilities.
+    */
 
-  blank.className = "grid-cell header";
-  blank.textContent = "Detective";
+    while (
+      remaining.length > 1 &&
+      shuffledClues.length > 0
+    ) {
 
-  container.appendChild(blank);
+      let bestClue = null;
+      let bestSolutions = remaining;
 
-  options.forEach(option => {
+      for (const clue of shuffledClues) {
 
-    const header = document.createElement("div");
+        const testClues = [
+          ...selectedClues,
+          clue
+        ];
 
-    header.className = "grid-cell header";
-    header.textContent = option;
+        const testSolutions =
+          ldCountSolutions(
+            people,
+            cityPermutations,
+            itemPermutations,
+            testClues
+          );
+
+        if (
+          testSolutions.length <
+          bestSolutions.length
+        ) {
+          bestClue = clue;
+          bestSolutions = testSolutions;
+        }
+
+        if (testSolutions.length === 1) {
+          break;
+        }
+      }
+
+      if (!bestClue) {
+        break;
+      }
+
+      selectedClues.push(bestClue);
+
+      const index =
+        shuffledClues.indexOf(bestClue);
+
+      if (index !== -1) {
+        shuffledClues.splice(index, 1);
+      }
+
+      remaining = bestSolutions;
+    }
+
+    /*
+      Safety verification:
+      The generated puzzle MUST have exactly
+      one possible solution.
+    */
+
+    const finalSolutions =
+      ldCountSolutions(
+        people,
+        cityPermutations,
+        itemPermutations,
+        selectedClues,
+        2
+      );
+
+    if (finalSolutions.length !== 1) {
+      console.warn(
+        "Logic Detective: unique puzzle generation failed. Retrying..."
+      );
+
+      return ldGeneratePuzzle(level + 1000);
+    }
+
+    /*
+      Make sure clues are not excessive.
+    */
+
+    const maxClues =
+      level <= 10 ? 6 :
+      level <= 30 ? 8 :
+      level <= 60 ? 10 : 12;
+
+    let finalClues = selectedClues.slice(
+      0,
+      maxClues
+    );
+
+    /*
+      Never allow truncation to destroy uniqueness.
+    */
+
+    if (
+      ldCountSolutions(
+        people,
+        cityPermutations,
+        itemPermutations,
+        finalClues,
+        2
+      ).length !== 1
+    ) {
+      finalClues = selectedClues;
+    }
+
+    return {
+      people,
+      cities,
+      items,
+      solution,
+      clues: finalClues.map(
+        clue => clue.text
+      ),
+      title:
+        LD_CASES[
+          (level - 1) % LD_CASES.length
+        ],
+      difficulty:
+        ldGetDifficulty(level)
+    };
+  }
+
+  /* =========================================================
+     LOAD LEVEL
+     ========================================================= */
+
+  function ldLoadLevel(level) {
+
+    ldStopTimer();
+
+    ldCurrentLevel =
+      Math.max(1, Math.min(100, level));
+
+    ldTimerSeconds = 0;
+    ldMistakes = 0;
+    ldScore = 1000;
+
+    ldCityChoices = {};
+    ldItemChoices = {};
+
+    ldPuzzle =
+      ldGeneratePuzzle(ldCurrentLevel);
+
+    ldLevelNumber.textContent =
+      `${ldCurrentLevel} / 100`;
+
+    ldTimerEl.textContent = "00:00";
+    ldMistakesEl.textContent = "0";
+    ldScoreEl.textContent = "1000";
+
+    ldCaseTitle.textContent =
+      ldPuzzle.title;
+
+    ldDifficultyEl.textContent =
+      ldPuzzle.difficulty;
+
+    ldCaseDescription.textContent =
+      "Study the clues carefully and determine the exact city and item for every detective.";
+
+    ldRenderClues();
+
+    ldRenderGrid(
+      ldCityGrid,
+      ldPuzzle.people,
+      ldPuzzle.cities,
+      ldCityChoices
+    );
+
+    ldRenderGrid(
+      ldItemGrid,
+      ldPuzzle.people,
+      ldPuzzle.items,
+      ldItemChoices
+    );
+
+    ldMessageEl.textContent = "";
+    ldMessageEl.className = "message";
+
+    ldSuccessPanel.classList.add("hidden");
+
+    ldStartTimer();
+  }
+
+  /* =========================================================
+     CLUES
+     ========================================================= */
+
+  function ldRenderClues() {
+
+    ldCluesEl.innerHTML = "";
+
+    ldPuzzle.clues.forEach(
+      (clue, index) => {
+
+        const div =
+          document.createElement("div");
+
+        div.className = "clue";
+
+        const number =
+          document.createElement("span");
+
+        number.className =
+          "clue-number";
+
+        number.textContent =
+          `${index + 1}.`;
+
+        div.appendChild(number);
+
+        div.appendChild(
+          document.createTextNode(
+            clue
+          )
+        );
+
+        ldCluesEl.appendChild(div);
+      }
+    );
+  }
+
+  /* =========================================================
+     GRID
+     ========================================================= */
+
+  function ldRenderGrid(
+    container,
+    people,
+    options,
+    choices
+  ) {
+
+    container.innerHTML = "";
+
+    const header =
+      document.createElement("div");
+
+    header.className =
+      "grid-cell header";
+
+    header.textContent =
+      "Detective";
 
     container.appendChild(header);
-  });
-
-  people.forEach(person => {
-
-    const personCell = document.createElement("div");
-
-    personCell.className = "grid-cell person";
-    personCell.textContent = person;
-
-    container.appendChild(personCell);
 
     options.forEach(option => {
 
-      const cell = document.createElement("div");
+      const cell =
+        document.createElement("div");
 
-      cell.className = "grid-cell selectable";
-      cell.textContent = "○";
+      cell.className =
+        "grid-cell header";
 
-      if (choices[person] === option) {
-
-        cell.classList.add("selected");
-        cell.textContent = "✓";
-      }
-
-      cell.addEventListener("click", () => {
-
-        choices[person] = option;
-
-        renderGrid(
-          container,
-          people,
-          options,
-          choices
-        );
-      });
+      cell.textContent =
+        option;
 
       container.appendChild(cell);
     });
-  });
-}
 
-function checkAnswer() {
+    people.forEach(person => {
 
-  let complete = true;
+      const personCell =
+        document.createElement("div");
 
-  currentPuzzle.people.forEach(person => {
+      personCell.className =
+        "grid-cell person";
+
+      personCell.textContent =
+        person;
+
+      container.appendChild(
+        personCell
+      );
+
+      options.forEach(option => {
+
+        const cell =
+          document.createElement("div");
+
+        cell.className =
+          "grid-cell selectable";
+
+        cell.textContent = "○";
+
+        if (
+          choices[person] === option
+        ) {
+          cell.classList.add(
+            "selected"
+          );
+
+          cell.textContent = "✓";
+        }
+
+        cell.addEventListener(
+          "click",
+          () => {
+
+            choices[person] =
+              option;
+
+            ldRenderGrid(
+              container,
+              people,
+              options,
+              choices
+            );
+          }
+        );
+
+        container.appendChild(cell);
+      });
+    });
+  }
+
+  /* =========================================================
+     CHECK ANSWER
+     ========================================================= */
+
+  function ldCheckAnswer() {
+
+    let complete = true;
+
+    ldPuzzle.people.forEach(
+      person => {
+
+        if (
+          !ldCityChoices[person] ||
+          !ldItemChoices[person]
+        ) {
+          complete = false;
+        }
+      }
+    );
+
+    if (!complete) {
+
+      ldShowMessage(
+        "Complete every detective's city and item first.",
+        "error"
+      );
+
+      return;
+    }
+
+    let correct = true;
+
+    ldPuzzle.people.forEach(
+      person => {
+
+        const answer =
+          ldPuzzle.solution[person];
+
+        if (
+          ldCityChoices[person] !==
+            answer.city ||
+          ldItemChoices[person] !==
+            answer.item
+        ) {
+          correct = false;
+        }
+      }
+    );
+
+    if (!correct) {
+
+      ldMistakes++;
+
+      ldScore =
+        Math.max(
+          0,
+          ldScore - 100
+        );
+
+      ldMistakesEl.textContent =
+        ldMistakes;
+
+      ldScoreEl.textContent =
+        ldScore;
+
+      ldShowMessage(
+        "Not quite. Re-check the clues.",
+        "error"
+      );
+
+      return;
+    }
+
+    ldFinishLevel();
+  }
+
+  /* =========================================================
+     FINISH
+     ========================================================= */
+
+  function ldFinishLevel() {
+
+    ldStopTimer();
+
+    const timeBonus =
+      Math.max(
+        0,
+        500 - ldTimerSeconds * 3
+      );
+
+    const mistakePenalty =
+      ldMistakes * 100;
+
+    ldScore =
+      Math.max(
+        100,
+        1000 +
+        timeBonus -
+        mistakePenalty
+      );
+
+    ldScoreEl.textContent =
+      ldScore;
+
+    ldFinalTime.textContent =
+      ldFormatTime(
+        ldTimerSeconds
+      );
+
+    ldFinalMistakes.textContent =
+      ldMistakes;
+
+    ldFinalScore.textContent =
+      ldScore;
+
+    ldSuccessPanel.classList.remove(
+      "hidden"
+    );
+
+    ldShowMessage(
+      "Case solved! Excellent detective work.",
+      "success"
+    );
+
+    ldSaveProgress();
+  }
+
+  /* =========================================================
+     HINT
+     ========================================================= */
+
+  function ldGiveHint() {
+
+    if (!ldPuzzle) return;
+
+    ldScore =
+      Math.max(
+        0,
+        ldScore - 150
+      );
+
+    ldScoreEl.textContent =
+      ldScore;
+
+    let target =
+      ldPuzzle.people.find(
+        person =>
+          !ldCityChoices[person] ||
+          !ldItemChoices[person]
+      );
+
+    if (!target) {
+      target =
+        ldPuzzle.people[0];
+    }
+
+    const answer =
+      ldPuzzle.solution[target];
+
+    ldShowMessage(
+      `Hint: ${target} is connected with one of the clues involving ${answer.city}.`,
+      "success"
+    );
+  }
+
+  /* =========================================================
+     TIMER
+     ========================================================= */
+
+  function ldStartTimer() {
+
+    ldStopTimer();
+
+    ldTimerInterval =
+      setInterval(() => {
+
+        ldTimerSeconds++;
+
+        ldTimerEl.textContent =
+          ldFormatTime(
+            ldTimerSeconds
+          );
+
+      }, 1000);
+  }
+
+  function ldStopTimer() {
 
     if (
-      !cityChoices[person] ||
-      !itemChoices[person]
+      ldTimerInterval !== null
     ) {
-      complete = false;
-    }
-  });
+      clearInterval(
+        ldTimerInterval
+      );
 
-  if (!complete) {
-
-    showMessage(
-      "Complete every detective's city and item first.",
-      "error"
-    );
-
-    return;
-  }
-
-  let correct = true;
-
-  currentPuzzle.people.forEach(person => {
-
-    const answer = currentPuzzle.solution[person];
-
-    if (
-      cityChoices[person] !== answer.city ||
-      itemChoices[person] !== answer.item
-    ) {
-      correct = false;
-    }
-  });
-
-  if (!correct) {
-
-    mistakes++;
-
-    score = Math.max(
-      0,
-      score - 100
-    );
-
-    mistakesEl.textContent = mistakes;
-    scoreEl.textContent = score;
-
-    showMessage(
-      "Not quite. Re-check the clues and try again.",
-      "error"
-    );
-
-    return;
-  }
-
-  finishLevel();
-}
-
-function finishLevel() {
-
-  stopTimer();
-
-  const timeBonus = Math.max(
-    0,
-    500 - timerSeconds * 3
-  );
-
-  const mistakePenalty = mistakes * 100;
-
-  score = Math.max(
-    100,
-    1000 + timeBonus - mistakePenalty
-  );
-
-  scoreEl.textContent = score;
-
-  finalTime.textContent =
-    formatTime(timerSeconds);
-
-  finalMistakes.textContent =
-    mistakes;
-
-  finalScore.textContent =
-    score;
-
-  successPanel.classList.remove("hidden");
-
-  showMessage(
-    "Case solved! Excellent detective work.",
-    "success"
-  );
-
-  saveProgress();
-}
-
-function giveHint() {
-
-  if (!currentPuzzle) return;
-
-  score = Math.max(
-    0,
-    score - 150
-  );
-
-  scoreEl.textContent = score;
-
-  const people = currentPuzzle.people;
-
-  let targetPerson = null;
-
-  for (const person of people) {
-
-    if (
-      !cityChoices[person] ||
-      !itemChoices[person]
-    ) {
-      targetPerson = person;
-      break;
+      ldTimerInterval = null;
     }
   }
 
-  if (!targetPerson) {
-    targetPerson = people[0];
-  }
+  function ldFormatTime(seconds) {
 
-  showMessage(
-    `Hint: Check what the clues say about ${targetPerson}.`,
-    "success"
-  );
-}
+    const minutes =
+      Math.floor(
+        seconds / 60
+      );
 
-function startTimer() {
+    const secs =
+      seconds % 60;
 
-  stopTimer();
-
-  timerInterval = setInterval(() => {
-
-    timerSeconds++;
-
-    timerEl.textContent =
-      formatTime(timerSeconds);
-
-  }, 1000);
-}
-
-function stopTimer() {
-
-  if (timerInterval !== null) {
-
-    clearInterval(timerInterval);
-
-    timerInterval = null;
-  }
-}
-
-function formatTime(seconds) {
-
-  const minutes =
-    Math.floor(seconds / 60);
-
-  const secs =
-    seconds % 60;
-
-  return (
-    String(minutes).padStart(2, "0") +
-    ":" +
-    String(secs).padStart(2, "0")
-  );
-}
-
-function showMessage(text, type) {
-
-  messageEl.textContent = text;
-
-  messageEl.className =
-    `message ${type}`;
-}
-
-function saveProgress() {
-
-  try {
-
-    localStorage.setItem(
-      "rockToolsDetectiveLevel",
-      String(
-        Math.min(
-          currentLevel + 1,
-          100
-        )
-      )
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Progress could not be saved.",
-      error
+    return (
+      String(minutes)
+        .padStart(2, "0") +
+      ":" +
+      String(secs)
+        .padStart(2, "0")
     );
   }
-}
 
-function getSavedLevel() {
+  /* =========================================================
+     MESSAGE
+     ========================================================= */
 
-  try {
+  function ldShowMessage(
+    text,
+    type
+  ) {
 
-    const saved =
-      Number(
-        localStorage.getItem(
-          "rockToolsDetectiveLevel"
+    ldMessageEl.textContent =
+      text;
+
+    ldMessageEl.className =
+      `message ${type}`;
+  }
+
+  /* =========================================================
+     SAVE PROGRESS
+     ========================================================= */
+
+  function ldSaveProgress() {
+
+    try {
+
+      localStorage.setItem(
+        "rockToolsDetectiveLevel",
+        String(
+          Math.min(
+            ldCurrentLevel + 1,
+            100
+          )
         )
       );
 
-    if (
-      Number.isInteger(saved) &&
-      saved >= 1 &&
-      saved <= 100
-    ) {
-      return saved;
+    } catch (error) {
+
+      console.warn(
+        "Could not save detective progress.",
+        error
+      );
     }
-
-  } catch (error) {
-
-    console.warn(
-      "Could not read saved progress.",
-      error
-    );
   }
 
-  return 1;
-}
+  function ldGetSavedLevel() {
 
+    try {
 
-/* =========================================
-   START GAME ONLY ON DETECTIVE PAGE
-   ========================================= */
+      const saved =
+        Number(
+          localStorage.getItem(
+            "rockToolsDetectiveLevel"
+          )
+        );
 
-const checkBtn = document.getElementById("checkBtn");
-const hintBtn = document.getElementById("hintBtn");
-const nextBtn = document.getElementById("nextBtn");
+      if (
+        Number.isInteger(saved) &&
+        saved >= 1 &&
+        saved <= 100
+      ) {
+        return saved;
+      }
 
-if (
-  checkBtn &&
-  hintBtn &&
-  nextBtn &&
-  levelNumber &&
-  timerEl &&
-  mistakesEl &&
-  scoreEl &&
-  caseTitle &&
-  caseDescription &&
-  difficultyEl &&
-  cluesEl &&
-  cityGrid &&
-  itemGrid &&
-  messageEl &&
-  successPanel
-) {
+    } catch (error) {
 
-  checkBtn.addEventListener(
+      console.warn(
+        "Could not read detective progress.",
+        error
+      );
+    }
+
+    return 1;
+  }
+
+  /* =========================================================
+     BUTTONS
+     ========================================================= */
+
+  ldCheckBtn.addEventListener(
     "click",
-    checkAnswer
+    ldCheckAnswer
   );
 
-  hintBtn.addEventListener(
+  ldHintBtn.addEventListener(
     "click",
-    giveHint
+    ldGiveHint
   );
 
-  nextBtn.addEventListener(
+  ldNextBtn.addEventListener(
     "click",
     () => {
 
-      if (currentLevel < 100) {
+      if (
+        ldCurrentLevel < 100
+      ) {
 
-        loadLevel(currentLevel + 1);
+        ldLoadLevel(
+          ldCurrentLevel + 1
+        );
 
         window.scrollTo({
           top: 0,
@@ -2749,7 +3177,7 @@ if (
 
       } else {
 
-        showMessage(
+        ldShowMessage(
           "🏆 You completed all 100 cases!",
           "success"
         );
@@ -2757,5 +3185,12 @@ if (
     }
   );
 
-  loadLevel(getSavedLevel());
-}
+  /* =========================================================
+     START
+     ========================================================= */
+
+  ldLoadLevel(
+    ldGetSavedLevel()
+  );
+
+})();
