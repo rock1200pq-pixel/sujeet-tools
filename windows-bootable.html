@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+        content="Rock Tools Windows Bootable Maker">
+
+  <title>Windows Bootable Maker | Rock Tools</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .bootContainer {
+      width: min(700px, 92%);
+      margin: 35px auto;
+    }
+
+    .bootCard {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .bootCard h2 {
+      margin-top: 0;
+    }
+
+    .bootLabel {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: 600;
+    }
+
+    .bootInput {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background: #111;
+      color: white;
+    }
+
+    .driveBox {
+      padding: 15px;
+      border: 1px dashed #555;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .driveStatus {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .warning {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 70, 70, 0.12);
+      border: 1px solid rgba(255, 70, 70, 0.4);
+    }
+
+    .progressBox {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .progressBar {
+      width: 100%;
+      height: 12px;
+      background: #222;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progressFill {
+      width: 0%;
+      height: 100%;
+      background: #00c6ff;
+      transition: width .3s;
+    }
+
+    .statusText {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: .85;
+    }
+
+    .success {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(0, 200, 100, .12);
+      border: 1px solid rgba(0, 200, 100, .4);
+    }
+
+    .dangerButton {
+      background: #d93025 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Rock Tools Logo">
+    <span class="logo-text">ROCK TOOLS</span>
+  </a>
+
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="tools.html" class="active">Tools</a></li>
+    <li><a href="games.html">Games</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<h1 class="title">💾 Windows Bootable Maker</h1>
+
+<div class="bootContainer">
+
+  <!-- ISO -->
+  <div class="bootCard">
+
+    <h2>1. Windows ISO</h2>
+
+    <label class="bootLabel">
+      Select Windows ISO
+    </label>
+
+    <input
+      type="file"
+      id="isoFile"
+      class="bootInput"
+      accept=".iso,application/octet-stream"
+    >
+
+    <p id="isoStatus" class="statusText">
+      No ISO selected.
+    </p>
+
+  </div>
+
+
+  <!-- USB / SD -->
+  <div class="bootCard">
+
+    <h2>2. Target Drive</h2>
+
+    <div class="driveBox">
+
+      <div id="usbStatus" class="driveStatus">
+        🔌 USB / SD not connected
+      </div>
+
+      <div id="usbInfo">
+        Connect your USB/SD card through Android OTG.
+      </div>
+
+      <button
+        id="detectBtn"
+        onclick="detectUSB()">
+        Detect USB / SD
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- Partition -->
+  <div class="bootCard">
+
+    <h2>3. Boot Configuration</h2>
+
+    <label class="bootLabel">
+      Partition Scheme
+    </label>
+
+    <select id="partitionScheme" class="bootInput">
+      <option value="MBR">MBR</option>
+    </select>
+
+    <label class="bootLabel">
+      Target
+    </label>
+
+    <select id="targetType" class="bootInput">
+      <option value="usb">USB Flash Drive</option>
+      <option value="sd">SD Card</option>
+    </select>
+
+  </div>
+
+
+  <!-- Warning -->
+  <div class="bootCard">
+
+    <h2>⚠ Important</h2>
+
+    <div class="warning">
+
+      Creating bootable media will erase the selected
+      USB/SD card.
+
+      <br><br>
+
+      <b>Never select a drive containing important data.</b>
+
+    </div>
+
+    <br>
+
+    <label>
+      <input type="checkbox" id="confirmErase">
+      I understand that the target drive will be erased.
+    </label>
+
+    <br><br>
+
+    <button
+      id="createBtn"
+      class="dangerButton"
+      onclick="startCreation()">
+      Create Bootable
+    </button>
+
+  </div>
+
+
+  <!-- Progress -->
+  <div class="bootCard progressBox" id="progressBox">
+
+    <h2>Creating Bootable Media</h2>
+
+    <div class="progressBar">
+      <div
+        class="progressFill"
+        id="progressFill">
+      </div>
+    </div>
+
+    <div
+      class="statusText"
+      id="progressText">
+      Preparing...
+    </div>
+
+  </div>
+
+
+  <!-- Success -->
+  <div class="success" id="successBox">
+
+    <b>✅ Bootable media created successfully.</b>
+
+    <br><br>
+
+    You can now restart the target computer and
+    select the USB/SD from the boot menu.
+
+  </div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+let selectedISO = null;
+let usbConnected = false;
+
+
+/* =========================
+   ISO SELECT
+========================= */
+
+document
+  .getElementById("isoFile")
+  .addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+      selectedISO = null;
+
+      document.getElementById("isoStatus").textContent =
+        "No ISO selected.";
+
+      return;
+    }
+
+    const name = file.name.toLowerCase();
+
+    if (!name.endsWith(".iso")) {
+
+      selectedISO = null;
+
+      this.value = "";
+
+      document.getElementById("isoStatus").textContent =
+        "❌ Please select a valid ISO file.";
+
+      return;
+    }
+
+    selectedISO = file;
+
+    const sizeGB =
+      (file.size / 1024 / 1024 / 1024).toFixed(2);
+
+    document.getElementById("isoStatus").textContent =
+      `✅ ${file.name} — ${sizeGB} GB`;
+
+});
+
+
+/* =========================
+   USB DETECTION
+========================= */
+
+function detectUSB() {
+
+  const status =
+    document.getElementById("usbStatus");
+
+  const info =
+    document.getElementById("usbInfo");
+
+  /*
+   * IMPORTANT:
+   * Browser cannot perform raw Android
+   * block-device detection.
+   *
+   * Native Android bridge will be connected here.
+   */
+
+  if (
+    window.AndroidBoot &&
+    typeof window.AndroidBoot.detectStorage === "function"
+  ) {
+
+    window.AndroidBoot.detectStorage();
+
+    return;
+  }
+
+  status.textContent =
+    "⚠ Android USB bridge not connected";
+
+  info.textContent =
+    "This web page is ready for the Android native USB module.";
+}
+
+
+/* =========================
+   ANDROID → WEB CALLBACK
+========================= */
+
+function onAndroidDriveDetected(name, sizeGB, id) {
+
+  usbConnected = true;
+
+  document.getElementById("usbStatus").textContent =
+    "✅ Drive detected";
+
+  document.getElementById("usbInfo").textContent =
+    `${name} — ${sizeGB} GB — ID: ${id}`;
+}
+
+
+/* =========================
+   CREATE
+========================= */
+
+function startCreation() {
+
+  if (!selectedISO) {
+
+    alert("Please select a Windows ISO.");
+
+    return;
+  }
+
+
+  if (!usbConnected) {
+
+    alert("Please connect and detect a USB/SD card.");
+
+    return;
+  }
+
+
+  if (!document.getElementById("confirmErase").checked) {
+
+    alert(
+      "Please confirm that the target drive can be erased."
+    );
+
+    return;
+  }
+
+
+  /*
+   * Native Android implementation will be called here.
+   */
+
+  if (
+    window.AndroidBoot &&
+    typeof window.AndroidBoot.createBootable === "function"
+  ) {
+
+    window.AndroidBoot.createBootable(
+      "MBR"
+    );
+
+    showProgress();
+
+    return;
+  }
+
+
+  alert(
+    "Android native bootable module is not connected yet."
+  );
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+function showProgress() {
+
+  document.getElementById("progressBox").style.display =
+    "block";
+
+  document.getElementById("successBox").style.display =
+    "none";
+}
+
+
+/*
+ * Android native side can call this:
+ *
+ * updateBootProgress(percentage, message)
+ */
+
+function updateBootProgress(percent, message) {
+
+  const fill =
+    document.getElementById("progressFill");
+
+  const text =
+    document.getElementById("progressText");
+
+  fill.style.width =
+    Math.max(0, Math.min(100, percent)) + "%";
+
+  text.textContent =
+    message || "Working...";
+}
+
+
+/*
+ * Android native side calls this when finished.
+ */
+
+function bootableComplete(success, message) {
+
+  if (success) {
+
+    updateBootProgress(
+      100,
+      "Completed successfully."
+    );
+
+    document.getElementById("successBox").style.display =
+      "block";
+
+  } else {
+
+    updateBootProgress(
+      0,
+      "Failed: " + (message || "Unknown error")
+    );
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
