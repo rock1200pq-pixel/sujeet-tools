@@ -1603,8 +1603,7 @@ function fallbackCopy(text) {
 
     $("rtPreviewNotes")
       .textContent =
-      $("rtNotes").value.trim() ||
-      "Thank you for your business.";
+      $("rtNotes").value.trim();
 
   }
 
