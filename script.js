@@ -1601,9 +1601,9 @@ function fallbackCopy(text) {
 
     /* NOTES */
 
-    $("rtPreviewNotes")
-      .textContent =
-      $("rtNotes").value.trim();
+    $("rtPreviewNotes").textContent =
+  $("rtNotes").value.trim() ||
+  "Thank you for your business.";
 
   }
 
