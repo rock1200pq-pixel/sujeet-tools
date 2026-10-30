@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Convert PDFs and images to editable Word documents using OCR.">
+<title>PDF/Image to Editable Word | Rock Tools</title>
+<link rel="stylesheet" href="style.css">
+<!-- FIX: pin exact matching versions for pdf.js core + worker, tesseract v5, docx -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.2.2/build/index.js"></script>
+<style>
+.wordCloneWrap{width:min(920px,calc(100% - 28px));margin:26px auto 56px}
+.wordClonePanel{background:linear-gradient(145deg,#0b1925,#08141e);border:1px solid #0b3c50;border-radius:15px;padding:clamp(18px,4vw,30px);color:#edf7ff;box-shadow:0 8px 30px #0003}
+.wordClonePanel h1{margin:0 0 8px;font-size:clamp(22px,4vw,30px);text-align:center;color:#f3f9ff}
+.wordCloneIntro{color:#a9c5d8;text-align:center;font-size:14px;line-height:1.6;margin:0 auto 24px;max-width:650px}
+.wordCloneDrop{border:1px dashed #17607a;background:#10222f;border-radius:10px;min-height:150px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px;cursor:pointer;transition:.2s}
+.wordCloneDrop:hover,.wordCloneDrop.dragover{border-color:#00bdf2;background:#112a3a}
+.wordCloneDrop .uploadIcon{font-size:34px}.wordCloneDrop strong{font-size:16px}.wordCloneDrop span{font-size:12px;color:#8db4cc}
+#wordCloneFiles{display:none}.wordCloneFileList{display:grid;gap:8px;margin:14px 0}
+.wordCloneFile{background:#0e202c;border:1px solid #163c4e;border-radius:8px;padding:10px 12px;color:#d9eaf6;font-size:12px;display:flex;justify-content:space-between;gap:12px;overflow-wrap:anywhere}
+.wordCloneOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+.wordCloneField{background:#0c1b27;border:1px solid #153c4e;border-radius:9px;padding:12px;min-width:0}
+.wordCloneField label{display:block;font-size:12px;color:#9ebed1;margin-bottom:8px}
+.wordCloneField select{width:100%;box-sizing:border-box;background:#142632;color:#f2f8ff;border:1px solid #225064;border-radius:7px;padding:10px}
+.wordCloneCheck{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.5;color:#c8dce9;margin:14px 2px}
+.wordCloneCheck input{margin-top:3px;accent-color:#078cff}
+.wordCloneBtn{display:block;width:100%;border:0;border-radius:9px;padding:12px 16px;color:#fff;background:linear-gradient(100deg,#08b9ed,#087bff);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.wordCloneBtn:hover{filter:brightness(1.08)}.wordCloneBtn:disabled{opacity:.55;cursor:not-allowed}
+.wordCloneStatus{display:none;margin-top:16px;padding:12px;border-radius:8px;background:#102531;border:1px solid #16475b;color:#bfe9ff;font-size:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.wordCloneStatus.error{color:#ffd0d0;border-color:#713b46;background:#2a1720}
+.wordCloneProgress{width:100%;height:7px;margin-top:10px;border-radius:20px;background:#1b3545;overflow:hidden}
+.wordCloneProgress>div{height:100%;width:0%;background:linear-gradient(90deg,#08b9ed,#087bff);transition:width .2s}
+.wordCloneNotice{color:#8eacbf;font-size:11px;line-height:1.6;margin:16px 2px 0}
+@media(max-width:560px){.wordCloneOptions{grid-template-columns:1fr}.wordCloneDrop{min-height:125px}}
+</style>
+</head>
+<body>
+<nav>
+<a href="index.html" class="logo"><img src="logo.png" alt="Rock Tools Logo"><span class="logo-text">ROCK TOOLS</span></a>
+<ul><li><a href="index.html">Home</a></li><li><a href="tools.html" class="active">Tools</a></li><li><a href="games.html">Games</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul>
+</nav>
+
+<main class="wordCloneWrap">
+<section class="wordClonePanel">
+<h1>📄 PDF/Image to Editable Word</h1>
+<p class="wordCloneIntro">Extract text from PDFs and scanned images with OCR, then download an editable Microsoft Word (.docx) file.</p>
+<label class="wordCloneDrop" id="wordCloneDrop" for="wordCloneFiles">
+<span class="uploadIcon">📂</span><strong>Choose PDF or image files</strong>
+<span>Click to browse or drag files here · PDF, JPG, PNG, WEBP (browser support varies)</span>
+<input id="wordCloneFiles" type="file" multiple accept=".pdf,image/*">
+</label>
+<div class="wordCloneFileList" id="wordCloneFileList" aria-live="polite"></div>
+<div class="wordCloneOptions">
+<div class="wordCloneField"><label for="wordCloneLanguage">OCR language</label>
+<select id="wordCloneLanguage"><option value="eng">English</option><option value="hin">Hindi</option><option value="eng+hin">English + Hindi</option></select></div>
+<div class="wordCloneField"><label for="wordCloneScale">PDF scan quality</label>
+<select id="wordCloneScale"><option value="1.5">Standard (faster)</option><option value="2.2" selected>High (recommended)</option><option value="3">Very high (slower)</option></select></div>
+</div>
+<label class="wordCloneCheck"><input id="wordCloneOcrAll" type="checkbox"><span>Force OCR on every PDF page. Enable for scanned PDFs when automatic text detection misses text. This can take longer.</span></label>
+<button class="wordCloneBtn" id="wordCloneConvertBtn" type="button" disabled>Convert to Editable Word</button>
+<div class="wordCloneStatus" id="wordCloneStatus" role="status" aria-live="polite"><div id="wordCloneStatusText">Ready.</div><div class="wordCloneProgress"><div id="wordCloneProgressBar"></div></div></div>
+<p class="wordCloneNotice">Privacy: files are processed in this browser and this page does not upload them to a server. OCR language data may be downloaded from the OCR provider. This version extracts text and basic paragraph structure; it does not reproduce the exact original layout, fonts, or tables. Always proofread OCR output.</p>
+</section>
+</main>
+
+<script>
+(function(){
+"use strict";
+const fileInput=document.getElementById("wordCloneFiles"),dropZone=document.getElementById("wordCloneDrop"),fileList=document.getElementById("wordCloneFileList"),convertBtn=document.getElementById("wordCloneConvertBtn"),statusBox=document.getElementById("wordCloneStatus"),statusText=document.getElementById("wordCloneStatusText"),progressBar=document.getElementById("wordCloneProgressBar"),languageSelect=document.getElementById("wordCloneLanguage"),scaleSelect=document.getElementById("wordCloneScale"),forceOcr=document.getElementById("wordCloneOcrAll");
+let selectedFiles=[];
+let isProcessing=false; // FIX: guard against double-submits / races
+
+// FIX: worker path now matches the pinned pdf.js version loaded above
+if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}
+
+function showStatus(message,progress,isError){statusBox.style.display="block";statusBox.classList.toggle("error",!!isError);statusText.textContent=message;if(typeof progress==="number")progressBar.style.width=Math.max(0,Math.min(100,progress))+"%";}
+function sizeText(bytes){if(bytes<1024)return bytes+" B";if(bytes<1048576)return(bytes/1024).toFixed(1)+" KB";return(bytes/1048576).toFixed(2)+" MB";}
+
+function renderFiles(){
+  fileList.replaceChildren();
+  selectedFiles.forEach(file=>{
+    const row=document.createElement("div");row.className="wordCloneFile";
+    const name=document.createElement("span");name.textContent=file.name;
+    const size=document.createElement("span");size.textContent=sizeText(file.size);
+    row.append(name,size);fileList.appendChild(row);
+  });
+  // FIX: never re-enable the button while a conversion is actively running
+  convertBtn.disabled = !selectedFiles.length || isProcessing;
+}
+
+function acceptFiles(files){
+  const accepted=Array.from(files).filter(f=>f.type==="application/pdf"||f.type.startsWith("image/")||/\.pdf$/i.test(f.name));
+  if(!accepted.length){showStatus("Please select a PDF or an image file.",0,true);return;}
+  // FIX: cap total files so a huge batch can't lock up the browser tab
+  if(accepted.length>20){showStatus("Please select 20 files or fewer at a time.",0,true);return;}
+  selectedFiles=accepted;
+  renderFiles();
+  showStatus(accepted.length+" file(s) ready. Click Convert to Editable Word.",0,false);
+}
+
+fileInput.addEventListener("change",()=>acceptFiles(fileInput.files));
+["dragenter","dragover"].forEach(type=>dropZone.addEventListener(type,e=>{e.preventDefault();dropZone.classList.add("dragover");}));
+["dragleave","drop"].forEach(type=>dropZone.addEventListener(type,e=>{e.preventDefault();dropZone.classList.remove("dragover");}));
+dropZone.addEventListener("drop",e=>{
+  // FIX: ignore drops while a conversion is in progress
+  if(isProcessing)return;
+  acceptFiles(e.dataTransfer.files);
+});
+
+// FIX: Tesseract v5 worker creation — logger must be passed in the options object,
+// and createWorker resolves to a ready worker (no separate load/loadLanguage/initialize calls)
+async function makeWorker(language){
+  if(!window.Tesseract)throw new Error("OCR library failed to load. Check internet and reload.");
+  return Tesseract.createWorker(language,1,{
+    logger:m=>{
+      if(m&&m.status){
+        const pct=m.progress?Math.round(m.progress*100):0;
+        showStatus("OCR: "+m.status+(pct?" ("+pct+"%)":""),pct,false);
+      }
+    }
+  });
+}
+
+async function recognize(worker,source){
+  const result=await worker.recognize(source);
+  return(result&&result.data&&result.data.text?result.data.text:"").trim();
+}
+
+async function processImage(file,worker){
+  const text=await recognize(worker,file);
+  return[{heading:file.name,text:text||"[No text could be recognized in this image.]"}];
+}
+
+async function processPdf(file,worker){
+  if(!window.pdfjsLib)throw new Error("PDF reader library failed to load. Check internet and reload.");
+  const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise,pages=[],scale=Number(scaleSelect.value)||2.2;
+
+  for(let n=1;n<=pdf.numPages;n++){
+    const page=await pdf.getPage(n);
+    showStatus("Reading "+file.name+" — page "+n+" of "+pdf.numPages+"...",Math.round((n-1)/pdf.numPages*100),false);
+    let text="";
+    try{
+      const tc=await page.getTextContent();
+      text=tc.items.map(item=>item.str||"").join(" ").trim();
+    }catch(e){ /* fall through to OCR below */ }
+
+    if(forceOcr.checked||text.replace(/\s/g,"").length<20){
+      const viewport=page.getViewport({scale});
+      const canvas=document.createElement("canvas");
+      const ctx=canvas.getContext("2d");
+      canvas.width=Math.ceil(viewport.width);
+      canvas.height=Math.ceil(viewport.height);
+      await page.render({canvasContext:ctx,viewport}).promise;
+      const ocr=await recognize(worker,canvas);
+      // FIX: properly release canvas memory — clear pixels, drop size, and
+      // null the reference so GC can reclaim it between pages
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      canvas.width=0;canvas.height=0;
+      if(ocr.length>text.length||forceOcr.checked)text=ocr;
+    }
+    // FIX: always release the page object before moving on, avoids
+    // pdf.js keeping every page's resources alive for large documents
+    page.cleanup();
+    pages.push({heading:file.name+" — Page "+n,text:text||"[No text could be extracted from this page.]"});
+  }
+  return pages;
+}
+
+function textParagraphs(text){
+  return String(text||"").replace(/\r/g,"").split("\n").map(line=>new docx.Paragraph({children:[new docx.TextRun({text:line||" "})],spacing:{after:100}}));
+}
+
+async function createDocx(sections,filename){
+  if(!window.docx||!docx.Document||!docx.Packer)throw new Error("Word document library failed to load. Check internet and reload.");
+  const children=[];
+  sections.forEach((section,index)=>{
+    if(index>0)children.push(new docx.Paragraph({text:"",pageBreakBefore:true}));
+    children.push(new docx.Paragraph({heading:docx.HeadingLevel.HEADING_1,children:[new docx.TextRun({text:section.heading})],spacing:{after:200}}));
+    textParagraphs(section.text).forEach(p=>children.push(p));
+  });
+
+  const wordDoc=new docx.Document({
+    creator:"Rock Tools",
+    title:"Editable text extracted from PDF and images",
+    sections:[{properties:{page:{margin:{top:900,right:900,bottom:900,left:900}}},children}]
+  });
+
+  const blob=await docx.Packer.toBlob(wordDoc);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=filename.replace(/[\\/:*?"<>|]+/g,"_")+".docx";
+  document.body.appendChild(a);
+  a.click();
+  // FIX: give the browser time to actually start the download before revoking
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1500);
+}
+
+// FIX: multi-file batches now get a timestamped name instead of a fixed
+// generic one, so repeated conversions don't silently overwrite each other
+function outputName(files){
+  if(files.length===1)return files[0].name.replace(/\.[^.]+$/,"")+"-editable";
+  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  return"rock-tools-converted-"+files.length+"-files-"+stamp;
+}
+
+convertBtn.addEventListener("click",async()=>{
+  if(!selectedFiles.length||isProcessing)return; // FIX: block re-entry
+  if(!window.Tesseract||!window.docx||!window.pdfjsLib){
+    showStatus("A required library did not load. Check internet and reload this page.",0,true);
+    return;
+  }
+
+  isProcessing=true;
+  convertBtn.disabled=true;
+  fileInput.disabled=true;
+  let worker=null;
+  const sections=[];
+
+  try{
+    showStatus("Starting OCR engine. The first run may download language data...",2,false);
+    worker=await makeWorker(languageSelect.value);
+
+    for(let i=0;i<selectedFiles.length;i++){
+      const file=selectedFiles[i];
+      showStatus("Processing file "+(i+1)+" of "+selectedFiles.length+": "+file.name,Math.round(i/selectedFiles.length*100),false);
+      const result=/\.pdf$/i.test(file.name)||file.type==="application/pdf"
+        ? await processPdf(file,worker)
+        : await processImage(file,worker);
+      sections.push(...result);
+    }
+
+    showStatus("Creating editable Word document...",95,false);
+    await createDocx(sections,outputName(selectedFiles));
+    showStatus("Done! The .docx download should have started. Proofread OCR output for errors.",100,false);
+
+  }catch(err){
+    console.error(err);
+    showStatus("Conversion failed: "+(err&&err.message?err.message:String(err)),0,true);
+  }finally{
+    if(worker){try{await worker.terminate();}catch(e){ /* ignore terminate errors */ }}
+    isProcessing=false;
+    // FIX: button state now derives from current selection, not a stale flag
+    convertBtn.disabled=!selectedFiles.length;
+    fileInput.disabled=false;
+  }
+});
+})();
+</script>
+</body>
+</html>
